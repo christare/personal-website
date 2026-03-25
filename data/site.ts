@@ -1,11 +1,11 @@
 export type VideoItem = {
   title: string;
   platform: "youtube" | "vimeo";
-  /** YouTube or Vimeo video id */
+  /** YouTube or Vimeo video id — leave empty to show an open slot */
   externalId: string;
-  /** Public watch URL (for “open on platform”) */
+  /** Public watch URL — optional when slot is empty */
   url: string;
-  /** Use when you do not set YOUTUBE_API_KEY or for Vimeo / manual stats */
+  /** Use when YOUTUBE_API_KEY is unset or for Vimeo / platforms without API access */
   manualViews?: number;
 };
 
@@ -15,18 +15,54 @@ export type SoftwareItem = {
   href?: string;
 };
 
-export const site = {
-  name: "Your Name",
-  tagline: "Video · software · experiments",
+export const site: {
+  name: string;
+  tagline: string;
+  profileImageUrl: string;
+  profileImageAlt: string;
+  videos: VideoItem[];
+  software: SoftwareItem[];
+  tare: { title: string; body: string; href: string };
+} = {
+  name: "Chris Jereza",
+  tagline: "Video · software · TARE",
+
+  /** Resolved via unavatar from Instagram @chrisjereza; replace with /your-photo.jpg if you prefer a local file */
+  profileImageUrl: "https://unavatar.io/instagram/chrisjereza",
+  profileImageAlt: "Chris Jereza",
 
   videos: [
     {
-      title: "Sample work (replace)",
+      title: "Example — replace with your work",
       platform: "youtube",
-      externalId: "dQw4w9WgXcQ",
-      url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      externalId: "YE7VzlLtp-4",
+      url: "https://www.youtube.com/watch?v=YE7VzlLtp-4",
     },
-  ] satisfies VideoItem[],
+    {
+      title: "Video 2",
+      platform: "youtube",
+      externalId: "",
+      url: "",
+    },
+    {
+      title: "Video 3",
+      platform: "youtube",
+      externalId: "",
+      url: "",
+    },
+    {
+      title: "Video 4",
+      platform: "youtube",
+      externalId: "",
+      url: "",
+    },
+    {
+      title: "Video 5",
+      platform: "youtube",
+      externalId: "",
+      url: "",
+    },
+  ],
 
   software: [
     {
@@ -38,10 +74,11 @@ export const site = {
       title: "Project two",
       description: "Another line; link optional.",
     },
-  ] satisfies SoftwareItem[],
+  ],
 
   tare: {
     title: "TARE",
-    body: "A space for TARE — swap this copy for what you actually want to highlight (research, a series, a label, etc.).",
+    body: "TARE Studio NYC — creative studio work and collaborations.",
+    href: "https://tarestudionyc.com",
   },
 };
