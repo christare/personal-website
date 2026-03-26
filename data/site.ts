@@ -26,6 +26,18 @@ export type SoftwareItem = {
   href?: string;
 };
 
+export type ResumeExperience = {
+  company: string;
+  role: string;
+  period: string;
+  bullets: string[];
+};
+
+export type ResumeSection = {
+  title: string;
+  lines: string[];
+};
+
 export const site: {
   name: string;
   tagline: string;
@@ -35,19 +47,27 @@ export const site: {
   highlights: string[];
   portfolioSections: PortfolioSection[];
   software: SoftwareItem[];
+  resume: {
+    location: string;
+    email: string;
+    linkedin: string;
+    experience: ResumeExperience[];
+    additional: string[];
+    education: ResumeSection;
+    skills: ResumeSection[];
+  };
   tare: { title: string; body: string; href: string };
 } = {
   name: "Chris Jereza",
-  tagline: "Video creator · storyteller · creative technologist",
+  tagline: "Selected video work",
   profileImageUrl: "https://unavatar.io/instagram/chrisjereza",
   profileImageAlt: "Chris Jereza",
-  intro:
-    "Video creator and storyteller specializing in viral short-form, social-first branded video and documentary, long-form shows, and comedy.",
+  intro: "",
   highlights: [
     "Former BuzzFeed lead producer/host",
     "Editor at The Verge",
-    "8+ years of end-to-end content execution",
-    "1.3M+ followers across YouTube, Instagram, and TikTok",
+    "8+ years in production and post",
+    "1.3M+ followers",
     "500M+ views across all platforms in 2025",
   ],
 
@@ -353,6 +373,86 @@ export const site: {
         "Final Cut Pro, Adobe Premiere, After Effects, Audition, Photoshop, Logic, audio recording, mixing, and mastering.",
     },
   ],
+
+  resume: {
+    location: "New York City, NY",
+    email: "chrisnjereza@gmail.com",
+    linkedin: "linkedin.com/in/christopherjereza/",
+    experience: [
+      {
+        company: "Sight Intelligence Engineering",
+        role: "Lead Software Engineer, Technical Lead",
+        period: "Jul 2025 - Jan 2026",
+        bullets: [
+          "Built the first clinically validated end-to-end simulator of human responses on perimetry tests, reducing development cycles from months to under 15 minutes.",
+          "Designed a psychophysical response model with anatomically grounded sensitivity fields, psychometric response modeling, hierarchical threshold-dependent variability, AR(1) reaction-time dynamics, and protocol-accurate timing.",
+          "Matched real-world clinical behavior across 12/12 literature benchmarks over 590 simulated 24-2 cohorts (1000+ subjects each), including 2.38 dB test-retest RMSE and 0.66 dB/decade age decline.",
+          "Benchmarked multiple visual field testing algorithms, including a Gaussian Process-based method with learned priors and RL-informed inference that matched clinical gold-standard accuracy with improved efficiency.",
+          "Authored validation paper and 510(k)-ready verification and validation package.",
+        ],
+      },
+      {
+        company: "DexCare Health",
+        role: "Lead Software Engineer",
+        period: "Jul 2024 - Apr 2025",
+        bullets: [
+          "Designed and built core architecture still in use at Series C stage, unifying fragmented healthcare data into graph/CSP + SQL/NoSQL layers with caching and messaging.",
+          "Integrated LLMs into production workflows for hybrid data modeling, graph traversal, and constraint satisfaction in patient-provider matching and logistics.",
+          "Integrated Stripe and Auth0 with role-based identity and HIPAA-compliant controls.",
+        ],
+      },
+      {
+        company: "Mount Sinai, Icahn School of Medicine",
+        role: "Software Developer (Clinical Research)",
+        period: "Jul 2023 - Jan 2024",
+        bullets: [
+          "Built Mount Sinai's first end-to-end pipeline for transcribing, diarizing, and analyzing clinical interviews for psychosis risk detection.",
+          "Integrated OpenAI Whisper, Pyannote, and Praat to process 100+ language samples and correlate syntactic, semantic, and prosodic signals with risk factors.",
+        ],
+      },
+      {
+        company: "Lyft",
+        role: "Software Engineering Intern",
+        period: "Jan 2019 - Apr 2019",
+        bullets: [
+          "Rebuilt Destination Mode matching by introducing directionality constraints aligned with driver-specified destinations.",
+          "Reduced average ETAs by 0.3% across millions of rides while improving route consistency.",
+          "Designed and executed user-split experiments across full driver population and built analytics for rollout decisions.",
+          "Built and deployed a full-stack system for automated cross-platform driver notifications without mobile OS rebuilds.",
+        ],
+      },
+    ],
+    additional: [
+      "Built and shipped Facebook's First With A Friend feature.",
+      "Built Bloomberg Terminal IPO search and an early Amazon Seller Central prototype.",
+      "Designed product features for GLEAM Dating and ProGuides.com (both acquired).",
+    ],
+    education: {
+      title: "Education",
+      lines: [
+        "University of California, Berkeley — Computer Science",
+        "Coursework: Data Structures, Statistics, Algorithms, AI, Computer Security, Databases, Discrete Math, Linear Algebra",
+      ],
+    },
+    skills: [
+      {
+        title: "Engineering",
+        lines: [
+          "Algorithm design, distributed systems architecture, scalable system design, psychophysical simulation, clinical and A/B experimental design, graph and constraint systems, hybrid database architecture",
+        ],
+      },
+      {
+        title: "Product & Content",
+        lines: [
+          "Technical content, product design, developer education, growth experiments",
+        ],
+      },
+      {
+        title: "Audience & Distribution",
+        lines: ["1M+ followers, 500M+ views across technical and product content"],
+      },
+    ],
+  },
 
   tare: {
     title: "TARE",

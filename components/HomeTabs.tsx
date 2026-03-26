@@ -2,7 +2,13 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
-import type { PortfolioItem, PortfolioSection, SoftwareItem } from "@/data/site";
+import type {
+  PortfolioItem,
+  PortfolioSection,
+  ResumeExperience,
+  ResumeSection,
+  SoftwareItem,
+} from "@/data/site";
 import { formatViewCount } from "@/lib/format";
 
 export type ResolvedPortfolioItem = PortfolioItem & {
@@ -32,8 +38,20 @@ function platformLabel(platform: PortfolioItem["platform"]) {
   return "External";
 }
 
+function platformTone(platform: PortfolioItem["platform"]) {
+  return "border-white/12 bg-white/[0.04] text-zinc-200";
+}
+
 function itemKey(sectionTitle: string, url: string): string {
   return `${sectionTitle}::${url}`;
+}
+
+function isPortraitVideo(item: ResolvedPortfolioItem): boolean {
+  if (item.platform === "instagram" || item.platform === "tiktok") return true;
+  if (item.platform === "youtube") {
+    return item.url.includes("/shorts/");
+  }
+  return false;
 }
 
 export function HomeTabs(props: {
@@ -45,6 +63,15 @@ export function HomeTabs(props: {
   profileImageAlt: string;
   portfolioSections: ResolvedSection[];
   software: SoftwareItem[];
+  resume: {
+    location: string;
+    email: string;
+    linkedin: string;
+    experience: ResumeExperience[];
+    additional: string[];
+    education: ResumeSection;
+    skills: ResumeSection[];
+  };
   tare: { title: string; body: string; href: string };
 }) {
   const [tab, setTab] = useState<TabId>("video");
@@ -60,6 +87,10 @@ export function HomeTabs(props: {
   );
 
   const activeRowRefs = useRef<Record<string, HTMLLIElement | null>>({});
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, []);
 
   useEffect(() => {
     if (tab !== "video" || !activeUrl) return;
@@ -78,10 +109,10 @@ export function HomeTabs(props: {
   }, [activeUrl, tab]);
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-4 pb-24 pt-10 sm:px-6 sm:pt-16 md:pt-20">
-      <header className="mb-10 border-b border-[var(--line)] pb-8 sm:mb-12 sm:pb-10">
+    <div className="mx-auto w-full max-w-6xl px-4 pb-24 pt-10 sm:px-6 sm:pt-14 md:pt-16">
+      <header className="-mx-4 mb-10 border-y border-[var(--line)] bg-[var(--surface)]/72 px-4 pb-8 pt-6 sm:-mx-6 sm:mb-12 sm:px-6 sm:pb-10 sm:pt-7">
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start sm:gap-8">
-          <div className="relative h-[5.5rem] w-[5.5rem] shrink-0 overflow-hidden rounded-full border border-[var(--line)] bg-[var(--surface)] shadow-[0_1px_0_rgba(0,0,0,0.04)] sm:h-28 sm:w-28">
+          <div className="relative h-[5.5rem] w-[5.5rem] shrink-0 overflow-hidden rounded-full border border-[var(--line-strong)] bg-[var(--surface)] sm:h-28 sm:w-28">
             <Image
               src={props.profileImageUrl}
               alt={props.profileImageAlt}
@@ -91,21 +122,18 @@ export function HomeTabs(props: {
               priority
             />
           </div>
-          <div className="min-w-0 flex-1 text-center sm:text-left">
-            <h1 className="portfolio-serif text-[clamp(2rem,6vw,3.15rem)] font-normal leading-tight tracking-tight text-[var(--ink)]">
+          <div className="min-w-0 flex-1 px-3 text-center sm:px-0 sm:pr-8 sm:text-left">
+            <h1 className="portfolio-serif text-[clamp(2rem,6vw,3.2rem)] font-normal leading-tight tracking-tight text-[var(--ink)]">
               {props.name}
             </h1>
-            <p className="mt-2.5 text-sm leading-relaxed tracking-wide text-[var(--muted)] sm:mt-3">
+            <p className="mt-2.5 text-sm leading-relaxed tracking-[0.01em] text-[var(--muted)] sm:mt-3">
               {props.tagline}
             </p>
-            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[var(--muted)] sm:mx-0">
-              {props.intro}
-            </p>
-            <ul className="mt-4 flex flex-wrap justify-center gap-2 sm:justify-start">
+            <ul className="mt-5 flex flex-wrap justify-center gap-2 pl-1 sm:pl-0 sm:justify-start">
               {props.highlights.map((h) => (
                 <li
                   key={h}
-                  className="rounded-full border border-[var(--line)] bg-[var(--surface)] px-3 py-1 text-[11px] font-medium tracking-wide text-[var(--muted)]"
+                  className="rounded-full border border-[var(--line)] bg-[var(--surface-2)] px-3 py-1 text-[11px] font-medium tracking-wide text-[var(--muted)]"
                 >
                   {h}
                 </li>
@@ -150,10 +178,16 @@ export function HomeTabs(props: {
       {tab === "video" ? (
         <section aria-label="Video" className="space-y-10">
           <div className="space-y-10">
-            {props.portfolioSections.map((section) => (
-              <section key={section.title} className="space-y-4">
-                <div className="border-b border-[var(--line)] pb-3">
-                  <h3 className="portfolio-serif text-xl text-[var(--ink)]">
+            {props.portfolioSections.map((section, index) => (
+              <section
+                key={section.title}
+                className={[
+                  "space-y-4 -mx-4 px-4 py-4 sm:-mx-6 sm:px-6",
+                  index % 2 === 0 ? "bg-[var(--surface-2)]/45" : "bg-[var(--surface-3)]/32",
+                ].join(" ")}
+              >
+                <div className="border-b border-[var(--line)] pb-3 pl-1 sm:pl-0">
+                  <h3 className="portfolio-serif text-2xl text-[var(--ink)]">
                     {section.title}
                   </h3>
                   {section.description ? (
@@ -182,74 +216,93 @@ export function HomeTabs(props: {
                             );
                           }}
                           className={[
-                            "w-full rounded-lg border px-3 py-3 text-left transition-colors sm:px-4",
+                            "w-full rounded-xl border px-3 py-3 text-left transition-colors sm:px-4",
                             selected
-                              ? "border-[var(--accent)] bg-[var(--surface)]"
-                              : "border-[var(--line)] bg-transparent hover:bg-[var(--surface)]",
+                              ? "border-[var(--line-strong)] bg-[var(--surface-3)]"
+                              : "border-[var(--line)] bg-[var(--surface)]/40 hover:bg-[var(--surface-2)]",
                           ].join(" ")}
                           aria-expanded={selected}
                         >
                           <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
-                            <span className="pr-2 text-sm leading-relaxed text-[var(--ink)]">
+                            <span className="pr-2 text-[15px] font-medium leading-relaxed text-[var(--ink)]">
                               {item.title}
                             </span>
                             <div className="flex shrink-0 flex-wrap items-center gap-2 text-[11px] text-[var(--muted)]">
-                              <span className="rounded border border-[var(--line)] bg-[var(--surface)] px-2 py-0.5">
+                              <span
+                                className={[
+                                  "rounded-full border px-2.5 py-1 font-medium",
+                                  platformTone(item.platform),
+                                ].join(" ")}
+                              >
                                 {platformLabel(item.platform)}
                               </span>
-                              {item.viewsLabel ? <span>{item.viewsLabel}</span> : null}
+                              {item.viewsLabel ? (
+                                <span className="rounded-full border border-[var(--line)] px-2.5 py-1 text-[var(--muted)]">
+                                  {item.viewsLabel}
+                                </span>
+                              ) : null}
                               <span>{selected ? "Collapse" : "Expand"}</span>
                             </div>
                           </div>
                         </button>
 
                         {selected ? (
-                          <article className="mt-3 space-y-4 rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4 sm:p-5">
+                          <article className="mt-3 space-y-4 rounded-xl bg-[var(--surface-2)]/60 p-3 sm:p-4">
+                            <a
+                              href={item.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex min-h-[44px] items-center rounded-md border border-[var(--line-strong)] bg-[var(--surface-3)] px-4 text-xs font-semibold tracking-wide text-[var(--ink)] transition-colors hover:bg-black"
+                            >
+                              View on {platformLabel(item.platform)}
+                              <span className="ml-2 text-[var(--muted)]" aria-hidden>↗</span>
+                            </a>
+
                             {item.embeddable && item.embedSrc ? (
-                              <div className="overflow-hidden rounded-lg border border-[var(--line)] bg-[var(--bg)]">
-                                <div className="aspect-video w-full">
+                              <div
+                                className={[
+                                  "overflow-hidden",
+                                  isPortraitVideo(item)
+                                    ? "portrait-embed-shell -mx-4 sm:mx-auto"
+                                    : "-mx-4 sm:-mx-5",
+                                ].join(" ")}
+                              >
+                                <div
+                                  className={
+                                    isPortraitVideo(item)
+                                      ? "portrait-embed-frame"
+                                      : "aspect-video w-full"
+                                  }
+                                >
                                   <iframe
                                     title={item.title}
                                     src={item.embedSrc}
                                     className="h-full w-full"
+                                    scrolling="no"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowFullScreen
                                   />
                                 </div>
                               </div>
-                            ) : (
-                              <a
-                                href={item.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex min-h-[44px] items-center rounded-md border border-[var(--line)] bg-[var(--surface)] px-4 text-xs font-medium text-[var(--ink)] transition-colors hover:bg-[var(--bg)]"
-                              >
-                                Open original on {platformLabel(item.platform)}
-                              </a>
-                            )}
-                            {item.platform === "instagram" ? (
-                              <p className="text-xs leading-relaxed text-[var(--muted)]">
-                                Prefer the native Instagram experience? Use{" "}
-                                <a
-                                  href={item.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="underline decoration-[var(--line)] underline-offset-4 transition-colors hover:text-[var(--ink)]"
-                                >
-                                  Open original
-                                </a>
-                                .
-                              </p>
                             ) : null}
 
                             <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--muted)]">
-                              <span className="rounded-md border border-[var(--line)] bg-[var(--surface)] px-2.5 py-1 font-medium">
+                              <span
+                                className={[
+                                  "rounded-full border px-2.5 py-1 font-medium",
+                                  platformTone(item.platform),
+                                ].join(" ")}
+                              >
                                 {platformLabel(item.platform)}
                               </span>
                               {item.viewsLabel ? (
-                                <span>{item.viewsLabel}</span>
+                                <span className="rounded-full border border-[var(--line)] px-2.5 py-1">
+                                  {item.viewsLabel}
+                                </span>
                               ) : item.computedViewCount != null ? (
-                                <span>{formatViewCount(item.computedViewCount)}</span>
+                                <span className="rounded-full border border-[var(--line)] px-2.5 py-1">
+                                  {formatViewCount(item.computedViewCount)}
+                                </span>
                               ) : null}
                             </div>
 
@@ -267,40 +320,104 @@ export function HomeTabs(props: {
               </section>
             ))}
           </div>
+
+          <section aria-label="Skills" className="space-y-5 border-t border-[var(--line)] pt-10">
+            <h3 className="portfolio-serif text-2xl text-[var(--ink)]">Skills</h3>
+            <ul className="space-y-4">
+              {props.software.map((s) => (
+                <li
+                  key={s.title}
+                  className="rounded-xl border border-[var(--line)] bg-[var(--surface)]/50 p-4"
+                >
+                  <p className="text-sm font-semibold text-[var(--ink)]">{s.title}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+                    {s.description}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
         </section>
       ) : null}
 
       {tab === "software" ? (
-        <section aria-label="Software" className="space-y-8">
-          <ul className="space-y-6">
-            {props.software.map((s) => (
-              <li
-                key={s.title}
-                className="border-b border-[var(--line)] pb-6 last:border-0"
-              >
-                {s.href ? (
-                  <a
-                    href={s.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group block py-1"
-                  >
-                    <span className="font-medium text-[var(--ink)] decoration-[var(--line)] underline-offset-4 group-hover:underline">
-                      {s.title}
-                    </span>
-                    <span className="ml-1 text-[var(--muted)] opacity-0 transition-opacity group-hover:opacity-100">
-                      ↗
-                    </span>
-                  </a>
-                ) : (
-                  <span className="font-medium text-[var(--ink)]">{s.title}</span>
-                )}
-                <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
-                  {s.description}
-                </p>
-              </li>
-            ))}
-          </ul>
+        <section aria-label="Software Resume" className="space-y-8">
+          <header className="space-y-2 border-b border-[var(--line)] pb-5">
+            <h2 className="portfolio-serif text-3xl text-[var(--ink)]">Software Resume</h2>
+            <p className="text-sm text-[var(--muted)]">
+              {props.resume.location} · {props.resume.email} · {props.resume.linkedin}
+            </p>
+          </header>
+
+          <section className="space-y-5">
+            <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+              Experience
+            </h3>
+            <div className="space-y-4">
+              {props.resume.experience.map((exp) => (
+                <article
+                  key={`${exp.company}-${exp.role}`}
+                  className="rounded-xl border border-[var(--line)] bg-[var(--surface)]/55 p-4"
+                >
+                  <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+                    <h4 className="text-base font-semibold text-[var(--ink)]">
+                      {exp.company} · {exp.role}
+                    </h4>
+                    <span className="text-xs text-[var(--muted)]">{exp.period}</span>
+                  </div>
+                  <ul className="mt-3 space-y-2 text-sm leading-relaxed text-[var(--muted)]">
+                    {exp.bullets.map((b) => (
+                      <li key={b} className="list-disc pl-1 marker:text-[var(--line-strong)]">
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="space-y-3">
+            <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+              Additional Experience
+            </h3>
+            <ul className="space-y-2 text-sm leading-relaxed text-[var(--muted)]">
+              {props.resume.additional.map((item) => (
+                <li key={item} className="list-disc pl-1 marker:text-[var(--line-strong)]">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="space-y-3">
+            <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+              {props.resume.education.title}
+            </h3>
+            <div className="space-y-1 text-sm leading-relaxed text-[var(--muted)]">
+              {props.resume.education.lines.map((line) => (
+                <p key={line}>{line}</p>
+              ))}
+            </div>
+          </section>
+
+          <section className="space-y-3">
+            <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-[var(--muted)]">
+              Skills
+            </h3>
+            <div className="space-y-3">
+              {props.resume.skills.map((group) => (
+                <div key={group.title} className="rounded-xl border border-[var(--line)] bg-[var(--surface)]/40 p-4">
+                  <p className="text-sm font-semibold text-[var(--ink)]">{group.title}</p>
+                  {group.lines.map((line) => (
+                    <p key={line} className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+                      {line}
+                    </p>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </section>
         </section>
       ) : null}
 
@@ -314,7 +431,7 @@ export function HomeTabs(props: {
             href={props.tare.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-[48px] w-full items-center justify-center rounded-lg border border-[var(--line)] bg-[var(--surface)] px-5 text-sm font-medium text-[var(--ink)] shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-colors hover:border-[var(--muted)] hover:bg-[var(--bg)] sm:w-auto sm:min-h-0 sm:justify-start sm:px-6 sm:py-3.5"
+            className="inline-flex min-h-[48px] w-full items-center justify-center rounded-lg border border-[var(--line-strong)] bg-[var(--surface-3)] px-5 text-sm font-semibold tracking-wide text-[var(--ink)] transition-colors hover:bg-black sm:w-auto sm:min-h-0 sm:justify-start sm:px-6 sm:py-3.5"
           >
             tarestudionyc.com
             <span className="ml-2 text-[var(--muted)]" aria-hidden>

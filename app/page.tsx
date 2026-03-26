@@ -105,6 +105,7 @@ export default async function Home() {
       profileImageAlt={site.profileImageAlt}
       portfolioSections={portfolioSections}
       software={site.software}
+      resume={site.resume}
       tare={site.tare}
     />
   );

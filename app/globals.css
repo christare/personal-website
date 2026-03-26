@@ -1,23 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #f7f5f2;
-  --surface: #fffcf8;
-  --ink: #14120f;
-  --muted: #5c5852;
-  --line: rgba(20, 18, 15, 0.1);
-  --accent: #2a2620;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f0e0c;
-    --surface: #161411;
-    --ink: #f2ede6;
-    --muted: #a39e96;
-    --line: rgba(242, 237, 230, 0.12);
-    --accent: #e8e2da;
-  }
+  --bg: #141517;
+  --surface: #222427;
+  --surface-2: #2d2f33;
+  --surface-3: #393b40;
+  --surface-4: #46484e;
+  --ink: #f3f4f6;
+  --muted: #b5b7be;
+  --muted-soft: #979aa3;
+  --line: rgba(255, 255, 255, 0.14);
+  --line-strong: rgba(255, 255, 255, 0.24);
+  --accent: #ffffff;
 }
 
 @theme inline {
@@ -31,6 +25,15 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html,
+body {
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
 }
 
 @layer utilities {
@@ -44,4 +47,31 @@ body {
 
 .portfolio-serif {
   font-family: var(--font-newsreader), Georgia, serif;
+}
+
+.portrait-embed-shell {
+  width: 100vw;
+  max-width: 760px;
+  margin-inline: auto;
+}
+
+.portrait-embed-frame {
+  width: min(100vw, calc((100dvh - 2rem) * 9 / 16));
+  height: min(100dvh - 2rem, calc(100vw * 16 / 9));
+  margin-inline: auto;
+}
+
+.portrait-embed-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  overflow: hidden;
+  background: #000;
+}
+
+@media (min-width: 640px) {
+  .portrait-embed-frame {
+    width: min(760px, calc((100dvh - 4rem) * 9 / 16));
+    height: min(100dvh - 4rem, calc(760px * 16 / 9));
+  }
 }
