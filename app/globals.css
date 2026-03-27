@@ -21,8 +21,13 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--bg);
+  background-image: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.03) 0%, transparent 60%);
   color: var(--ink);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   text-rendering: optimizeLegibility;
@@ -34,6 +39,11 @@ html,
 body {
   overflow-x: hidden;
   overscroll-behavior-x: none;
+}
+
+::selection {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
 }
 
 @layer utilities {

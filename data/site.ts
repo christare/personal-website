@@ -20,6 +20,13 @@ export type PortfolioSection = {
   items: PortfolioItem[];
 };
 
+export type SocialLink = {
+  platform: "instagram" | "youtube" | "tiktok";
+  handle: string;
+  url: string;
+  fallbackCount: string;
+};
+
 export type SoftwareItem = {
   title: string;
   description: string;
@@ -45,6 +52,7 @@ export const site: {
   profileImageAlt: string;
   intro: string;
   highlights: string[];
+  socials: SocialLink[];
   portfolioSections: PortfolioSection[];
   software: SoftwareItem[];
   resume: {
@@ -56,19 +64,35 @@ export const site: {
     education: ResumeSection;
     skills: ResumeSection[];
   };
-  tare: { title: string; body: string; href: string };
+  tare: { title: string; href: string; logoUrl: string; images: string[] };
 } = {
   name: "Chris Jereza",
-  tagline: "Selected video work",
+  tagline: "Video Producer / Editor / Host / Software Engineer",
   profileImageUrl: "/Chris Profile Photo 1.jpg",
   profileImageAlt: "Chris Jereza",
-  intro: "",
-  highlights: [
-    "Former BuzzFeed lead producer/host",
-    "Editor at The Verge",
-    "8+ years in production and post",
-    "1.3M+ followers",
-    "500M+ views across all platforms in 2025",
+  intro:
+    "Formerly at BuzzFeed (lead producer/host) and The Verge (editor). 8+ years in production and post. 1.3M+ followers, 500M+ views annually across platforms.",
+  highlights: [],
+
+  socials: [
+    {
+      platform: "instagram",
+      handle: "@chrisjereza",
+      url: "https://instagram.com/chrisjereza",
+      fallbackCount: "273K followers",
+    },
+    {
+      platform: "youtube",
+      handle: "@chrisjereza415",
+      url: "https://youtube.com/@chrisjereza415",
+      fallbackCount: "15K subscribers",
+    },
+    {
+      platform: "tiktok",
+      handle: "@chris.jereza",
+      url: "https://tiktok.com/@chris.jereza",
+      fallbackCount: "300K+ followers",
+    },
   ],
 
   portfolioSections: [
@@ -83,7 +107,7 @@ export const site: {
           platform: "youtube",
         },
         {
-          title: "Single Guy PIcks A Date Based On Their Fried Chicken",
+          title: "Single Guy Picks A Date Based On Their Fried Chicken",
           url: "https://www.youtube.com/watch?v=iQeLRD48GTw&ab_channel=A*Pop",
           platform: "youtube",
         },
@@ -151,7 +175,7 @@ export const site: {
           platform: "youtube",
         },
         {
-          title: "GM Ceo Interview (Decoder)",
+          title: "GM CEO Interview (Decoder)",
           url: "https://www.youtube.com/watch?v=GIr_oscnob4&t=922s",
           platform: "youtube",
         },
@@ -182,6 +206,11 @@ export const site: {
           note: "Created in <36 hours, $50 budget",
         },
         {
+          title: "Futuristic Self-Driving Cruise Vehicle",
+          url: "https://www.youtube.com/watch?v=sDIRjNzHDvM",
+          platform: "youtube",
+        },
+        {
           title: "What to Expect at a Muay Thai Class",
           url: "https://drive.google.com/file/d/1xkHsvXqYAS3c0kdW_ZaIXN0lQpuLsDzx/view?usp=sharing",
           platform: "drive",
@@ -192,14 +221,14 @@ export const site: {
           platform: "drive",
         },
         {
-          title: "How I Passed The Google Coding Interview",
-          url: "https://youtu.be/ksZ2wFRZ3gM",
-          platform: "youtube",
-        },
-        {
           title: "Office Tour at Tech Startup (Doola)",
           url: "https://drive.google.com/file/d/1yR2KCiYimGlEd1AuqEulzpMS9j1FPZyO/view?usp=sharing",
           platform: "drive",
+        },
+        {
+          title: "He Made A Drink That Prevents Hangover Symptoms",
+          url: "https://www.youtube.com/watch?v=45kYpBJEC1w",
+          platform: "youtube",
         },
         {
           title: "Muay Thai Gym Promo Series (short-form)",
@@ -226,16 +255,13 @@ export const site: {
           title: "Styling Session 2",
           url: "https://www.instagram.com/p/C1cIX8ZqKQJ/",
           platform: "instagram",
+          note: "Hair Product Reels For American Crew",
         },
         {
           title: "Styling Session 3",
           url: "https://www.instagram.com/p/C1UZ8JDN7rn/",
           platform: "instagram",
-        },
-        {
-          title: "BuzzFeed Producer Recap",
-          url: "https://youtu.be/mKnSeBsZpNI?si=cC7AOtpjbJk5ImG3",
-          platform: "youtube",
+          note: "Hair Product Reels For American Crew",
         },
         {
           title: "Do You Wonder If You're Burned Out?",
@@ -327,29 +353,74 @@ export const site: {
       title: "Long-form videos on personal platforms",
       items: [
         {
-          title: "I moved to new york like everyone else",
-          url: "https://www.youtube.com/watch?v=kd_y5IW0NUQ&t=3s",
+          title: "How I Passed The Google Coding Interviews",
+          url: "https://www.youtube.com/watch?v=ksZ2wFRZ3gM",
           platform: "youtube",
         },
         {
-          title: "How I Passed The Google Coding Interviews",
-          url: "https://www.youtube.com/watch?v=ksZ2wFRZ3gM&t=17s",
+          title: "BuzzFeed Producer Recap",
+          url: "https://youtu.be/mKnSeBsZpNI",
+          platform: "youtube",
+        },
+        {
+          title: "How I Passed Coding Interviews at Facebook, Google, Lyft, Bloomberg",
+          url: "https://www.youtube.com/watch?v=lDTKnzrX6qU",
+          platform: "youtube",
+        },
+        {
+          title: "I moved to new york like everyone else",
+          url: "https://www.youtube.com/watch?v=kd_y5IW0NUQ",
+          platform: "youtube",
+        },
+        {
+          title: "How Adderall Destroyed His Startup",
+          url: "https://www.youtube.com/watch?v=Q5oDnaYrz3s",
+          platform: "youtube",
+        },
+        {
+          title: "A Day In The Life of a Software Engineer Intern (San Francisco)",
+          url: "https://www.youtube.com/watch?v=ISfwmzf5B9Q",
+          platform: "youtube",
+        },
+        {
+          title: "A Day In The Life of a Facebook Software Engineer Intern",
+          url: "https://www.youtube.com/watch?v=ehbzIdq2-h8",
+          platform: "youtube",
+        },
+        {
+          title: "Why the pandemic made you depressed (explained by a therapist)",
+          url: "https://www.youtube.com/watch?v=anh06Qehe3A",
+          platform: "youtube",
+        },
+        {
+          title: "Life as a Famous Tech YouTuber",
+          url: "https://www.youtube.com/watch?v=K-5sxMZ_opI",
+          platform: "youtube",
+        },
+        {
+          title: "How I got shredded in 3 months",
+          url: "https://www.youtube.com/watch?v=uEuD0MtIDLI",
+          platform: "youtube",
+        },
+        {
+          title: "Go Bears Freestyle",
+          url: "https://www.youtube.com/watch?v=5srhwqzBQE8",
+          platform: "youtube",
+        },
+        {
+          title: "CLASS OF 2020",
+          url: "https://www.youtube.com/watch?v=QhKBt49L2HE",
           platform: "youtube",
         },
         {
           title: "Life After Heroin Addiction",
-          url: "https://www.youtube.com/watch?v=8dW2xiKmJso&t=209s&pp=0gcJCcEJAYcqIYzv",
+          url: "https://www.youtube.com/watch?v=8dW2xiKmJso",
           platform: "youtube",
           note: "Interview Series",
         },
         {
-          title: "Life as a Famous Tech YouTuber",
-          url: "https://www.youtube.com/watch?v=K-5sxMZ_opI&ab_channel=ChristopherJ",
-          platform: "youtube",
-        },
-        {
           title: "Life After Losing a Parent in the Hood",
-          url: "https://www.youtube.com/watch?v=TnBbqFHrBy8&t=181s&ab_channel=ChristopherJ",
+          url: "https://www.youtube.com/watch?v=TnBbqFHrBy8",
           platform: "youtube",
         },
       ],
@@ -456,7 +527,14 @@ export const site: {
 
   tare: {
     title: "TARE",
-    body: "TARE Studio NYC - my experimental coffee omakase brand.",
     href: "https://tarestudionyc.com",
+    logoUrl: "/TARE Logo 1.png",
+    images: [
+      "/TARE 2.png",
+      "/TARE 1.png",
+      "/TARE 4.png",
+      "/TARE 3.png",
+      "/TARE 5.png",
+    ],
   },
 };
