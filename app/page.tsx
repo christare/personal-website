@@ -69,6 +69,59 @@ function embedSrc(item: PortfolioItem): string | null {
   return null;
 }
 
+async function fetchTikTokThumbnail(url: string): Promise<string | null> {
+  try {
+    const res = await fetch(
+      `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`,
+      { signal: AbortSignal.timeout(5000) },
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as { thumbnail_url?: string };
+    return data.thumbnail_url ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function fetchInstagramThumbnail(url: string): Promise<string | null> {
+  try {
+    const res = await fetch(url, {
+      headers: { "User-Agent": "facebookexternalhit/1.1" },
+      signal: AbortSignal.timeout(8000),
+      redirect: "follow",
+    });
+    if (!res.ok) return null;
+    const html = await res.text();
+    const match =
+      html.match(/<meta\s+property="og:image"\s+content="([^"]+)"/) ??
+      html.match(/<meta\s+content="([^"]+)"\s+property="og:image"/);
+    if (!match?.[1]) return null;
+    return match[1].replace(/&amp;/g, "&");
+  } catch {
+    return null;
+  }
+}
+
+function driveFileIdFromUrl(url: string): string | null {
+  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return match?.[1] ?? null;
+}
+
+function driveThumbnailUrl(url: string): string | null {
+  const id = driveFileIdFromUrl(url);
+  return id ? `https://lh3.googleusercontent.com/d/${id}=w640` : null;
+}
+
+async function fetchExternalThumbnail(
+  url: string,
+  platform: string,
+): Promise<string | null> {
+  if (platform === "tiktok") return fetchTikTokThumbnail(url);
+  if (platform === "instagram") return fetchInstagramThumbnail(url);
+  if (platform === "drive") return driveThumbnailUrl(url);
+  return null;
+}
+
 export default async function Home() {
   const youtubeIds = site.portfolioSections
     .flatMap((section) => section.items)
@@ -76,7 +129,25 @@ export default async function Home() {
     .map((item) => youtubeIdFromUrl(item.url))
     .filter((id): id is string => Boolean(id));
 
-  const youtubeViews = await fetchYoutubeViewCounts(youtubeIds);
+  const nonYtItems = site.portfolioSections
+    .flatMap((s) => s.items)
+    .filter(
+      (i) => i.platform === "tiktok" || i.platform === "instagram",
+    );
+
+  const [youtubeViews, externalThumbnails] = await Promise.all([
+    fetchYoutubeViewCounts(youtubeIds),
+    Promise.all(
+      nonYtItems.map(async (item) => ({
+        url: item.url,
+        thumbnail: await fetchExternalThumbnail(item.url, item.platform),
+      })),
+    ),
+  ]);
+
+  const thumbnailMap = new Map(
+    externalThumbnails.map((r) => [r.url, r.thumbnail]),
+  );
 
   const portfolioSections = site.portfolioSections.map((section) => ({
     ...section,
@@ -85,12 +156,17 @@ export default async function Home() {
       const itemEmbedSrc = embedSrc(item);
       const computedViewCount =
         youtubeId && youtubeViews[youtubeId] != null ? youtubeViews[youtubeId] : null;
+      const thumbnailUrl =
+        item.platform === "youtube" && youtubeId
+          ? `https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`
+          : thumbnailMap.get(item.url) ?? null;
 
       return {
         ...item,
         embedSrc: itemEmbedSrc,
         embeddable: Boolean(itemEmbedSrc),
         computedViewCount,
+        thumbnailUrl,
       };
     }),
   }));

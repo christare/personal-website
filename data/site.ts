@@ -60,7 +60,7 @@ export const site: {
 } = {
   name: "Chris Jereza",
   tagline: "Selected video work",
-  profileImageUrl: "https://unavatar.io/instagram/chrisjereza",
+  profileImageUrl: "/Chris Profile Photo 1.jpg",
   profileImageAlt: "Chris Jereza",
   intro: "",
   highlights: [

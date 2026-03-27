@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         hostname: "unavatar.io",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "img.youtube.com",
+        pathname: "/vi/**",
+      },
     ],
   },
 };
