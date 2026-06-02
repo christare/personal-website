@@ -5,6 +5,7 @@ import {
   fetchYoutubeViewCounts,
   fetchYoutubeSubscribers,
 } from "@/lib/youtube";
+import thumbnailManifest from "@/data/thumbnails.json";
 
 function youtubeIdFromUrl(url: string): string | null {
   try {
@@ -206,10 +207,12 @@ export default async function Home() {
       const itemEmbedSrc = embedSrc(item);
       const computedViewCount =
         youtubeId && youtubeViews[youtubeId] != null ? youtubeViews[youtubeId] : null;
+      const localThumbnail = (thumbnailManifest as Record<string, string>)[item.url] ?? null;
       const thumbnailUrl =
-        item.platform === "youtube" && youtubeId
-          ? `https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`
-          : thumbnailMap.get(item.url) ?? null;
+        localThumbnail ??
+        (item.platform === "youtube" && youtubeId
+          ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
+          : thumbnailMap.get(item.url) ?? null);
 
       return {
         ...item,

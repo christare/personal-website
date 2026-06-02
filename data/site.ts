@@ -97,15 +97,114 @@ export const site: {
 
   portfolioSections: [
     {
-      title: "BuzzFeed Originals",
-      description:
-        "Creator of flagship series My Plate to Date and Language Test, and others. Created and grew BuzzFeed's Asian-American channel, A*Pop, from 0 to 150k+ subscribers in 6 months.",
+      title: "Long-Form Highlights",
+      description: "Favorite long-form pieces across shows, interviews, and film.",
       items: [
         {
           title: "Korean Girl Picks a Date Based on Their Tteokbokki (Plate to Date)",
           url: "https://youtu.be/NC-iKvZNhy4?si=Hb5_l8mLB_mvRFfc",
           platform: "youtube",
         },
+        {
+          title: "Happy to Announce — A Short Film by Chris Jereza",
+          url: "https://www.youtube.com/watch?v=zZAfjmVZcvI",
+          platform: "youtube",
+          note: "Made in <36 hours on a $50 budget",
+        },
+        {
+          title: "Uber CEO Interview (Decoder)",
+          url: "https://www.youtube.com/watch?v=NRIF-DfMsQ0&t=3s",
+          platform: "youtube",
+        },
+        {
+          title: "Asian Dad Speed Dates 5 Guys for His Daughter",
+          url: "https://youtu.be/MHkhZJcFQSk?si=t_KNpLcMYEjXuNdM",
+          platform: "youtube",
+        },
+        {
+          title: "How I Passed The Google Coding Interviews",
+          url: "https://www.youtube.com/watch?v=ksZ2wFRZ3gM",
+          platform: "youtube",
+        },
+        {
+          title: "What to Expect at a Muay Thai Class",
+          url: "https://drive.google.com/file/d/1xkHsvXqYAS3c0kdW_ZaIXN0lQpuLsDzx/view?usp=sharing",
+          platform: "drive",
+        },
+      ],
+    },
+    {
+      title: "Custom Rap Verses for Tech/Cybersecurity Companies",
+      description:
+        "Custom rap campaigns produced for startups and security companies.",
+      items: [
+        {
+          title: "Keeper Security rap",
+          url: "https://www.instagram.com/p/DYS3FRTqodh/",
+          platform: "instagram",
+        },
+        {
+          title: "Sola Security rap",
+          url: "https://www.instagram.com/p/DZF9FzRKQrU/",
+          platform: "instagram",
+        },
+        {
+          title: "Hydden Security rap",
+          url: "https://www.instagram.com/p/DVfHBG8Kixa/",
+          platform: "instagram",
+        },
+        {
+          title: "21 Savage Teaches Security Engineering",
+          url: "https://www.instagram.com/p/DTBcGeDioin/",
+          platform: "instagram",
+        },
+      ],
+    },
+    {
+      title: "Viral Short-Form Highlights",
+      description: "Top-performing short-form across comedy, food, and edutainment.",
+      items: [
+        {
+          title: "Combo to End ANY Fight",
+          url: "https://www.instagram.com/reel/DEDdOBOSk2I/",
+          platform: "instagram",
+          viewsLabel: "50M views",
+        },
+        {
+          title: "If Someone Pulls a Firearm...",
+          url: "https://www.youtube.com/shorts/OBltIp3B9Vs",
+          platform: "youtube",
+          viewsLabel: "182M views",
+        },
+        {
+          title: "The Hammer Strike",
+          url: "https://www.instagram.com/reel/DES2Z8eyHSS/",
+          platform: "instagram",
+          viewsLabel: "37.5M views",
+        },
+        {
+          title: "Korean Language Test",
+          url: "https://www.tiktok.com/@apopofficial/video/7241331458135100715",
+          platform: "tiktok",
+        },
+        {
+          title: "Asian Parent Punishment Tier List",
+          url: "https://www.tiktok.com/@apopofficial/video/7214933941781056810",
+          platform: "tiktok",
+        },
+        {
+          title: "Lil Wayne Teaches Network Engineering",
+          url: "https://www.instagram.com/reel/C7fFEE2PDNE/",
+          platform: "instagram",
+          viewsLabel: "1.2M views",
+        },
+      ],
+    },
+    {
+      title: "BuzzFeed Originals",
+      description:
+        "Creator of flagship series My Plate to Date and Language Test, and others. Created and grew BuzzFeed's Asian-American channel, A*Pop, from 0 to 150k+ subscribers in 6 months.",
+      items: [
         {
           title: "Single Guy Picks A Date Based On Their Fried Chicken",
           url: "https://www.youtube.com/watch?v=iQeLRD48GTw&ab_channel=A*Pop",
@@ -119,16 +218,6 @@ export const site: {
         {
           title: "Korean Americans Take a 1st Grade Korean Test (Language Test)",
           url: "https://youtu.be/JbHCTOFF1XA?si=5LJXLGdHZ-xL-Z-B",
-          platform: "youtube",
-        },
-        {
-          title: "Short-Form Edit of Korean Language Test",
-          url: "https://www.tiktok.com/@apopofficial/video/7241331458135100715",
-          platform: "tiktok",
-        },
-        {
-          title: "Asian Dad Speed Dates 5 Guys for His Daughter",
-          url: "https://youtu.be/MHkhZJcFQSk?si=t_KNpLcMYEjXuNdM",
           platform: "youtube",
         },
         {
@@ -148,11 +237,6 @@ export const site: {
           note: "TikTok clips and tier list video samples",
         },
         {
-          title: "Asian Parent Punishment Tier List",
-          url: "https://www.tiktok.com/@apopofficial/video/7214933941781056810",
-          platform: "tiktok",
-        },
-        {
           title: "Barista Reviews Celebrity Coffee Orders",
           url: "https://youtu.be/7qqIRrVQehM?si=-thE2LunXc99P2u-",
           platform: "youtube",
@@ -169,11 +253,6 @@ export const site: {
       description:
         "Main editor for The Verge's flagship tech CEO interview series Decoder.",
       items: [
-        {
-          title: "Uber CEO Interview (Decoder)",
-          url: "https://www.youtube.com/watch?v=NRIF-DfMsQ0&t=3s",
-          platform: "youtube",
-        },
         {
           title: "GM CEO Interview (Decoder)",
           url: "https://www.youtube.com/watch?v=GIr_oscnob4&t=922s",
@@ -200,20 +279,9 @@ export const site: {
       title: "Branded + Client Work",
       items: [
         {
-          title: "Short Film Challenge for Hollyland Tech",
-          url: "https://www.youtube.com/watch?v=zZAfjmVZcvI",
-          platform: "youtube",
-          note: "Created in <36 hours, $50 budget",
-        },
-        {
           title: "Futuristic Self-Driving Cruise Vehicle",
           url: "https://www.youtube.com/watch?v=sDIRjNzHDvM",
           platform: "youtube",
-        },
-        {
-          title: "What to Expect at a Muay Thai Class",
-          url: "https://drive.google.com/file/d/1xkHsvXqYAS3c0kdW_ZaIXN0lQpuLsDzx/view?usp=sharing",
-          platform: "drive",
         },
         {
           title: "Crypto Casino Campaign",
@@ -276,28 +344,10 @@ export const site: {
       description: "Viral comedy shorts",
       items: [
         {
-          title: "If Someone Pulls a Firearm...",
-          url: "https://www.youtube.com/shorts/OBltIp3B9Vs",
-          platform: "youtube",
-          viewsLabel: "182M views",
-        },
-        {
-          title: "Combo to End ANY Fight",
-          url: "https://www.instagram.com/reel/DEDdOBOSk2I/",
-          platform: "instagram",
-          viewsLabel: "50M views",
-        },
-        {
           title: "Nuts Attack",
           url: "https://www.instagram.com/reel/DFGaTQ5yPKT/",
           platform: "instagram",
           viewsLabel: "60M views",
-        },
-        {
-          title: "The Hammer Strike",
-          url: "https://www.instagram.com/reel/DES2Z8eyHSS/",
-          platform: "instagram",
-          viewsLabel: "37.5M views",
         },
         {
           title: "Combo That Will Protect You From Women",
@@ -321,19 +371,13 @@ export const site: {
     },
     {
       title: "Viral Short-Form - Rappers Teach Engineering",
-      description: "Viral edutainment series",
+      description: "Viral edutainment series.",
       items: [
         {
           title: "21 Savage Teaches Security Engineering",
           url: "https://www.instagram.com/reel/C6HjhEvgFb7/",
           platform: "instagram",
           viewsLabel: "2M views",
-        },
-        {
-          title: "Lil Wayne Teaches Network Engineering",
-          url: "https://www.instagram.com/reel/C7fFEE2PDNE/",
-          platform: "instagram",
-          viewsLabel: "1.2M views",
         },
         {
           title: "Baby Keem Teaches System Design",
@@ -352,11 +396,6 @@ export const site: {
     {
       title: "Long-form videos on personal platforms",
       items: [
-        {
-          title: "How I Passed The Google Coding Interviews",
-          url: "https://www.youtube.com/watch?v=ksZ2wFRZ3gM",
-          platform: "youtube",
-        },
         {
           title: "BuzzFeed Producer Recap",
           url: "https://youtu.be/mKnSeBsZpNI",
