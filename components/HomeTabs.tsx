@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type {
   PortfolioItem,
   PortfolioSection,
@@ -219,85 +219,370 @@ export function HomeTabs(props: {
     });
   }, [activeUrl]);
 
-  const activeItem = useMemo(() => {
-    if (!activeUrl) return null;
-    for (const section of props.portfolioSections) {
-      const found = section.items.find((i) => i.url === activeUrl);
-      if (found) return found;
+  function MetaRow({
+    item,
+    viewLabel,
+  }: {
+    item: ResolvedPortfolioItem;
+    viewLabel: string | null;
+  }) {
+    return (
+      <div className="mt-3 flex gap-0 sm:gap-3">
+        <span className="mt-0.5 hidden h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--surface-3)] sm:flex">
+          {item.platform === "youtube" ? (
+            <YouTubeIcon className="h-[18px] w-[18px] text-[var(--muted)]" />
+          ) : (
+            <PlatformLogo
+              platform={item.platform}
+              className="h-[18px] w-[18px] text-[var(--muted)]"
+            />
+          )}
+        </span>
+        <div className="min-w-0">
+          <p className="line-clamp-3 text-[15px] font-semibold leading-snug text-[var(--ink)] sm:line-clamp-2 sm:text-[17px]">
+            {item.title}
+          </p>
+          <p className="mt-1 truncate text-[13px] text-[var(--muted-soft)] sm:text-[14px]">
+            {platformLabel(item.platform)}
+            {item.note ? ` · ${item.note}` : ""}
+          </p>
+          {viewLabel ? (
+            <p className="text-[13px] font-medium text-[var(--muted-soft)] sm:text-[14px]">
+              {viewLabel}
+            </p>
+          ) : null}
+        </div>
+      </div>
+    );
+  }
+
+  function renderCard(item: ResolvedPortfolioItem): React.ReactNode[] {
+    const viewLabel =
+      item.viewsLabel ??
+      (item.computedViewCount != null
+        ? formatViewCount(item.computedViewCount)
+        : null);
+    const portrait = isPortraitVideo(item);
+    const aspectClass = portrait ? "aspect-[9/16]" : "aspect-video";
+
+    /* ── Direct-link card (non-YouTube) ── */
+    if (item.platform !== "youtube") {
+      return [
+        <div key={item.url} className="min-w-0">
+          <a
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group block w-full text-left"
+          >
+            {item.thumbnailUrl ? (
+              <div
+                className={`relative ${aspectClass} w-full overflow-hidden rounded-xl bg-black`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={item.thumbnailUrl}
+                  alt=""
+                  className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
+                  loading="lazy"
+                />
+              </div>
+            ) : (
+              <div
+                className={`relative ${aspectClass} w-full overflow-hidden rounded-xl`}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-[#0e0e0c] via-[#131311] to-[#0a0a09]" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(200,250,95,0.10),transparent_70%)]" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(200,250,95,0.05),transparent_70%)]" />
+                <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/[0.08]" />
+                <div className="relative flex h-full flex-col justify-between p-3">
+                  <span className="self-start rounded bg-[var(--accent-soft)] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-[var(--accent)]">
+                    Client Sample
+                  </span>
+                  <div>
+                    <p className="line-clamp-2 text-xs font-semibold leading-snug text-white/80">
+                      {item.title}
+                    </p>
+                    <p className="mt-1 text-[10px] font-medium tracking-wide text-white/35">
+                      View on {platformLabel(item.platform)} ↗
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+            <MetaRow item={item} viewLabel={viewLabel} />
+          </a>
+        </div>,
+      ];
     }
-    return null;
-  }, [activeUrl, props.portfolioSections]);
+
+    /* ── Embeddable card (YouTube) ── */
+    const selected = activeUrl === item.url;
+
+    const card = (
+      <div key={item.url} className="min-w-0">
+        <button
+          type="button"
+          onClick={() =>
+            setActiveUrl((prev) => (prev === item.url ? null : item.url))
+          }
+          className={[
+            "group w-full text-left rounded-xl transition-all duration-200",
+            selected ? "ring-2 ring-[var(--accent)]/40" : "",
+          ].join(" ")}
+        >
+          <div
+            className={`relative ${aspectClass} w-full overflow-hidden rounded-xl bg-[var(--surface-3)]`}
+          >
+            {item.thumbnailUrl ? (
+              <>
+                <Image
+                  src={item.thumbnailUrl}
+                  alt=""
+                  fill
+                  className="object-cover transition-transform duration-200 group-hover:scale-105"
+                  sizes={portrait ? "200px" : "(max-width: 639px) 50vw, 320px"}
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/60 opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100 sm:h-12 sm:w-12">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="white"
+                      className="ml-0.5 h-5 w-5 sm:h-6 sm:w-6"
+                    >
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="flex h-full items-center justify-center bg-gradient-to-br from-[var(--surface-3)] to-[var(--surface-4)]">
+                <PlatformLogo
+                  platform={item.platform}
+                  className="h-10 w-10 text-white/50 transition-colors group-hover:text-white/70"
+                />
+              </div>
+            )}
+          </div>
+          <MetaRow item={item} viewLabel={viewLabel} />
+        </button>
+      </div>
+    );
+
+    if (!selected) return [card];
+
+    return [
+      card,
+      <div
+        key={`embed-${item.url}`}
+        ref={embedPanelRef}
+        className="col-span-full scroll-mt-20 overflow-hidden pt-1"
+      >
+        <div className="rounded-xl border border-[var(--line-strong)] bg-[var(--surface-2)] p-3 sm:p-5">
+          <div className="mb-3 flex flex-wrap items-center gap-3">
+            <a
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-full border border-[var(--line-strong)] bg-[var(--surface-3)] px-3.5 py-1.5 text-sm font-semibold text-[var(--ink)] transition-colors hover:bg-[var(--surface-4)]"
+            >
+              View on {platformLabel(item.platform)}
+              <span className="text-[var(--muted)]" aria-hidden>
+                ↗
+              </span>
+            </a>
+            {viewLabel ? (
+              <span className="text-sm text-[var(--muted)]">{viewLabel}</span>
+            ) : null}
+          </div>
+
+          {item.embeddable && item.embedSrc ? (
+            <div
+              className={[
+                "overflow-hidden rounded-lg",
+                portrait ? "portrait-embed-shell" : "aspect-video w-full",
+              ].join(" ")}
+            >
+              {portrait ? (
+                <div className="portrait-embed-frame">
+                  <iframe
+                    title={item.title}
+                    src={item.embedSrc}
+                    className="h-full w-full border-0"
+                    scrolling="no"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                  />
+                </div>
+              ) : (
+                <iframe
+                  title={item.title}
+                  src={item.embedSrc}
+                  className="h-full w-full border-0"
+                  scrolling="no"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              )}
+            </div>
+          ) : null}
+
+          {item.note ? (
+            <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
+              {item.note}
+            </p>
+          ) : null}
+        </div>
+      </div>,
+    ];
+  }
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 pb-24 pt-10 sm:px-6 sm:pt-14 md:pt-16">
+    <div className="mx-auto w-full max-w-[1800px] px-4 pb-24 pt-10 sm:px-8 sm:pt-14 md:pt-16 lg:px-12 xl:px-16">
       {/* ── Header ── */}
-      <header className="-mx-4 mb-10 border-y border-[var(--line)] bg-gradient-to-b from-[var(--surface)]/80 to-[var(--surface)]/40 px-4 pb-8 pt-6 sm:-mx-6 sm:mb-12 sm:px-6 sm:pb-10 sm:pt-7">
-        <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-start sm:gap-8">
-          <div className="relative shrink-0">
-            <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-white/20 via-white/5 to-transparent blur-md" />
-            <div className="relative h-[5.5rem] w-[5.5rem] overflow-hidden rounded-full border border-[var(--line-strong)] bg-[var(--surface)] sm:h-28 sm:w-28">
-              <Image
-                src={props.profileImageUrl}
-                alt={props.profileImageAlt}
-                fill
-                className="object-cover scale-[1.35] translate-y-[5%]"
-                style={{ objectPosition: "center 25%" }}
-                sizes="(max-width: 640px) 88px, 112px"
-                priority
-              />
+      <header className="mb-10 pt-8 sm:mb-12 sm:pt-12">
+        {/* Name row: photo baseline-aligned with name, stats on the right */}
+        <div className="flex items-end justify-between gap-4">
+          <div className="flex min-w-0 items-end gap-4 sm:gap-6">
+            {/* Profile photo */}
+            <div className="relative shrink-0">
+              <div className="absolute -inset-1.5 rounded-full bg-[var(--accent)]/20 blur-md" />
+              <div className="relative h-14 w-14 overflow-hidden rounded-full border border-[var(--line-strong)] bg-[var(--surface)] sm:h-20 sm:w-20">
+                <Image
+                  src={props.profileImageUrl}
+                  alt={props.profileImageAlt}
+                  fill
+                  className="object-cover scale-[1.35] translate-y-[5%]"
+                  style={{ objectPosition: "center 25%" }}
+                  sizes="(max-width: 640px) 56px, 80px"
+                  priority
+                />
+              </div>
             </div>
-          </div>
-          <div className="min-w-0 flex-1 px-3 text-center sm:px-0 sm:pr-8 sm:text-left">
-            <h1 className="portfolio-serif text-[clamp(2rem,6vw,3.2rem)] font-normal leading-tight tracking-tight text-[var(--ink)]">
+            <h1 className="text-[clamp(2.6rem,6.5vw,8rem)] font-black leading-[0.92] tracking-[-0.04em] text-[var(--ink)]">
               {props.name}
             </h1>
-            <p className="mt-1.5 text-base font-medium tracking-wide text-[var(--muted)] sm:mt-2">
-              {props.tagline}
-            </p>
-            {props.intro ? (
-              <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-[var(--muted-soft)]">
-                {props.intro}
-              </p>
-            ) : null}
+          </div>
+          {/* Desktop stats */}
+          <div className="hidden shrink-0 gap-8 pb-0.5 sm:flex lg:gap-12">
+            {[
+              { value: "1.3M+", label: "Total Followers" },
+              { value: "500M+", label: "Views / Year" },
+              { value: "8+", label: "Years" },
+            ].map((st) => (
+              <div key={st.label} className="text-right">
+                <div className="text-[2rem] font-black leading-none tracking-tight text-[var(--accent)] lg:text-[2.6rem]">
+                  {st.value}
+                </div>
+                <div className="mt-1.5 text-[13px] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
+                  {st.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
-            {/* Social links */}
-            <div className="mt-4 flex flex-col items-center gap-2 sm:items-start">
-              {props.socials.map((s) => (
-                <a
-                  key={s.platform}
-                  href={s.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-[13px] text-[var(--muted-soft)] transition-colors hover:text-[var(--ink)]"
-                >
-                  <SocialIcon
-                    platform={s.platform}
-                    className="h-4 w-4"
-                  />
-                  <span className="font-medium">{s.handle}</span>
-                  <span className="text-[var(--muted-soft)]/60">·</span>
-                  <span>{s.count}</span>
-                </a>
-              ))}
-              <a
-                href={`mailto:${props.email}`}
-                className="inline-flex items-center gap-1.5 text-[13px] text-[var(--muted-soft)] transition-colors hover:text-[var(--ink)]"
-              >
-                <MailIcon className="h-4 w-4" />
-                <span>{props.email}</span>
-              </a>
+        {/* Mobile stats — full width under name row */}
+        <div className="mt-3 flex gap-6 sm:hidden">
+          {[
+            { value: "1.3M+", label: "Followers" },
+            { value: "500M+", label: "Views / yr" },
+            { value: "8+", label: "Yrs" },
+          ].map((st) => (
+            <div key={st.label}>
+              <div className="text-[1.5rem] font-black leading-none tracking-tight text-[var(--accent)]">
+                {st.value}
+              </div>
+              <div className="mt-1 text-[12px] font-semibold uppercase tracking-[0.12em] text-[var(--muted)]">
+                {st.label}
+              </div>
             </div>
+          ))}
+        </div>
+
+        {/* Divider */}
+        <div className="mt-6 border-t border-[var(--line-strong)] sm:mt-8" />
+
+        {/* Tagline + logos + socials — full width */}
+        <div className="mt-6 sm:mt-8">
+          <p className="text-[1.15rem] font-bold text-[var(--ink)] sm:text-[1.4rem]">
+            Video Producer, Host, Editor
+          </p>
+
+          {/* Company logos — the flex, no label needed */}
+          <div className="mt-3 flex gap-2 sm:gap-3">
+            {[
+              { src: "/logos/BuzzFeed Name Logo.png", alt: "BuzzFeed", bg: "#EF3340", cls: "logo-scale-bf" },
+              { src: "/logos/The Verge Name Logo.png", alt: "The Verge", bg: "#1A56DB", cls: "logo-scale-tv" },
+              { src: "/logos/Blueprint Name Logo.png", alt: "Blueprint", bg: "#1B3FA0", cls: "logo-scale-bp" },
+            ].map((co) => (
+              <div
+                key={co.alt}
+                className="flex flex-1 h-11 items-center justify-center overflow-hidden rounded-xl sm:h-16"
+                style={{ backgroundColor: co.bg }}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={co.src}
+                  alt={co.alt}
+                  className={`h-full w-full object-contain ${co.cls}`}
+                  style={{ filter: "brightness(0) invert(1)", transform: "scale(var(--ls))" }}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Platform stat cards */}
+          <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
+            {props.socials.map((s) => (
+              <a
+                key={s.platform}
+                href={s.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 rounded-2xl border border-[var(--line-strong)] bg-[var(--surface-2)] px-4 py-3 transition-colors hover:border-[var(--accent)]/40 hover:bg-[var(--surface-3)] sm:px-5 sm:py-4"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={`/logos/${s.platform}.svg`}
+                  alt={s.platform}
+                  className="h-7 w-7 shrink-0 object-contain sm:h-9 sm:w-9"
+                />
+                <div>
+                  <div className="text-[1.2rem] font-black leading-none tracking-tight text-[var(--ink)] sm:text-[1.6rem]">
+                    {s.count}
+                  </div>
+                  <div className="mt-1 truncate text-[12px] font-medium text-[var(--muted)] sm:text-[13px]">
+                    {s.handle}
+                  </div>
+                </div>
+              </a>
+            ))}
+            <a
+              href={`mailto:${props.email}`}
+              className="flex items-center gap-3 rounded-2xl border border-[var(--accent)]/50 bg-[var(--accent-soft)] px-4 py-3 transition-colors hover:bg-[var(--accent)] hover:text-[var(--accent-on)] hover:border-[var(--accent)] group sm:px-5 sm:py-4"
+            >
+              <MailIcon className="h-6 w-6 shrink-0 text-[var(--accent)] group-hover:text-[var(--accent-on)] sm:h-7 sm:w-7" />
+              <div>
+                <div className="text-[1rem] font-black leading-none text-[var(--accent)] group-hover:text-[var(--accent-on)] sm:text-[1.1rem]">
+                  Hire / Collab
+                </div>
+                <div className="mt-1 text-[12px] font-medium text-[var(--accent)]/70 group-hover:text-[var(--accent-on)]/70 sm:text-[13px]">
+                  {props.email}
+                </div>
+              </div>
+            </a>
           </div>
         </div>
       </header>
 
       {/* ── Tabs ── */}
       <nav
-        className="mb-8 border-b border-[var(--line)] sm:mb-10"
+        className="mb-8 sm:mb-12"
         aria-label="Sections"
       >
         <div className="-mx-4 overflow-x-auto overscroll-x-contain px-4 scrollbar-none sm:mx-0 sm:overflow-visible sm:px-0">
-          <div className="flex min-w-max gap-0 sm:min-w-0">
+          <div className="flex min-w-max gap-1.5 sm:min-w-0">
             {tabs.map((t) => {
               const active = tab === t.id;
               return (
@@ -306,17 +591,17 @@ export function HomeTabs(props: {
                   type="button"
                   onClick={() => setTab(t.id)}
                   className={[
-                    "relative -mb-px shrink-0 px-5 py-4 text-base transition-colors sm:px-6 sm:py-3.5",
-                    "min-h-[48px] min-w-[48px] touch-manipulation sm:min-h-0 sm:min-w-0",
+                    "relative shrink-0 cursor-pointer rounded-lg px-5 py-2.5 text-base font-semibold transition-all duration-150 sm:px-6 sm:py-3 sm:text-lg",
+                    "min-h-[44px] touch-manipulation",
                     active
-                      ? "font-semibold text-[var(--ink)]"
-                      : "font-medium text-[var(--muted)] hover:text-[var(--ink)]",
+                      ? "bg-[var(--surface-3)] text-[var(--ink)] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+                      : "text-[var(--muted)] hover:bg-[var(--surface-2)] hover:text-[var(--ink)]",
                   ].join(" ")}
                 >
                   {t.label}
                   {active ? (
                     <span
-                      className="absolute inset-x-4 bottom-0 h-0.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.4)]"
+                      className="absolute bottom-0 left-1/2 h-[3px] w-8 -translate-x-1/2 rounded-full bg-[var(--accent)]"
                       aria-hidden
                     />
                   ) : null}
@@ -329,292 +614,50 @@ export function HomeTabs(props: {
 
       {/* ── Video Tab ── */}
       {tab === "video" ? (
-        <section aria-label="Video" className="space-y-10">
-          <div className="space-y-10">
-            {props.portfolioSections.map((section, index) => (
+        <section aria-label="Video" className="space-y-6 sm:space-y-8">
+          <div className="space-y-6 sm:space-y-8">
+            {props.portfolioSections.map((section) => (
               <section
                 key={section.title}
-                className={[
-                  "-mx-4 px-4 py-6 sm:-mx-6 sm:px-6",
-                  index % 2 === 0
-                    ? "bg-gradient-to-br from-[var(--surface-2)]/50 to-[var(--surface-2)]/20"
-                    : "bg-gradient-to-bl from-[var(--surface-3)]/35 to-[var(--surface-3)]/15",
-                ].join(" ")}
+                className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5 shadow-[0_1px_0_rgba(255,255,255,0.03)_inset] sm:p-8"
               >
-                <div className="mb-5 pl-1 sm:pl-0">
-                  <h3 className="portfolio-serif text-2xl text-[var(--ink)]">
+                <div className="mb-6">
+                  <h3 className="flex items-center gap-3 text-[1.6rem] font-bold tracking-tight text-[var(--ink)] sm:text-[2.2rem]">
+                    <span
+                      className="h-8 w-1.5 rounded-full bg-[var(--accent)] sm:h-10"
+                      aria-hidden
+                    />
                     {section.title}
                   </h3>
                   {section.description ? (
-                    <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">
+                    <p className="mt-3 max-w-3xl pl-[18px] text-[15px] leading-relaxed text-[var(--muted)] sm:text-[17px]">
                       {section.description}
                     </p>
                   ) : null}
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
-                  {section.items.flatMap((item) => {
-                    const viewLabel =
-                      item.viewsLabel ??
-                      (item.computedViewCount != null
-                        ? formatViewCount(item.computedViewCount)
-                        : null);
-                    /* ── Direct-link card (non-YouTube) ── */
-                    if (item.platform !== "youtube") {
-                      const portraitContent =
-                        item.platform === "instagram" ||
-                        item.platform === "tiktok";
-
-                      return [
-                        <div key={item.url} className="min-w-0">
-                          <a
-                            href={item.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group block w-full rounded-lg text-left transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:shadow-black/20"
-                          >
-                            {item.thumbnailUrl ? (
-                              <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-black">
-                                {portraitContent ? (
-                                  <>
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                      src={item.thumbnailUrl}
-                                      alt=""
-                                      aria-hidden
-                                      className="absolute inset-0 h-full w-full scale-125 object-cover opacity-40 blur-2xl"
-                                      loading="lazy"
-                                    />
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                      src={item.thumbnailUrl}
-                                      alt=""
-                                      className="relative mx-auto h-full object-contain transition-transform duration-200 group-hover:scale-105"
-                                      loading="lazy"
-                                    />
-                                  </>
-                                ) : (
-                                  <>
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                      src={item.thumbnailUrl}
-                                      alt=""
-                                      className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
-                                      loading="lazy"
-                                    />
-                                  </>
-                                )}
-                                <div className="absolute bottom-1.5 left-1.5 flex items-center gap-1 rounded-full bg-black/70 px-2 py-0.5">
-                                  <PlatformLogo
-                                    platform={item.platform}
-                                    className="h-3 w-3 text-white/90"
-                                  />
-                                  <span className="text-[9px] font-semibold text-white/80">
-                                    {platformLabel(item.platform)}
-                                  </span>
-                                </div>
-                                {viewLabel ? (
-                                  <span className="absolute bottom-1 right-1 rounded bg-black/80 px-1.5 py-0.5 text-[10px] font-medium text-white">
-                                    {viewLabel}
-                                  </span>
-                                ) : null}
-                              </div>
-                            ) : (
-                              <div className="relative aspect-video w-full overflow-hidden rounded-lg">
-                                {/* Layered gradient background */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-[#1e1e24] via-[#2a2535] to-[#1a1a2e]" />
-                                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(120,80,220,0.18),transparent_70%)]" />
-                                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,rgba(60,140,200,0.12),transparent_70%)]" />
-                                {/* Subtle noise texture via border */}
-                                <div className="absolute inset-0 rounded-lg ring-1 ring-inset ring-white/[0.08]" />
-
-                                {/* Content */}
-                                <div className="relative flex h-full flex-col justify-between p-3">
-                                  <span className="self-start rounded bg-white/[0.08] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-[0.15em] text-white/50">
-                                    Client Sample
-                                  </span>
-                                  <div>
-                                    <p className="line-clamp-2 text-xs font-semibold leading-snug text-white/80">
-                                      {item.title}
-                                    </p>
-                                    <p className="mt-1 text-[10px] font-medium tracking-wide text-white/35">
-                                      View on{" "}
-                                      {platformLabel(item.platform)} ↗
-                                    </p>
-                                  </div>
-                                </div>
-
-                                {viewLabel ? (
-                                  <span className="absolute bottom-1 right-1 rounded bg-black/80 px-1.5 py-0.5 text-[10px] font-medium text-white">
-                                    {viewLabel}
-                                  </span>
-                                ) : null}
-                              </div>
-                            )}
-                            <div className="mt-2 px-0.5">
-                              <p className="line-clamp-2 text-sm font-medium leading-snug text-[var(--ink)]">
-                                {item.title}
-                              </p>
-                              <p className="mt-0.5 flex items-center text-xs text-[var(--muted-soft)]">
-                                <span className="truncate">
-                                  {platformLabel(item.platform)}
-                                  {item.note ? ` · ${item.note}` : ""}
-                                </span>
-                                <span
-                                  className="ml-1 shrink-0 text-[var(--muted)]"
-                                  aria-hidden
-                                >
-                                  ↗
-                                </span>
-                              </p>
-                            </div>
-                          </a>
-                        </div>,
-                      ];
-                    }
-
-                    /* ── Embeddable card (YouTube + Instagram) ── */
-                    const selected = activeUrl === item.url;
-                    const isYoutube = item.platform === "youtube";
-
-                    const card = (
-                      <div key={item.url} className="min-w-0">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setActiveUrl((prev) =>
-                              prev === item.url ? null : item.url,
-                            )
-                          }
-                          className={[
-                            "group w-full text-left rounded-lg transition-all duration-200",
-                            selected
-                              ? "ring-2 ring-white/25"
-                              : "hover:-translate-y-1 hover:shadow-lg hover:shadow-black/20",
-                          ].join(" ")}
-                        >
-                          <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-[var(--surface-3)]">
-                            {isYoutube && item.thumbnailUrl ? (
-                              <>
-                                <Image
-                                  src={item.thumbnailUrl}
-                                  alt=""
-                                  fill
-                                  className="object-cover transition-transform duration-200 group-hover:scale-105"
-                                  sizes="(max-width: 639px) 50vw, 33vw"
-                                />
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-black/60 opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100 sm:h-12 sm:w-12">
-                                    <svg viewBox="0 0 24 24" fill="white" className="ml-0.5 h-5 w-5 sm:h-6 sm:w-6">
-                                      <path d="M8 5v14l11-7z" />
-                                    </svg>
-                                  </div>
-                                </div>
-                              </>
-                            ) : (
-                              <div className="flex h-full items-center justify-center bg-gradient-to-br from-[var(--surface-3)] to-[var(--surface-4)]">
-                                <PlatformLogo
-                                  platform={item.platform}
-                                  className="h-10 w-10 text-white/50 transition-colors group-hover:text-white/70"
-                                />
-                              </div>
-                            )}
-                            {viewLabel ? (
-                              <span className="absolute bottom-1 right-1 rounded bg-black/80 px-1.5 py-0.5 text-[10px] font-medium text-white">
-                                {viewLabel}
-                              </span>
-                            ) : null}
-                          </div>
-                          <div className="mt-2 px-0.5">
-                            <p className="line-clamp-2 text-sm font-medium leading-snug text-[var(--ink)]">
-                              {item.title}
-                            </p>
-                            <p className="mt-0.5 text-xs text-[var(--muted-soft)]">
-                              {platformLabel(item.platform)}
-                              {item.note ? ` · ${item.note}` : ""}
-                            </p>
-                          </div>
-                        </button>
-                      </div>
-                    );
-
-                    if (!selected) return [card];
-
-                    const portrait = isPortraitVideo(item);
-
-                    return [
-                      card,
-                      <div
-                        key={`embed-${item.url}`}
-                        ref={embedPanelRef}
-                        className="col-span-full scroll-mt-20 overflow-hidden pt-1"
-                      >
-                        <div className="rounded-xl border border-[var(--line)] bg-gradient-to-b from-[var(--surface)]/95 to-[var(--surface)]/70 p-3 sm:p-5">
-                          <div className="mb-3 flex flex-wrap items-center gap-3">
-                            <a
-                              href={item.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 rounded-full border border-[var(--line-strong)] bg-[var(--surface-3)] px-3.5 py-1.5 text-sm font-semibold text-[var(--ink)] transition-colors hover:bg-[var(--surface-4)]"
-                            >
-                              View on {platformLabel(item.platform)}
-                              <span
-                                className="text-[var(--muted)]"
-                                aria-hidden
-                              >
-                                ↗
-                              </span>
-                            </a>
-                            {viewLabel ? (
-                              <span className="text-sm text-[var(--muted)]">
-                                {viewLabel}
-                              </span>
-                            ) : null}
-                          </div>
-
-                          {item.embeddable && item.embedSrc ? (
-                            <div
-                              className={[
-                                "overflow-hidden rounded-lg",
-                                portrait
-                                  ? "portrait-embed-shell"
-                                  : "aspect-video w-full",
-                              ].join(" ")}
-                            >
-                              {portrait ? (
-                                <div className="portrait-embed-frame">
-                                  <iframe
-                                    title={item.title}
-                                    src={item.embedSrc}
-                                    className="h-full w-full border-0"
-                                    scrolling="no"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    allowFullScreen
-                                  />
-                                </div>
-                              ) : (
-                                <iframe
-                                  title={item.title}
-                                  src={item.embedSrc}
-                                  className="h-full w-full border-0"
-                                  scrolling="no"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                  allowFullScreen
-                                />
-                              )}
-                            </div>
-                          ) : null}
-
-                          {item.note ? (
-                            <p className="mt-3 text-sm leading-relaxed text-[var(--muted)]">
-                              {item.note}
-                            </p>
-                          ) : null}
+                {(() => {
+                  const landscape = section.items.filter(
+                    (i) => !isPortraitVideo(i),
+                  );
+                  const vertical = section.items.filter((i) =>
+                    isPortraitVideo(i),
+                  );
+                  return (
+                    <div className="space-y-7 sm:space-y-9">
+                      {landscape.length > 0 ? (
+                        <div className="grid grid-cols-[repeat(auto-fill,minmax(170px,1fr))] gap-x-4 gap-y-8 sm:grid-cols-[repeat(auto-fill,minmax(400px,1fr))] sm:gap-x-6 sm:gap-y-12">
+                          {landscape.flatMap(renderCard)}
                         </div>
-                      </div>,
-                    ];
-                  })}
-                </div>
+                      ) : null}
+                      {vertical.length > 0 ? (
+                        <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-x-3 gap-y-7 sm:grid-cols-[repeat(auto-fill,minmax(270px,1fr))] sm:gap-x-6 sm:gap-y-12">
+                          {vertical.flatMap(renderCard)}
+                        </div>
+                      ) : null}
+                    </div>
+                  );
+                })()}
               </section>
             ))}
           </div>
@@ -622,16 +665,20 @@ export function HomeTabs(props: {
           {/* Skills */}
           <section
             aria-label="Skills"
-            className="space-y-5 border-t border-[var(--line)] pt-10"
+            className="space-y-5 rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-5 sm:p-8"
           >
-            <h3 className="portfolio-serif text-2xl text-[var(--ink)]">
+            <h3 className="flex items-center gap-3 text-[1.6rem] font-bold tracking-tight text-[var(--ink)] sm:text-[2.2rem]">
+              <span
+                className="h-8 w-1.5 rounded-full bg-[var(--accent)] sm:h-10"
+                aria-hidden
+              />
               Skills
             </h3>
             <ul className="space-y-4">
               {props.software.map((s) => (
                 <li
                   key={s.title}
-                  className="rounded-xl border border-[var(--line)] bg-[var(--surface)]/50 p-4"
+                  className="rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-4"
                 >
                   <p className="text-sm font-semibold text-[var(--ink)]">
                     {s.title}
@@ -651,7 +698,7 @@ export function HomeTabs(props: {
         <section aria-label="Software Resume" className="max-w-3xl space-y-12">
           {/* Resume header */}
           <header className="space-y-4 border-b border-[var(--line)] pb-8">
-            <h2 className="portfolio-serif text-[clamp(1.8rem,5vw,2.8rem)] leading-tight text-[var(--ink)]">
+            <h2 className="text-[clamp(1.6rem,4vw,2.4rem)] font-bold leading-tight tracking-[-0.02em] text-[var(--ink)]">
               Software Engineer
             </h2>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-[var(--muted)]">

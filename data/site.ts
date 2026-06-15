@@ -85,7 +85,7 @@ export const site: {
       platform: "youtube",
       handle: "@chrisjereza415",
       url: "https://youtube.com/@chrisjereza415",
-      fallbackCount: "15K subscribers",
+      fallbackCount: "810K subscribers",
     },
     {
       platform: "tiktok",
@@ -486,7 +486,7 @@ export const site: {
 
   resume: {
     location: "New York City, NY",
-    email: "chrisnjereza@gmail.com",
+    email: "chris@chrisjereza.io",
     linkedin: "linkedin.com/in/christopherjereza/",
     experience: [
       {
