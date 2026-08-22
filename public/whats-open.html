@@ -1,0 +1,716 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="The best burgers within five miles of wherever you are, and which ones are open right now.">
+<meta name="theme-color" content="#13100E">
+<title>What's Open?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;700&display=swap">
+
+<style>
+:root{
+  --ground:#F2EEEA;
+  --surface:#FFFFFF;
+  --surface-2:#E9E3DD;
+  --ink:#1A1310;
+  --ink-2:#5C4F48;
+  --ink-3:#8B7C73;
+  --line:#DCD3CB;
+  --ember:#D6371A;
+  --ember-ink:#FFFFFF;
+  --open:#0E7A44;
+  --open-bg:#DDF0E4;
+  --soon:#9A5B02;
+  --soon-bg:#F8E9D2;
+  --shut:#8B7C73;
+  --shut-bg:#E7E1DB;
+  --shadow:0 1px 0 rgba(26,19,16,.05), 0 6px 18px -12px rgba(26,19,16,.4);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#13100E;
+    --surface:#1C1815;
+    --surface-2:#262019;
+    --ink:#F4F0EC;
+    --ink-2:#B4A79E;
+    --ink-3:#83756C;
+    --line:#332B25;
+    --ember:#FF5B38;
+    --ember-ink:#1A0B06;
+    --open:#4FD68B;
+    --open-bg:#12301F;
+    --soon:#F5B133;
+    --soon-bg:#33240D;
+    --shut:#83756C;
+    --shut-bg:#252019;
+    --shadow:0 1px 0 rgba(0,0,0,.4), 0 8px 22px -14px #000;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#13100E;
+  --surface:#1C1815;
+  --surface-2:#262019;
+  --ink:#F4F0EC;
+  --ink-2:#B4A79E;
+  --ink-3:#83756C;
+  --line:#332B25;
+  --ember:#FF5B38;
+  --ember-ink:#1A0B06;
+  --open:#4FD68B;
+  --open-bg:#12301F;
+  --soon:#F5B133;
+  --soon-bg:#33240D;
+  --shut:#83756C;
+  --shut-bg:#252019;
+  --shadow:0 1px 0 rgba(0,0,0,.4), 0 8px 22px -14px #000;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--ink);
+  font-family:Karla, "Helvetica Neue", Arial, sans-serif;
+  font-size:16px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:660px;margin:0 auto;padding:0 16px 64px}
+
+/* ---------- masthead ---------- */
+header{padding:30px 0 18px}
+.kicker{
+  font-family:"JetBrains Mono", ui-monospace, monospace;
+  font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ember);display:flex;align-items:center;gap:8px;
+}
+.kicker::after{content:"";flex:1;height:1px;background:var(--line)}
+h1{
+  font-family:Anton, Impact, sans-serif;
+  font-weight:400;
+  font-size:clamp(46px,15vw,78px);
+  line-height:.86;
+  letter-spacing:-.01em;
+  margin:12px 0 0;
+  text-transform:uppercase;
+  text-wrap:balance;
+}
+h1 em{font-style:normal;color:var(--ember)}
+.dek{color:var(--ink-2);margin:12px 0 0;max-width:34ch}
+
+/* ---------- primary action ---------- */
+.locate{
+  margin-top:22px;width:100%;border:0;cursor:pointer;
+  background:var(--ember);color:var(--ember-ink);
+  font-family:Anton, Impact, sans-serif;font-size:22px;letter-spacing:.02em;
+  text-transform:uppercase;padding:18px 20px;border-radius:2px;
+  display:flex;align-items:center;justify-content:center;gap:12px;
+  transition:transform .12s ease, filter .12s ease;
+}
+.locate:hover{filter:brightness(1.08)}
+.locate:active{transform:translateY(1px)}
+.locate[disabled]{opacity:.6;cursor:progress}
+.locate svg{width:20px;height:20px;flex:none}
+
+.hint{
+  font-family:"JetBrains Mono", ui-monospace, monospace;
+  font-size:11px;color:var(--ink-3);margin-top:10px;text-align:center;
+}
+.linkbtn{
+  background:none;border:0;padding:0;cursor:pointer;color:var(--ink-2);
+  font:inherit;text-decoration:underline;text-underline-offset:3px;
+}
+.linkbtn:hover{color:var(--ember)}
+
+/* ---------- readout ---------- */
+.readout{
+  margin-top:18px;background:var(--surface);border:1px solid var(--line);
+  border-radius:3px;padding:16px 18px;box-shadow:var(--shadow);
+}
+.readout-top{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.bignum{
+  font-family:Anton, Impact, sans-serif;font-size:52px;line-height:.8;
+  color:var(--ember);font-variant-numeric:tabular-nums;
+}
+.bigunit{
+  font-family:Anton, Impact, sans-serif;text-transform:uppercase;
+  font-size:19px;line-height:1.05;letter-spacing:.01em;
+}
+.readout-meta{
+  margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);
+  font-family:"JetBrains Mono", ui-monospace, monospace;font-size:11.5px;
+  color:var(--ink-3);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.readout-meta b{color:var(--ink-2);font-weight:400}
+
+/* ---------- controls ---------- */
+.controls{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.ctl-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ctl-label{
+  font-family:"JetBrains Mono", ui-monospace, monospace;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-3);margin-right:2px;
+}
+.chip{
+  font-family:"JetBrains Mono", ui-monospace, monospace;font-size:12px;
+  padding:7px 12px;border:1px solid var(--line);background:var(--surface);
+  color:var(--ink-2);border-radius:999px;cursor:pointer;
+  transition:background .12s ease,color .12s ease,border-color .12s ease;
+}
+.chip:hover{border-color:var(--ink-3);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+.chip.hot[aria-pressed="true"]{background:var(--ember);border-color:var(--ember);color:var(--ember-ink)}
+
+/* ---------- tickets ---------- */
+.list{list-style:none;padding:0;margin:22px 0 0;display:flex;flex-direction:column;gap:10px}
+.ticket{
+  position:relative;background:var(--surface);border:1px solid var(--line);
+  border-radius:3px;padding:15px 16px 14px 18px;box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.ticket::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--stripe,var(--shut));
+}
+.ticket.is-open{--stripe:var(--open)}
+.ticket.is-soon{--stripe:var(--soon)}
+.t-head{display:flex;align-items:flex-start;gap:12px}
+.rank{
+  font-family:Anton, Impact, sans-serif;font-size:26px;line-height:1;
+  color:var(--ink-3);font-variant-numeric:tabular-nums;flex:none;
+  min-width:1.6ch;padding-top:2px;
+}
+.t-main{flex:1;min-width:0}
+.t-name{
+  font-family:Anton, Impact, sans-serif;font-size:21px;line-height:1.1;
+  text-transform:uppercase;letter-spacing:.005em;
+}
+.t-known{color:var(--ink-2);font-size:14.5px;margin-top:3px}
+.t-right{flex:none;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.dist{
+  font-family:"JetBrains Mono", ui-monospace, monospace;font-weight:700;
+  font-size:15px;font-variant-numeric:tabular-nums;line-height:1;white-space:nowrap;
+}
+.dist span{font-weight:400;font-size:10px;color:var(--ink-3);margin-left:2px}
+.pill{
+  font-family:"JetBrains Mono", ui-monospace, monospace;font-size:10px;
+  letter-spacing:.09em;text-transform:uppercase;padding:4px 8px;border-radius:2px;
+  background:var(--shut-bg);color:var(--shut);white-space:nowrap;
+}
+.is-open .pill{background:var(--open-bg);color:var(--open)}
+.is-soon .pill{background:var(--soon-bg);color:var(--soon)}
+
+.t-foot{
+  margin-top:12px;padding-top:11px;border-top:1px dashed var(--line);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+.t-hours{
+  font-family:"JetBrains Mono", ui-monospace, monospace;font-size:11.5px;
+  color:var(--ink-3);min-width:0;
+}
+.t-hours b{color:var(--ink-2);font-weight:400}
+.go{
+  font-family:"JetBrains Mono", ui-monospace, monospace;font-size:11px;
+  letter-spacing:.08em;text-transform:uppercase;text-decoration:none;
+  color:var(--ember);border:1px solid var(--ember);padding:7px 11px;border-radius:2px;
+  white-space:nowrap;flex:none;transition:background .12s ease,color .12s ease;
+}
+.go:hover{background:var(--ember);color:var(--ember-ink)}
+
+/* ---------- notices ---------- */
+.notice{
+  margin-top:20px;background:var(--surface-2);border:1px solid var(--line);
+  border-left:4px solid var(--ember);border-radius:3px;padding:16px 18px;
+}
+.notice h3{
+  font-family:Anton, Impact, sans-serif;font-weight:400;text-transform:uppercase;
+  font-size:19px;margin:0 0 6px;line-height:1.15;
+}
+.notice p{margin:0;color:var(--ink-2);font-size:14.5px}
+.notice .go{display:inline-block;margin-top:13px}
+.cities{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:13px;
+  max-height:168px;overflow-y:auto;
+}
+
+footer{
+  margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+  font-family:"JetBrains Mono", ui-monospace, monospace;
+  font-size:10.5px;line-height:1.7;color:var(--ink-3);
+}
+footer a{color:var(--ink-2)}
+
+.hidden{display:none !important}
+:focus-visible{outline:2px solid var(--ember);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important}}
+@media (max-width:420px){
+  .t-head{flex-wrap:wrap}
+  .t-right{flex-direction:row;align-items:center;width:100%;justify-content:flex-start;gap:10px;padding-left:38px}
+  .t-foot{flex-direction:column;align-items:flex-start;gap:10px}
+}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="kicker">Burger radar</div>
+    <h1>What's <em>Open?</em></h1>
+    <p class="dek">The best burgers within five miles of wherever you're standing — and which ones are still serving right now.</p>
+  </header>
+
+  <button class="locate" id="locate">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3"></path><circle cx="12" cy="12" r="8"></circle>
+    </svg>
+    <span id="locate-label">Find burgers near me</span>
+  </button>
+  <p class="hint" id="hint">Uses your phone's GPS. Nothing is sent anywhere — it all runs on your device.</p>
+
+  <div id="app"></div>
+
+  <footer>
+    A hand-picked map of ~90 burger institutions across 30+ cities. Hours are the usual ones, not a live feed —
+    holidays, private events and last-minute closures happen, so tap <b>Directions</b> to confirm before you walk.
+    Your location never leaves your phone.
+  </footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- hours helpers: index 0 = Sunday. Values are decimal hours; >24 = after midnight ---------- */
+var D  = function(o,c){ return [[o,c],[o,c],[o,c],[o,c],[o,c],[o,c],[o,c]]; };
+var W  = function(o,c,eo,ec){ return [[eo,ec],[o,c],[o,c],[o,c],[o,c],[o,c],[eo,ec]]; };
+var off = function(h,days){ h=h.map(function(d){return d;}); days.forEach(function(i){ h[i]=null; }); return h; };
+
+var SPOTS = [
+  /* ---- New York ---- */
+  {n:"Peter Luger",         c:"Brooklyn, NY",  a:"178 Broadway, Brooklyn",       lat:40.7099, lng:-73.9626, k:"Dry-aged trimmings, lunch only, with bacon", p:"$$$", h:D(11.75,14.75)},
+  {n:"Minetta Tavern",      c:"New York, NY",  a:"113 MacDougal St, New York",   lat:40.7297, lng:-74.0004, k:"The Black Label — prime cuts, caramelized onion", p:"$$$", h:W(17,23,11,23)},
+  {n:"Corner Bistro",       c:"New York, NY",  a:"331 W 4th St, New York",       lat:40.7379, lng:-74.0037, k:"$10 Bistro Burger on a paper plate since 1961", p:"$", h:D(11.5,27)},
+  {n:"J.G. Melon",          c:"New York, NY",  a:"1291 3rd Ave, New York",       lat:40.7726, lng:-73.9575, k:"Pub classic, cottage fries, cash-friendly", p:"$$", h:D(11.5,24)},
+  {n:"Burger Joint",        c:"New York, NY",  a:"119 W 56th St, New York",      lat:40.7644, lng:-73.9779, k:"Hidden behind the curtain in a marble lobby", p:"$", h:D(11,23)},
+  {n:"Hamburger America",   c:"New York, NY",  a:"51 MacDougal St, New York",    lat:40.7276, lng:-74.0043, k:"Oklahoma fried onion burgers, griddle-smashed", p:"$", h:D(11,22)},
+  {n:"Au Cheval",           c:"New York, NY",  a:"33 Cortlandt Alley, New York", lat:40.7180, lng:-74.0022, k:"Double with egg and thick-cut bacon", p:"$$$", h:D(11,23)},
+  {n:"Raoul's",             c:"New York, NY",  a:"180 Prince St, New York",      lat:40.7263, lng:-74.0018, k:"Au poivre burger — bar seats only, limited nightly", p:"$$$", h:D(17,24)},
+  {n:"7th Street Burger",   c:"New York, NY",  a:"91 E 7th St, New York",        lat:40.7268, lng:-73.9852, k:"Smashed double, American, quick and cheap", p:"$", h:D(12,25)},
+  {n:"Emily",               c:"New York, NY",  a:"35 Downing St, New York",      lat:40.7290, lng:-74.0035, k:"The Emmy Burger — pretzel bun, Emmy sauce", p:"$$$", h:D(17,22.5)},
+  {n:"P.J. Clarke's",       c:"New York, NY",  a:"915 3rd Ave, New York",        lat:40.7581, lng:-73.9678, k:"The Cadillac — saloon burger since 1884", p:"$$", h:D(11.5,25)},
+  {n:"Shake Shack",         c:"New York, NY",  a:"Madison Square Park, New York",lat:40.7414, lng:-73.9880, k:"The original kiosk in the park", p:"$", h:D(11,22)},
+  {n:"Donovan's Pub",       c:"Woodside, NY",  a:"57-24 Roosevelt Ave, Queens",  lat:40.7458, lng:-73.9060, k:"Loosely packed half-pounder, dark wood booths", p:"$$", h:D(11.5,23)},
+
+  /* ---- Los Angeles ---- */
+  {n:"Father's Office",     c:"Santa Monica, CA", a:"1018 Montana Ave, Santa Monica", lat:34.0296, lng:-118.4977, k:"Office Burger — no substitutions, ever", p:"$$", h:W(17,25,12,25)},
+  {n:"The Apple Pan",       c:"Los Angeles, CA",  a:"10801 W Pico Blvd, Los Angeles", lat:34.0356, lng:-118.4265, k:"Hickory burger at the horseshoe counter since 1947", p:"$", h:off(D(11,24),[1])},
+  {n:"In-N-Out",            c:"Hollywood, CA",    a:"7009 Sunset Blvd, Los Angeles",  lat:34.0980, lng:-118.3430, k:"Double-Double animal style, the baseline", p:"$", h:W(10.5,25,10.5,26)},
+  {n:"Cassell's Hamburgers",c:"Los Angeles, CA",  a:"3600 W 6th St, Los Angeles",     lat:34.0629, lng:-118.2977, k:"Ground in-house daily, crossed-flame broiler", p:"$$", h:D(7,21)},
+  {n:"Petit Trois",         c:"Los Angeles, CA",  a:"718 N Highland Ave, Los Angeles",lat:34.0830, lng:-118.3384, k:"Big Mec — bordelaise, foie-butter, garlic aioli", p:"$$$", h:D(12,22)},
+  {n:"Burgers Never Say Die",c:"Los Angeles, CA", a:"3400 Sunset Blvd, Los Angeles",  lat:34.0910, lng:-118.2760, k:"Thin smashed patties, potato roll, long line", p:"$", h:off(D(12,21),[1,2])},
+  {n:"HiHo Cheeseburger",   c:"Santa Monica, CA", a:"1320 2nd St, Santa Monica",      lat:34.0175, lng:-118.4977, k:"100% Wagyu smash, dry-aged blend", p:"$$", h:D(11,21)},
+  {n:"Golden State",        c:"Los Angeles, CA",  a:"426 N Fairfax Ave, Los Angeles", lat:34.0784, lng:-118.3614, k:"Niman Ranch beef, arugula, aioli, great beer list", p:"$$", h:D(11.5,22)},
+  {n:"Original Tommy's",    c:"Los Angeles, CA",  a:"2575 W Beverly Blvd, Los Angeles",lat:34.0716,lng:-118.2765, k:"Chili burger, open around the clock since 1946", p:"$", h:D(0,24)},
+  {n:"The Win~Dow",         c:"Venice, CA",       a:"1523 Pacific Ave, Venice",       lat:33.9861, lng:-118.4707, k:"Walk-up window smash burger near the boardwalk", p:"$", h:D(12,25)},
+
+  /* ---- Chicago ---- */
+  {n:"Au Cheval",           c:"Chicago, IL", a:"800 W Randolph St, Chicago",   lat:41.8845, lng:-87.6473, k:"The single most-copied double cheeseburger in America", p:"$$$", h:D(11,24)},
+  {n:"Small Cheval",        c:"Chicago, IL", a:"1732 N Milwaukee Ave, Chicago",lat:41.9137, lng:-87.6773, k:"Au Cheval's burger, no two-hour wait", p:"$$", h:D(11,23)},
+  {n:"Kuma's Corner",       c:"Chicago, IL", a:"2900 W Belmont Ave, Chicago",  lat:41.9391, lng:-87.6989, k:"10oz burgers named after metal bands", p:"$$", h:D(11.5,24)},
+  {n:"Bavette's Bar & Boeuf",c:"Chicago, IL",a:"218 W Kinzie St, Chicago",     lat:41.8890, lng:-87.6350, k:"Dry-aged steakhouse burger in a dim jazz room", p:"$$$", h:D(11.5,25)},
+  {n:"Billy Goat Tavern",   c:"Chicago, IL", a:"430 N Michigan Ave, Chicago",  lat:41.8901, lng:-87.6222, k:"Cheezborger, cheezborger. No fries — cheeps", p:"$", h:D(9,20)},
+  {n:"Top Notch Beefburgers",c:"Chicago, IL",a:"2116 W 95th St, Chicago",      lat:41.7215, lng:-87.6741, k:"Ground on-site, fried in beef tallow since 1942", p:"$", h:off(D(10,20),[0])},
+
+  /* ---- San Francisco Bay ---- */
+  {n:"Zuni Café",           c:"San Francisco, CA", a:"1658 Market St, San Francisco", lat:37.7734, lng:-122.4223, k:"Grilled on rosemary focaccia — lunch and late only", p:"$$$", h:off(D(11.5,22),[1])},
+  {n:"Nopa",                c:"San Francisco, CA", a:"560 Divisadero St, San Francisco",lat:37.7749,lng:-122.4376, k:"Grass-fed burger, wood oven, served till 1am", p:"$$$", h:D(17,25)},
+  {n:"Causwells",           c:"San Francisco, CA", a:"2346 Chestnut St, San Francisco",lat:37.8003, lng:-122.4405, k:"The Americana — double smash, two slices of American", p:"$$", h:off(D(17,22),[1,2])},
+  {n:"4505 Burgers & BBQ",  c:"San Francisco, CA", a:"705 Divisadero St, San Francisco",lat:37.7761,lng:-122.4378, k:"Best Damn Cheeseburger, sesame-seed bun, backyard patio", p:"$$", h:D(11,21)},
+  {n:"Marlowe",             c:"San Francisco, CA", a:"500 Brannan St, San Francisco",  lat:37.7784, lng:-122.3968, k:"Cheddar, bacon, caramelized onion, horseradish aioli", p:"$$$", h:D(11.5,22)},
+  {n:"Super Duper Burgers", c:"San Francisco, CA", a:"721 Market St, San Francisco",   lat:37.7866, lng:-122.4036, k:"Niman Ranch beef, free house pickles at the counter", p:"$", h:D(10.5,22)},
+  {n:"Gott's Roadside",     c:"San Francisco, CA", a:"1 Ferry Building, San Francisco",lat:37.7955, lng:-122.3937, k:"Roadside classic with a view of the Bay Bridge", p:"$$", h:D(10.5,21)},
+
+  /* ---- Seattle / Portland ---- */
+  {n:"Dick's Drive-In",     c:"Seattle, WA",  a:"115 Broadway E, Seattle",       lat:47.6194, lng:-122.3210, k:"Deluxe, hand-cut fries, cash, since 1954", p:"$", h:D(10.5,26)},
+  {n:"Li'l Woody's",        c:"Seattle, WA",  a:"1211 Pine St, Seattle",         lat:47.6146, lng:-122.3277, k:"Painted Hills beef, rotating burger of the month", p:"$", h:D(11,25)},
+  {n:"Red Mill Burgers",    c:"Seattle, WA",  a:"312 N 67th St, Seattle",        lat:47.6784, lng:-122.3560, k:"Bacon Deluxe with Mill sauce and onion rings", p:"$", h:off(D(11,21),[1])},
+  {n:"Katsu Burger",        c:"Seattle, WA",  a:"6538 4th Ave S, Seattle",       lat:47.5449, lng:-122.3277, k:"Panko-crusted patties, wasabi mayo, Japanese-American", p:"$", h:D(11,20)},
+  {n:"Killer Burger",       c:"Portland, OR", a:"510 SE MLK Jr Blvd, Portland",  lat:45.5195, lng:-122.6620, k:"Every burger comes with bacon. Peanut butter pickle bacon", p:"$", h:D(11,21)},
+  {n:"Little Big Burger",   c:"Portland, OR", a:"122 NW 10th Ave, Portland",     lat:45.5230, lng:-122.6815, k:"Quarter-pound, truffle fries, Cambozola upgrade", p:"$", h:D(11,22)},
+
+  /* ---- Texas ---- */
+  {n:"Dirty Martin's Place",c:"Austin, TX",  a:"2808 Guadalupe St, Austin",     lat:30.2955, lng:-97.7418, k:"Kum-Bak burger, griddled since 1926", p:"$", h:D(11,22)},
+  {n:"Casino El Camino",    c:"Austin, TX",  a:"517 E 6th St, Austin",          lat:30.2670, lng:-97.7370, k:"Three-quarter pound, dark bar, 45-minute wait, worth it", p:"$$", h:D(16,26)},
+  {n:"Hopdoddy Burger Bar", c:"Austin, TX",  a:"1400 S Congress Ave, Austin",   lat:30.2500, lng:-97.7500, k:"Buns baked hourly, Primetime with truffle aioli", p:"$$", h:D(11,22)},
+  {n:"P. Terry's",          c:"Austin, TX",  a:"404 S Lamar Blvd, Austin",      lat:30.2601, lng:-97.7635, k:"Double with cheese, all-natural beef, drive-thru", p:"$", h:D(7,24)},
+  {n:"Keller's Drive-In",   c:"Dallas, TX",  a:"6537 E Northwest Hwy, Dallas",  lat:32.8690, lng:-96.7250, k:"No. 5 on a poppy-seed bun, eaten in your car", p:"$", h:D(10.5,22)},
+  {n:"Off-Site Kitchen",    c:"Dallas, TX",  a:"331 Singleton Blvd, Dallas",    lat:32.7800, lng:-96.8300, k:"Crispy-edged smash, jalapeño ranch on the side", p:"$", h:off(D(11,20),[0])},
+  {n:"Stanton's City Bites",c:"Houston, TX", a:"1420 Edwards St, Houston",      lat:29.7716, lng:-95.3760, k:"Cheeseburger with a fried egg, neighborhood grocery roots", p:"$", h:off(D(7,15),[0,6])},
+
+  /* ---- Mountain / Midwest ---- */
+  {n:"Matt's Bar",          c:"Minneapolis, MN",a:"3500 Cedar Ave S, Minneapolis",lat:44.9370, lng:-93.2480, k:"The original Jucy Lucy — molten cheese core", p:"$", h:D(11,24)},
+  {n:"5-8 Club",            c:"Minneapolis, MN",a:"5800 Cedar Ave S, Minneapolis",lat:44.9010, lng:-93.2480, k:"The other Juicy Lucy. Pick a side of the feud", p:"$", h:D(11,23)},
+  {n:"The Cherry Cricket",  c:"Denver, CO",   a:"2641 E 2nd Ave, Denver",       lat:39.7189, lng:-104.9540, k:"Build-your-own with cream cheese and green chile", p:"$$", h:D(11,24)},
+  {n:"Park Burger",         c:"Denver, CO",   a:"1890 S Pearl St, Denver",      lat:39.6810, lng:-104.9800, k:"El Chilango with roasted poblano and queso", p:"$", h:D(11,21)},
+  {n:"Green Dot Stables",   c:"Detroit, MI",  a:"2200 W Lafayette Blvd, Detroit",lat:42.3260, lng:-83.0770, k:"Dozens of sliders, all a few bucks each", p:"$", h:D(11,26)},
+  {n:"Miller's Bar",        c:"Dearborn, MI", a:"23700 Michigan Ave, Dearborn", lat:42.3020, lng:-83.2380, k:"Cash only, no plates, wax paper, since 1941", p:"$", h:off(D(11,22),[0])},
+
+  /* ---- East Coast ---- */
+  {n:"Mr. Bartley's",       c:"Cambridge, MA",  a:"1246 Massachusetts Ave, Cambridge",lat:42.3730,lng:-71.1185, k:"Burgers named after politicians, since 1960", p:"$$", h:off(D(11,21),[0])},
+  {n:"R.F. O'Sullivan's",   c:"Somerville, MA", a:"282 Beacon St, Somerville",  lat:42.3839, lng:-71.1030, k:"Enormous half-pounders in a dark neighborhood pub", p:"$$", h:D(11.5,23)},
+  {n:"Tasty Burger",        c:"Boston, MA",    a:"1301 Boylston St, Boston",    lat:42.3446, lng:-71.0997, k:"Fenway staple, open past midnight after the game", p:"$", h:D(11,26)},
+  {n:"Village Whiskey",     c:"Philadelphia, PA",a:"118 S 20th St, Philadelphia",lat:39.9509,lng:-75.1743, k:"The Whiskey King — bourbon onions, blue cheese, foie", p:"$$$", h:D(11.5,24)},
+  {n:"Good Dog Bar",        c:"Philadelphia, PA",a:"224 S 15th St, Philadelphia",lat:39.9481,lng:-75.1662, k:"Roquefort stuffed into the middle of the patty", p:"$$", h:D(11.5,26)},
+  {n:"Duke's Grocery",      c:"Washington, DC", a:"1513 17th St NW, Washington",lat:38.9105, lng:-77.0384, k:"The Proper Burke — pickled onion, feta, sriracha mayo", p:"$$", h:D(11,23)},
+  {n:"Le Diplomate",        c:"Washington, DC", a:"1601 14th St NW, Washington",lat:38.9110, lng:-77.0320, k:"Parisian brasserie burger with gruyère and pommes frites", p:"$$$", h:D(11.5,24)},
+  {n:"Good Stuff Eatery",   c:"Washington, DC", a:"303 Pennsylvania Ave SE, Washington",lat:38.8866,lng:-76.9955, k:"Prez Obama burger, homemade mayos on the bar", p:"$", h:off(D(11,22),[0])},
+
+  /* ---- South ---- */
+  {n:"The Vortex",          c:"Atlanta, GA",  a:"438 Moreland Ave NE, Atlanta", lat:33.7627, lng:-84.3494, k:"Coronary Bypass burger. 18+, unapologetic", p:"$$", h:D(11,24)},
+  {n:"Holeman & Finch",     c:"Atlanta, GA",  a:"2277 Peachtree Rd NE, Atlanta",lat:33.8175, lng:-84.3865, k:"The famous double that used to drop only at 10pm", p:"$$", h:D(11,23)},
+  {n:"Port of Call",        c:"New Orleans, LA",a:"838 Esplanade Ave, New Orleans",lat:29.9640,lng:-90.0630, k:"Half-pound burger served with a baked potato, not fries", p:"$$", h:D(11,26)},
+  {n:"The Company Burger",  c:"New Orleans, LA",a:"4600 Freret St, New Orleans",lat:29.9310, lng:-90.1020, k:"Double with red onion and house butter pickles", p:"$", h:D(11,22)},
+  {n:"Brown's Diner",       c:"Nashville, TN", a:"2102 Blair Blvd, Nashville",  lat:36.1330, lng:-86.8070, k:"Cheeseburger out of a converted trolley car", p:"$", h:D(11,24)},
+  {n:"Gabby's Burgers",     c:"Nashville, TN", a:"493 Humphreys St, Nashville", lat:36.1420, lng:-86.7690, k:"Hand-pattied, hand-cut fries, tiny room", p:"$", h:off(D(11,20),[0,1])},
+  {n:"Cheeseburger Baby",   c:"Miami Beach, FL",a:"1505 Washington Ave, Miami Beach",lat:25.7885,lng:-80.1315, k:"Open till 5am on South Beach. That's the whole pitch", p:"$", h:D(11,29)},
+  {n:"LoKal",               c:"Miami, FL",    a:"3190 Commodore Plaza, Miami",  lat:25.7275, lng:-80.2430, k:"The frita — Cuban-style with shoestring potatoes on top", p:"$$", h:off(D(12,22),[1])},
+
+  /* ---- Southwest / West ---- */
+  {n:"Hodad's",             c:"San Diego, CA", a:"5010 Newport Ave, San Diego", lat:32.7490, lng:-117.2490, k:"Double bacon in a surf shack plastered with plates", p:"$", h:D(11,21)},
+  {n:"Rocky's Crown Pub",   c:"San Diego, CA", a:"3786 Ingraham St, San Diego", lat:32.7960, lng:-117.2410, k:"Third-pounder, cash only, no fries, no nonsense", p:"$", h:D(11,25.5)},
+  {n:"Holsteins",           c:"Las Vegas, NV", a:"3708 Las Vegas Blvd S, Las Vegas",lat:36.1095,lng:-115.1740, k:"Rising Sun burger and a spiked milkshake", p:"$$", h:D(11,24)},
+  {n:"In-N-Out",            c:"Las Vegas, NV", a:"4888 Dean Martin Dr, Las Vegas",lat:36.0985, lng:-115.1840, k:"Off-Strip, open till 1am, the reliable answer", p:"$", h:W(10.5,25,10.5,26)},
+
+  /* ---- Canada ---- */
+  {n:"The Burger's Priest", c:"Toronto, ON",  a:"1636 Queen St E, Toronto",     lat:43.6660, lng:-79.3140, k:"Secret menu built on grilled-cheese-bun patties", p:"$", h:D(11,23)},
+  {n:"Rudy",                c:"Toronto, ON",  a:"619 College St, Toronto",      lat:43.6540, lng:-79.4160, k:"Smash double, house sauce, natural wine list", p:"$$", h:D(17,24)},
+  {n:"DownLow Burgers",     c:"Vancouver, BC",a:"2601 Main St, Vancouver",      lat:49.2620, lng:-123.1010, k:"Cheeseburger with crispy lace edges, Main Street", p:"$", h:off(D(12,21),[1])},
+
+  /* ---- UK / Europe ---- */
+  {n:"Bleecker Burger",     c:"London, UK",   a:"Old Spitalfields Market, London",lat:51.5195, lng:-0.0755, k:"Dry-aged beef, the Bleecker Black with blue cheese", p:"££", h:D(11.5,21)},
+  {n:"Black Bear Burger",   c:"London, UK",   a:"Boxpark Shoreditch, London",   lat:51.5240, lng:-0.0780, k:"Dexter beef, the Dirty Bacon Cheese", p:"££", h:D(12,22)},
+  {n:"Patty & Bun",         c:"London, UK",   a:"54 James St, London",          lat:51.5150, lng:-0.1500, k:"Ari Gold with smoky mayo and pickled onion", p:"££", h:D(12,22)},
+  {n:"Hawksmoor",           c:"London, UK",   a:"11 Langley St, London",        lat:51.5140, lng:-0.1265, k:"Bar-only burger from a legendary steakhouse", p:"£££", h:D(12,23)},
+  {n:"Four Legs",           c:"London, UK",   a:"The Compton Arms, London",     lat:51.5430, lng:-0.1010, k:"The Ivan — pub burger that people cross London for", p:"££", h:off(D(12,22),[1])},
+  {n:"Blend",               c:"Paris, FR",    a:"44 Rue d'Argout, Paris",       lat:48.8650, lng:2.3480, k:"House-baked buns, French beef, the burger that started it", p:"€€", h:D(12,22.5)},
+  {n:"PNY",                 c:"Paris, FR",    a:"96 Rue Oberkampf, Paris",      lat:48.8660, lng:2.3760, k:"Paris New York — smoky Dirty Wasp, tiled dining room", p:"€€", h:D(12,22.5)},
+  {n:"Le Camion Qui Fume",  c:"Paris, FR",    a:"66 Rue Saint-Marc, Paris",     lat:48.8700, lng:2.3400, k:"The food truck that taught Paris the burger", p:"€€", h:D(11.75,22)},
+  {n:"Burgermeister",       c:"Berlin, DE",   a:"Oberbaumstr. 8, Berlin",       lat:52.5010, lng:13.4440, k:"Inside a converted public toilet under the U-Bahn tracks", p:"€", h:D(11,29)},
+  {n:"The Bird",            c:"Berlin, DE",   a:"Am Falkplatz 5, Berlin",       lat:52.5480, lng:13.4180, k:"New York-style, hand-chopped, English muffin bun", p:"€€", h:D(17,24)},
+  {n:"The Butcher",         c:"Amsterdam, NL",a:"Albert Cuypstraat 129, Amsterdam",lat:52.3560,lng:4.8920, k:"Silence of the Lamb, hidden speakeasy in the back", p:"€€", h:D(11,23)},
+
+  /* ---- Asia-Pacific ---- */
+  {n:"Blacows",             c:"Tokyo, JP",    a:"1-8-1 Ebisu-Nishi, Shibuya",   lat:35.6480, lng:139.7100, k:"Kuroge wagyu patty, house bun, Ebisu backstreet", p:"¥¥¥", h:off(D(11.5,22),[1])},
+  {n:"Munch's Burger Shack",c:"Tokyo, JP",    a:"1-4-4 Shibakoen, Minato",      lat:35.6560, lng:139.7480, k:"Avocado cheeseburger, one of Tokyo's hardest tables", p:"¥¥", h:off(D(11,21),[3])},
+  {n:"Golden Brown",        c:"Tokyo, JP",    a:"1-17-1 Kamimeguro, Meguro",    lat:35.6440, lng:139.6990, k:"Nakameguro classic, thick patty, charcoal grill", p:"¥¥", h:D(11.5,22)},
+  {n:"Mary's",              c:"Sydney, AU",   a:"6 Mary St, Newtown",           lat:-33.8960,lng:151.1790, k:"Dark, loud, greasy in the best possible way", p:"$$", h:D(12,24)},
+  {n:"Bar Luca",            c:"Sydney, AU",   a:"52 Phillip St, Sydney",        lat:-33.8660,lng:151.2080, k:"The Blame Canada — maple bacon jam, CBD lunch rush", p:"$$", h:off(D(11,21),[0])},
+  {n:"8bit",                c:"Melbourne, AU",a:"5 Droop St, Footscray",        lat:-37.8000,lng:144.9000, k:"Arcade-themed, the Mario with double cheese", p:"$", h:D(11.5,21)},
+  {n:"Royal Stacks",        c:"Melbourne, AU",a:"470 Collins St, Melbourne",    lat:-37.8160,lng:144.9640, k:"Grass-fed smash, free soft-serve with every order", p:"$", h:D(11,21)},
+  {n:"Butcher & Sons",      c:"Mexico City, MX",a:"Álvaro Obregón 145, Roma",   lat:19.4180, lng:-99.1630, k:"Build-your-own on the terrace in Roma Norte", p:"$$", h:D(13,24)}
+];
+
+var els = {
+  app: document.getElementById('app'),
+  btn: document.getElementById('locate'),
+  btnLabel: document.getElementById('locate-label'),
+  hint: document.getElementById('hint')
+};
+
+var state = {
+  origin: null,      // {lat,lng,label}
+  radius: 5,
+  openOnly: true,
+  sort: 'best',      // 'best' | 'near'
+  manual: false
+};
+
+/* ---------- persistence (per-viewer convenience only) ---------- */
+function loadPrefs(){
+  try{
+    var raw = localStorage.getItem('whatsopen.prefs');
+    if(!raw) return;
+    var p = JSON.parse(raw);
+    if(typeof p.radius === 'number') state.radius = p.radius;
+    if(typeof p.openOnly === 'boolean') state.openOnly = p.openOnly;
+    if(p.sort === 'best' || p.sort === 'near') state.sort = p.sort;
+  }catch(e){/* private mode, blocked storage — defaults are fine */}
+}
+function savePrefs(){
+  try{
+    localStorage.setItem('whatsopen.prefs', JSON.stringify({
+      radius: state.radius, openOnly: state.openOnly, sort: state.sort
+    }));
+  }catch(e){}
+}
+
+/* ---------- geo ---------- */
+function miles(a, b){
+  var R = 3958.8, toRad = Math.PI/180;
+  var dLat = (b.lat-a.lat)*toRad, dLng = (b.lng-a.lng)*toRad;
+  var la1 = a.lat*toRad, la2 = b.lat*toRad;
+  var x = Math.sin(dLat/2)*Math.sin(dLat/2) +
+          Math.sin(dLng/2)*Math.sin(dLng/2)*Math.cos(la1)*Math.cos(la2);
+  return 2*R*Math.asin(Math.min(1, Math.sqrt(x)));
+}
+
+/* ---------- clock / hours ---------- */
+function fmtHour(x){
+  var t = ((x % 24) + 24) % 24;
+  var h = Math.floor(t), m = Math.round((t - h) * 60);
+  if(m === 60){ m = 0; h = (h + 1) % 24; }
+  var ap = h >= 12 ? 'pm' : 'am';
+  var hh = h % 12; if(hh === 0) hh = 12;
+  return m ? hh + ':' + String(m).padStart(2,'0') + ap : hh + ap;
+}
+var DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function statusOf(spot, now){
+  var day = now.getDay();
+  var cur = now.getHours() + now.getMinutes()/60;
+
+  // a window opened yesterday can still be running (e.g. closes 2am)
+  var prev = spot.h[(day + 6) % 7];
+  if(prev && prev[1] > 24 && cur < prev[1] - 24){
+    return { open:true, closesAt: prev[1] - 24, minsLeft: (prev[1] - 24 - cur) * 60 };
+  }
+  var today = spot.h[day];
+  if(today && cur >= today[0] && cur < today[1]){
+    return {
+      open:true, closesAt: today[1], minsLeft: (today[1] - cur) * 60,
+      roundClock: today[1] - today[0] >= 24
+    };
+  }
+  // find the next opening within a week
+  for(var i = 0; i < 8; i++){
+    var d = (day + i) % 7, win = spot.h[d];
+    if(!win) continue;
+    if(i === 0 && win[0] <= cur) continue;
+    return { open:false, opensAt: win[0], opensDay: i === 0 ? 'today' : (i === 1 ? 'tomorrow' : DAYS[d]) };
+  }
+  return { open:false };
+}
+
+function hoursLine(spot, now){
+  var today = spot.h[now.getDay()];
+  if(!today) return 'Closed today';
+  if(today[1] - today[0] >= 24) return 'Open around the clock';
+  return "Today " + fmtHour(today[0]) + "–" + fmtHour(today[1]);
+}
+
+/* ---------- rendering ---------- */
+function esc(s){
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+function mapsHref(spot){
+  return 'https://www.google.com/maps/search/?api=1&query=' +
+         encodeURIComponent(spot.n + ' ' + spot.a);
+}
+function mapsSearchHere(origin){
+  // /maps/search/<term>/@lat,lng,zoom — anchors the live search on the exact fix
+  return 'https://www.google.com/maps/search/burgers/@' +
+         origin.lat.toFixed(6) + ',' + origin.lng.toFixed(6) + ',14z';
+}
+
+function render(){
+  if(!state.origin){ els.app.innerHTML = ''; return; }
+  var now = new Date();
+  var origin = state.origin;
+
+  var all = SPOTS.map(function(s, i){
+    return { s:s, i:i, d: miles(origin, s), st: statusOf(s, now) };
+  }).sort(function(a,b){ return a.d - b.d; });
+
+  var inRange = all.filter(function(r){ return r.d <= state.radius; });
+  var nearestAny = all[0];
+
+  // Off the map entirely — hand them over to a live maps search.
+  if(all[0].d > 60){
+    els.app.innerHTML = offMapHTML(nearestAny);
+    wireCities();
+    return;
+  }
+
+  var openCount = inRange.filter(function(r){ return r.st.open; }).length;
+  var rows = state.openOnly ? inRange.filter(function(r){ return r.st.open; }) : inRange;
+
+  if(state.sort === 'best'){
+    rows = rows.slice().sort(function(a,b){ return a.i - b.i; });
+  }
+
+  var html = '';
+
+  /* readout */
+  html += '<div class="readout">' +
+    '<div class="readout-top">' +
+      '<span class="bignum">' + openCount + '</span>' +
+      '<span class="bigunit">open right now<br>within ' + state.radius + ' mile' + (state.radius===1?'':'s') + '</span>' +
+    '</div>' +
+    '<div class="readout-meta">' +
+      '<span>' + esc(origin.label) + '</span>' +
+      '<span><b>' + fmtHour(now.getHours() + now.getMinutes()/60) + '</b> · ' + DAYS[now.getDay()] + '</span>' +
+    '</div>' +
+  '</div>';
+
+  /* controls */
+  html += '<div class="controls">' +
+    '<div class="ctl-row"><span class="ctl-label">Radius</span>' +
+      [1,3,5,10].map(function(r){
+        return '<button class="chip" data-radius="' + r + '" aria-pressed="' + (state.radius===r) + '">' + r + ' mi</button>';
+      }).join('') +
+    '</div>' +
+    '<div class="ctl-row">' +
+      '<button class="chip hot" data-toggle="openOnly" aria-pressed="' + state.openOnly + '">Open now only</button>' +
+      '<button class="chip" data-sort="best" aria-pressed="' + (state.sort==='best') + '">Best first</button>' +
+      '<button class="chip" data-sort="near" aria-pressed="' + (state.sort==='near') + '">Closest first</button>' +
+    '</div>' +
+  '</div>';
+
+  /* list */
+  if(!rows.length){
+    var why = state.openOnly && inRange.length
+      ? 'All ' + inRange.length + ' spot' + (inRange.length===1?'':'s') + ' within ' + state.radius + ' miles are closed right now.'
+      : 'Nothing on the map within ' + state.radius + ' miles.';
+    html += '<div class="notice"><h3>Nothing serving</h3><p>' + why +
+      ' Widen the radius, or drop the open-now filter to see what to plan for.</p>' +
+      '<a class="go" target="_blank" rel="noopener" href="' + mapsSearchHere(origin) + '">Search live on Maps</a></div>';
+  } else {
+    html += '<ul class="list">';
+    rows.forEach(function(r, idx){
+      var st = r.st;
+      var allDay = st.open && st.roundClock;
+      var cls = st.open ? (!allDay && st.minsLeft <= 60 ? 'is-soon' : 'is-open') : '';
+      var pill = allDay ? 'Open 24 hours'
+        : st.open
+          ? (st.minsLeft <= 60 ? 'Closes ' + fmtHour(st.closesAt) : 'Open · till ' + fmtHour(st.closesAt))
+          : (st.opensAt != null ? 'Opens ' + st.opensDay + ' ' + fmtHour(st.opensAt) : 'Closed');
+      html += '<li class="ticket ' + cls + '">' +
+        '<div class="t-head">' +
+          '<div class="rank">' + (idx + 1) + '</div>' +
+          '<div class="t-main">' +
+            '<div class="t-name">' + esc(r.s.n) + '</div>' +
+            '<div class="t-known">' + esc(r.s.k) + '</div>' +
+          '</div>' +
+          '<div class="t-right">' +
+            '<div class="dist">' + (r.d < 0.1 ? '<0.1' : r.d.toFixed(1)) + '<span>MI</span></div>' +
+            '<div class="pill">' + esc(pill) + '</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="t-foot">' +
+          '<div class="t-hours"><b>' + esc(hoursLine(r.s, now)) + '</b> · ' + esc(r.s.p) + ' · ' + esc(r.s.c) + '</div>' +
+          '<a class="go" target="_blank" rel="noopener" href="' + mapsHref(r.s) + '">Directions</a>' +
+        '</div>' +
+      '</li>';
+    });
+    html += '</ul>';
+  }
+
+  els.app.innerHTML = html;
+  wireControls();
+}
+
+function offMapHTML(nearest){
+  var origin = state.origin;
+  var cities = {};
+  SPOTS.forEach(function(s){ if(!cities[s.c]) cities[s.c] = s; });
+  var list = Object.keys(cities).map(function(c){
+    return { c:c, s:cities[c], d: miles(origin, cities[c]) };
+  }).sort(function(a,b){ return a.d - b.d; }).slice(0, 12);
+
+  return '<div class="notice">' +
+    '<h3>You\'re off our map</h3>' +
+    '<p>No hand-picked spot within 60 miles of ' + esc(origin.label) + '. The nearest one on the list is ' +
+    '<b>' + esc(nearest.s.n) + '</b> in ' + esc(nearest.s.c) + ', about ' + Math.round(nearest.d) +
+    ' miles away. For what\'s actually open around you right now, go live:</p>' +
+    '<a class="go" target="_blank" rel="noopener" href="' + mapsSearchHere(origin) + '">Burgers near me on Maps</a>' +
+    '<div class="cities">' + list.map(function(x){
+      return '<button class="chip" data-city="' + esc(x.c) + '">' + esc(x.c) + ' · ' + Math.round(x.d) + ' mi</button>';
+    }).join('') + '</div>' +
+  '</div>';
+}
+
+function wireControls(){
+  els.app.querySelectorAll('[data-radius]').forEach(function(b){
+    b.addEventListener('click', function(){ state.radius = +b.dataset.radius; savePrefs(); render(); });
+  });
+  els.app.querySelectorAll('[data-sort]').forEach(function(b){
+    b.addEventListener('click', function(){ state.sort = b.dataset.sort; savePrefs(); render(); });
+  });
+  var t = els.app.querySelector('[data-toggle="openOnly"]');
+  if(t) t.addEventListener('click', function(){ state.openOnly = !state.openOnly; savePrefs(); render(); });
+  wireCities();
+}
+function wireCities(){
+  els.app.querySelectorAll('[data-city]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var c = b.dataset.city;
+      var s = SPOTS.filter(function(x){ return x.c === c; })[0];
+      state.origin = { lat:s.lat, lng:s.lng, label: 'Browsing ' + c };
+      state.manual = true;
+      render();
+      els.app.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+}
+
+/* ---------- location flow ---------- */
+function cityPicker(msg){
+  var cities = {};
+  SPOTS.forEach(function(s){ if(!cities[s.c]) cities[s.c] = s; });
+  var names = Object.keys(cities).sort();
+  els.app.innerHTML = '<div class="notice">' +
+    '<h3>Pick a city instead</h3>' +
+    '<p>' + esc(msg) + '</p>' +
+    '<div class="cities">' + names.map(function(c){
+      return '<button class="chip" data-city="' + esc(c) + '">' + esc(c) + '</button>';
+    }).join('') + '</div></div>';
+  wireCities();
+}
+
+els.btn.addEventListener('click', function(){
+  if(!navigator.geolocation){
+    cityPicker('This browser has no location services. Choose a city to browse the map by hand.');
+    return;
+  }
+  els.btn.disabled = true;
+  els.btnLabel.textContent = 'Finding you…';
+  navigator.geolocation.getCurrentPosition(function(pos){
+    els.btn.disabled = false;
+    els.btnLabel.textContent = 'Update my location';
+    els.hint.innerHTML = 'Located. <button class="linkbtn" id="pick">Browse a city instead</button>';
+    var pick = document.getElementById('pick');
+    if(pick) pick.addEventListener('click', function(){
+      cityPicker('Pick anywhere on the map to see what\'s open there on its own clock.');
+    });
+    state.origin = {
+      lat: pos.coords.latitude,
+      lng: pos.coords.longitude,
+      label: 'Your location · ±' + Math.round(pos.coords.accuracy) + 'm'
+    };
+    render();
+  }, function(err){
+    els.btn.disabled = false;
+    els.btnLabel.textContent = 'Try location again';
+    var msg = err && err.code === 1
+      ? 'Location permission was declined — that is completely fine.'
+      : 'Could not get a GPS fix just now.';
+    cityPicker(msg + ' Choose a city to browse the map by hand.');
+  }, { enableHighAccuracy:true, timeout:12000, maximumAge:60000 });
+});
+
+loadPrefs();
+
+/* keep the clock and every open/closed badge honest while the page sits open,
+   but never yank the DOM out from under a control someone is using */
+setInterval(function(){
+  if(!state.origin) return;
+  if(els.app.contains(document.activeElement)) return;
+  render();
+}, 60000);
+})();
+</script>
+</body>
+</html>
