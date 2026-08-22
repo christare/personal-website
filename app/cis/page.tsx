@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import styles from "./cis.module.css";
 
 const shareImage =
@@ -180,10 +179,10 @@ export default function CisPage() {
   return (
     <main className={styles.page}>
       <nav className={styles.nav}>
-        <Link href="/" className={styles.identity}>
+        <a href="/" className={styles.identity}>
           <span>CJ</span>
           <strong>Chris Jereza</strong>
-        </Link>
+        </a>
         <p>Prepared for Center for Internet Security</p>
         <a className={styles.navCta} href="mailto:chris@chrisjereza.io">
           Start a conversation
@@ -286,7 +285,7 @@ export default function CisPage() {
 
       <footer className={styles.footer}>
         <span>Chris Jereza · New York City</span>
-        <Link href="/">View full portfolio ↗</Link>
+        <a href="/">View full portfolio ↗</a>
       </footer>
     </main>
   );
