@@ -15,16 +15,32 @@ const geistMono = Geist_Mono({
 
 
 export const metadata: Metadata = {
-  title: site.name,
-  description: site.tagline,
+  metadataBase: new URL("https://chrisjereza.io"),
+  title: `${site.name} — Video Producer, Editor & Engineer`,
+  description:
+    "Selected video, editorial, branded, and engineering work by Chris Jereza.",
+  openGraph: {
+    title: `${site.name} — Video Producer, Editor & Engineer`,
+    description:
+      "Selected video, editorial, branded, and engineering work by Chris Jereza.",
+    type: "website",
+    images: [{ url: "/og.png", width: 1672, height: 941, alt: "Chris Jereza portfolio" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.name} — Video Producer, Editor & Engineer`,
+    description:
+      "Selected video, editorial, branded, and engineering work by Chris Jereza.",
+    images: ["/og.png"],
+  },
 };
 
 export const viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f2f0e8" },
-    { media: "(prefers-color-scheme: dark)", color: "#080807" },
+    { media: "(prefers-color-scheme: light)", color: "#0d0d0d" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d0d0d" },
   ],
 };
 
