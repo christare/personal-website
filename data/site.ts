@@ -101,6 +101,11 @@ export const site: {
       description: "Favorite long-form pieces across shows, interviews, and film.",
       items: [
         {
+          title: "We Tested ChatGPT 5.6 For A Month",
+          url: "https://youtu.be/uUW0rLfgg2g",
+          platform: "youtube",
+        },
+        {
           title: "Korean Girl Picks a Date Based on Their Tteokbokki (Plate to Date)",
           url: "https://youtu.be/NC-iKvZNhy4?si=Hb5_l8mLB_mvRFfc",
           platform: "youtube",
