@@ -71,7 +71,7 @@ export const site: {
   profileImageUrl: "/Chris Profile Photo 1.jpg",
   profileImageAlt: "Chris Jereza",
   intro:
-    "Formerly at BuzzFeed (lead producer/host) and The Verge (editor). 8+ years in production and post. 1.3M+ followers, 500M+ views annually across platforms.",
+    "Formerly at BuzzFeed (lead producer/host) and The Verge (editor). 8+ years in production and post. 1.4M+ followers, 500M+ views annually across platforms.",
   highlights: [],
 
   socials: [
@@ -79,13 +79,13 @@ export const site: {
       platform: "instagram",
       handle: "@chrisjereza",
       url: "https://instagram.com/chrisjereza",
-      fallbackCount: "273K followers",
+      fallbackCount: "283K followers",
     },
     {
       platform: "youtube",
       handle: "@chrisjereza415",
       url: "https://youtube.com/@chrisjereza415",
-      fallbackCount: "810K subscribers",
+      fallbackCount: "850K subscribers",
     },
     {
       platform: "tiktok",

@@ -87,7 +87,7 @@ export type ClientBrief = {
     number: string;
     title: string;
     description: string;
-    prices?: string[];
+    prices?: { range: string; detail: string }[];
     references: { label: string; url: string }[];
   }[];
 };
@@ -299,7 +299,7 @@ export function HomeTabs(props: HomeTabsProps) {
           </div>
 
           <dl className="proof-grid">
-            <div><dt>Audience</dt><dd>1.3M+</dd></div>
+            <div><dt>Audience</dt><dd>1.4M+</dd></div>
             <div><dt>Annual views</dt><dd>500M+</dd></div>
             <div><dt>Experience</dt><dd>8+ years</dd></div>
           </dl>
@@ -343,7 +343,12 @@ export function HomeTabs(props: HomeTabsProps) {
                       </div>
                       {format.prices ? (
                         <div className="client-format-prices">
-                          {format.prices.map((price) => <strong key={price}>{price}</strong>)}
+                          {format.prices.map((price) => (
+                            <div className="client-price" key={`${price.range}-${price.detail}`}>
+                              <strong>{price.range}</strong>
+                              <span>{price.detail}</span>
+                            </div>
+                          ))}
                         </div>
                       ) : null}
                     </div>

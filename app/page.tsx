@@ -4,11 +4,7 @@ import {
   type ResolvedPortfolioItem,
 } from "@/components/HomeTabs";
 import { site, type PortfolioItem } from "@/data/site";
-import { formatCount } from "@/lib/format";
-import {
-  fetchYoutubeViewCounts,
-  fetchYoutubeSubscribers,
-} from "@/lib/youtube";
+import { fetchYoutubeViewCounts } from "@/lib/youtube";
 import thumbnailManifest from "@/data/thumbnails.json";
 
 function youtubeIdFromUrl(url: string): string | null {
@@ -121,32 +117,6 @@ function driveThumbnailUrl(url: string): string | null {
   return id ? `https://lh3.googleusercontent.com/d/${id}=w640` : null;
 }
 
-async function fetchInstagramFollowers(
-  handle: string,
-): Promise<string | null> {
-  try {
-    const url = `https://www.instagram.com/${handle.replace(/^@/, "")}/`;
-    const res = await fetch(url, {
-      headers: { "User-Agent": "facebookexternalhit/1.1" },
-      signal: AbortSignal.timeout(8000),
-      redirect: "follow",
-    });
-    if (!res.ok) return null;
-    const html = await res.text();
-    const match = html.match(
-      /<meta\s+property="og:description"\s+content="([^"]+)"/,
-    );
-    if (!match?.[1]) return null;
-    const followerMatch = match[1].match(
-      /([\d,.]+[KMB]?)\s*Followers/i,
-    );
-    if (!followerMatch?.[1]) return null;
-    return `${followerMatch[1]} followers`;
-  } catch {
-    return null;
-  }
-}
-
 async function fetchExternalThumbnail(
   url: string,
   platform: string,
@@ -170,10 +140,7 @@ export async function PortfolioHome({ clientBrief }: { clientBrief?: ClientBrief
       (i) => i.platform === "tiktok" || i.platform === "instagram",
     );
 
-  const igSocial = site.socials.find((s) => s.platform === "instagram");
-  const ytSocial = site.socials.find((s) => s.platform === "youtube");
-
-  const [youtubeViews, externalThumbnails, igFollowers, ytSubscribers] =
+  const [youtubeViews, externalThumbnails] =
     await Promise.all([
       fetchYoutubeViewCounts(youtubeIds),
       Promise.all(
@@ -182,23 +149,14 @@ export async function PortfolioHome({ clientBrief }: { clientBrief?: ClientBrief
           thumbnail: await fetchExternalThumbnail(item.url, item.platform),
         })),
       ),
-      igSocial
-        ? fetchInstagramFollowers(igSocial.handle)
-        : Promise.resolve(null),
-      ytSocial
-        ? fetchYoutubeSubscribers(ytSocial.handle)
-        : Promise.resolve(null),
     ]);
 
-  const resolvedSocials = site.socials.map((s) => {
-    let count: string = s.fallbackCount;
-    if (s.platform === "instagram" && igFollowers) {
-      count = igFollowers;
-    } else if (s.platform === "youtube" && ytSubscribers != null) {
-      count = formatCount(ytSubscribers, "subscribers");
-    }
-    return { platform: s.platform, handle: s.handle, url: s.url, count };
-  });
+  const resolvedSocials = site.socials.map((s) => ({
+    platform: s.platform,
+    handle: s.handle,
+    url: s.url,
+    count: s.fallbackCount,
+  }));
 
   const thumbnailMap = new Map(
     externalThumbnails.map((r) => [r.url, r.thumbnail]),

@@ -34,11 +34,12 @@ const cisBrief: ClientBrief = {
       title: "Rappers Teach",
       description:
         "A complete original track and video: custom-produced beat, written and professionally recorded modern rap verse, mixing and mastering, and a lyric/graphics video. Built as an evergreen asset for ads, events, presentations, and campaign use. Final price depends on production level and usage rights.",
-      prices: ["$7k–$10k"],
+      prices: [{ range: "$7k–$10k", detail: "Production level and usage rights" }],
       references: [
         { label: "Keeper", url: "https://www.instagram.com/p/DYS3FRTqodh/" },
         { label: "Sola", url: "https://www.instagram.com/p/DZF9FzRKQrU/" },
         { label: "Hydden", url: "https://www.instagram.com/p/DVfHBG8Kixa/" },
+        { label: "21 Savage", url: "https://www.instagram.com/p/DTBcGeDioin/" },
       ],
     },
     {
@@ -46,9 +47,9 @@ const cisBrief: ClientBrief = {
       title: "Product or technical profile",
       description: "A clear, hosted piece about a product, topic, framework, or technical idea.",
       prices: [
-        "$3k–$5k · one-day shoot",
-        "$6k–$10k · scripting, graphics, sound design, or multiple deliverables",
-        "$10k–$12k+ · multi-day or technically complex production",
+        { range: "$3k–$5k", detail: "One-day shoot" },
+        { range: "$6k–$10k", detail: "Scripting, graphics, sound design, or multiple deliverables" },
+        { range: "$10k–$12k+", detail: "Multi-day or technically complex production" },
       ],
       references: [
         { label: "ChatGPT 5.6", url: "https://youtu.be/uUW0rLfgg2g" },
@@ -59,16 +60,17 @@ const cisBrief: ClientBrief = {
     {
       number: "03",
       title: "Narrative film or organization profile",
-      description: "A story-led film built around a person, organization, mission, or transformation.",
+      description: "A story-led, person-first film built around an individual, organization, mission, or transformation.",
       prices: [
-        "$5k–$8k · one-day, one-location story",
-        "$8k–$15k · deeper story development or multi-day production",
-        "$15k+ · larger documentary-style production",
+        { range: "$5k–$8k", detail: "One-day, one-location story" },
+        { range: "$8k–$15k", detail: "Deeper story development or multi-day production" },
+        { range: "$15k+", detail: "Larger documentary-style production" },
       ],
       references: [
         { label: "Adderall / startup", url: "https://www.youtube.com/watch?v=Q5oDnaYrz3s" },
         { label: "Hangover drink", url: "https://www.youtube.com/watch?v=45kYpBJEC1w" },
         { label: "Muay Thai", url: "https://drive.google.com/file/d/1xkHsvXqYAS3c0kdW_ZaIXN0lQpuLsDzx/view?usp=sharing" },
+        { label: "Life after addiction", url: "https://www.youtube.com/watch?v=8dW2xiKmJso" },
       ],
     },
   ],
