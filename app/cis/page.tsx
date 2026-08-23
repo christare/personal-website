@@ -61,7 +61,7 @@ const cisBrief: ClientBrief = {
       title: "Founder or organization profile",
       description: "A hosted profile built around a person, team, or organization.",
       references: [
-        { label: "Adderall / startup", url: "https://youtu.be/Q5oDnaYrz3s" },
+        { label: "Adderall / startup", url: "https://www.youtube.com/watch?v=Q5oDnaYrz3s" },
         { label: "Hangover drink", url: "https://www.youtube.com/watch?v=45kYpBJEC1w" },
         { label: "Muay Thai", url: "https://drive.google.com/file/d/1xkHsvXqYAS3c0kdW_ZaIXN0lQpuLsDzx/view?usp=sharing" },
       ],

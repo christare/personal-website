@@ -217,6 +217,9 @@ function VideoCard({
 export function HomeTabs(props: HomeTabsProps) {
   const [tab, setTab] = useState<TabId>("video");
   const [playingUrls, setPlayingUrls] = useState<string[]>([]);
+  const portfolioByUrl = new Map(
+    props.portfolioSections.flatMap((section) => section.items).map((item) => [item.url, item]),
+  );
 
   useEffect(() => {
     const fromHash = window.location.hash.replace("#", "") as TabId;
@@ -313,27 +316,40 @@ export function HomeTabs(props: HomeTabsProps) {
             </div>
 
             <div className="client-format-list">
-              {props.clientBrief.formats.map((format) => (
-                <article key={format.number} className="client-format">
-                  <span className="client-format-number">{format.number}</span>
-                  <div className="client-format-copy">
-                    <h3>{format.title}</h3>
-                    <p>{format.description}</p>
-                    <div className="client-format-references" aria-label={`${format.title} references`}>
-                      {format.references.map((reference) => (
-                        <a key={reference.url} href={reference.url} target="_blank" rel="noopener noreferrer">
-                          {reference.label} <ArrowIcon />
-                        </a>
+              {props.clientBrief.formats.map((format) => {
+                const samples = format.references
+                  .map((reference) => portfolioByUrl.get(reference.url) ?? null)
+                  .filter((item): item is ResolvedPortfolioItem => Boolean(item));
+                const portraitOnly = samples.length > 0 && samples.every(isPortraitVideo);
+
+                return (
+                  <article key={format.number} className="client-format">
+                    <div className="client-format-header">
+                      <span className="client-format-number">{format.number}</span>
+                      <div className="client-format-copy">
+                        <h3>{format.title}</h3>
+                        <p>{format.description}</p>
+                      </div>
+                      {format.prices ? (
+                        <div className="client-format-prices">
+                          {format.prices.map((price) => <strong key={price}>{price}</strong>)}
+                        </div>
+                      ) : null}
+                    </div>
+
+                    <div className={`client-format-video-grid${portraitOnly ? " portrait" : ""}`}>
+                      {samples.map((item) => (
+                        <VideoCard
+                          key={item.url}
+                          item={item}
+                          playing={playingUrls.includes(item.url)}
+                          onToggle={() => togglePlayer(item.url)}
+                        />
                       ))}
                     </div>
-                  </div>
-                  {format.prices ? (
-                    <div className="client-format-prices">
-                      {format.prices.map((price) => <strong key={price}>{price}</strong>)}
-                    </div>
-                  ) : null}
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           </section>
         ) : null}
