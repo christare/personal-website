@@ -34,12 +34,14 @@ const formats: {
   number: string;
   title: string;
   description: string;
+  pricing?: string[];
   work: WorkItem[];
 }[] = [
   {
     number: "01",
-    title: "Security rap",
-    description: "Original song or verse built around one topic, product, or campaign.",
+    title: "Rappers Teach",
+    description: "Original song or verse built around one topic, product, or campaign. Final price depends on production level and usage rights.",
+    pricing: ["$7k–$10k"],
     work: [
       {
         title: "Keeper Security Rap",
@@ -65,6 +67,11 @@ const formats: {
     number: "02",
     title: "Product or technical explainer",
     description: "Hosted test, walkthrough, or story centered on one technical idea.",
+    pricing: [
+      "$3k–$5k · one-day shoot",
+      "$6k–$12k · graphics, sound design, or multi-day production",
+      "Custom quote · larger builds",
+    ],
     work: [
       {
         title: "We Tested ChatGPT 5.6 For A Month",
@@ -91,6 +98,12 @@ const formats: {
     title: "Founder or organization profile",
     description: "A hosted profile built around a person, team, or organization.",
     work: [
+      {
+        title: "How Adderall Destroyed His Startup",
+        note: "Narrative founder profile",
+        href: "https://youtu.be/Q5oDnaYrz3s",
+        image: "/thumbnails/yt-Q5oDnaYrz3s.jpg",
+      },
       {
         title: "He Made A Drink That Prevents Hangover Symptoms",
         note: "Founder profile",
@@ -157,8 +170,8 @@ export default function CisPage() {
         <p>CIS × Chris Jereza</p>
         <h1>Format options</h1>
         <span>
-          Reference work for choosing the creative direction. Once we select the
-          format and scope, I&apos;ll confirm the exact price.
+          References show format and production style only. Final messaging will be
+          tailored to CIS, the selected topic, and the intended audience.
         </span>
       </header>
 
@@ -170,6 +183,13 @@ export default function CisPage() {
               <div>
                 <h2>{format.title}</h2>
                 <p>{format.description}</p>
+                {format.pricing && (
+                  <div className={styles.pricing}>
+                    {format.pricing.map((line) => (
+                      <strong key={line}>{line}</strong>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
             <div className={styles.workGrid}>
