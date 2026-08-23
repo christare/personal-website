@@ -220,6 +220,17 @@ export function HomeTabs(props: HomeTabsProps) {
   const portfolioByUrl = new Map(
     props.portfolioSections.flatMap((section) => section.items).map((item) => [item.url, item]),
   );
+  const clientReferenceUrls = new Set(
+    props.clientBrief?.formats.flatMap((format) => format.references.map((reference) => reference.url)) ?? [],
+  );
+  const displayedPortfolioSections = props.clientBrief
+    ? props.portfolioSections
+        .map((section) => ({
+          ...section,
+          items: section.items.filter((item) => !clientReferenceUrls.has(item.url)),
+        }))
+        .filter((section) => section.items.length > 0)
+    : props.portfolioSections;
 
   useEffect(() => {
     const fromHash = window.location.hash.replace("#", "") as TabId;
@@ -356,7 +367,20 @@ export function HomeTabs(props: HomeTabsProps) {
 
         {tab === "video" ? (
           <section className="content-stack" aria-label="Video work">
-            {props.portfolioSections.map((section) => {
+            {props.clientBrief ? (
+              <section className="portfolio-archive-intro" aria-labelledby="additional-work-title">
+                <div>
+                  <p className="eyebrow">Additional portfolio</p>
+                  <h2 id="additional-work-title">More work</h2>
+                </div>
+                <p>
+                  Broader editorial, branded, viral, and independent work. These are
+                  portfolio examples—not additional CIS format options.
+                </p>
+              </section>
+            ) : null}
+
+            {displayedPortfolioSections.map((section) => {
               const landscape = section.items.filter((item) => !isPortraitVideo(item));
               const portrait = section.items.filter(isPortraitVideo);
               return (

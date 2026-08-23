@@ -33,7 +33,7 @@ const cisBrief: ClientBrief = {
       number: "01",
       title: "Rappers Teach",
       description:
-        "Original song or verse built around one topic, product, or campaign. Final price depends on production level and usage rights.",
+        "A complete original track and video: custom-produced beat, written and professionally recorded modern rap verse, mixing and mastering, and a lyric/graphics video. Built as an evergreen asset for ads, events, presentations, and campaign use. Final price depends on production level and usage rights.",
       prices: ["$7k–$10k"],
       references: [
         { label: "Keeper", url: "https://www.instagram.com/p/DYS3FRTqodh/" },
@@ -43,12 +43,12 @@ const cisBrief: ClientBrief = {
     },
     {
       number: "02",
-      title: "Product or technical explainer",
-      description: "Hosted test, walkthrough, or story centered on one technical idea.",
+      title: "Product or technical profile",
+      description: "A clear, hosted piece about a product, topic, framework, or technical idea.",
       prices: [
         "$3k–$5k · one-day shoot",
-        "$6k–$12k · graphics, sound design, or multi-day production",
-        "Custom quote · larger builds",
+        "$6k–$10k · scripting, graphics, sound design, or multiple deliverables",
+        "$10k–$12k+ · multi-day or technically complex production",
       ],
       references: [
         { label: "ChatGPT 5.6", url: "https://youtu.be/uUW0rLfgg2g" },
@@ -58,21 +58,17 @@ const cisBrief: ClientBrief = {
     },
     {
       number: "03",
-      title: "Founder or organization profile",
-      description: "A hosted profile built around a person, team, or organization.",
+      title: "Narrative film or organization profile",
+      description: "A story-led film built around a person, organization, mission, or transformation.",
+      prices: [
+        "$5k–$8k · one-day, one-location story",
+        "$8k–$15k · deeper story development or multi-day production",
+        "$15k+ · larger documentary-style production",
+      ],
       references: [
         { label: "Adderall / startup", url: "https://www.youtube.com/watch?v=Q5oDnaYrz3s" },
         { label: "Hangover drink", url: "https://www.youtube.com/watch?v=45kYpBJEC1w" },
         { label: "Muay Thai", url: "https://drive.google.com/file/d/1xkHsvXqYAS3c0kdW_ZaIXN0lQpuLsDzx/view?usp=sharing" },
-      ],
-    },
-    {
-      number: "04",
-      title: "Hosted interview or expert breakdown",
-      description: "A structured conversation, reaction, or breakdown with an expert.",
-      references: [
-        { label: "Uber CEO", url: "https://www.youtube.com/watch?v=NRIF-DfMsQ0&t=3s" },
-        { label: "GM CEO", url: "https://www.youtube.com/watch?v=GIr_oscnob4&t=922s" },
       ],
     },
   ],
