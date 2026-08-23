@@ -102,6 +102,22 @@ button:focus-visible, a:focus-visible {
 .social-strip small { overflow: hidden; color: var(--muted); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
 .social-strip svg { width: 16px; color: var(--muted-soft); }
 
+.client-brief { padding: 52px 0 8px; border-bottom: 1px solid var(--line); }
+.client-brief-heading { display: grid; grid-template-columns: minmax(260px, .8fr) minmax(300px, 1fr); gap: 48px; align-items: end; margin-bottom: 30px; }
+.client-brief-heading h2 { margin: 0; font-size: clamp(30px, 4vw, 54px); font-weight: 690; line-height: 1; letter-spacing: -.05em; }
+.client-brief-heading > p { max-width: 680px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+.client-format-list { border-top: 1px solid var(--line); }
+.client-format { display: grid; grid-template-columns: 44px minmax(280px, 1fr) minmax(260px, .8fr); gap: 24px; padding: 28px 0; border-bottom: 1px solid var(--line); }
+.client-format-number { padding-top: 4px; color: var(--muted-soft); font-family: var(--font-geist-mono), monospace; font-size: 11px; }
+.client-format-copy h3 { margin: 0; font-size: clamp(18px, 2vw, 25px); font-weight: 660; letter-spacing: -.025em; }
+.client-format-copy > p { max-width: 640px; margin: 8px 0 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+.client-format-references { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.client-format-references a { display: flex; align-items: center; gap: 4px; padding: 7px 10px; border: 1px solid var(--line-strong); border-radius: 999px; color: #c8c8c5; font-size: 11px; font-weight: 600; transition: border-color 160ms ease, color 160ms ease, background 160ms ease; }
+.client-format-references a:hover { border-color: var(--ink); background: var(--ink); color: var(--bg); }
+.client-format-references svg { width: 12px; }
+.client-format-prices { display: grid; gap: 8px; align-content: start; padding-top: 2px; }
+.client-format-prices strong { font-size: 13px; font-weight: 650; line-height: 1.45; }
+
 .content-stack { padding: 52px 0 96px; }
 .work-section + .work-section { margin-top: 72px; }
 .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
@@ -188,6 +204,9 @@ footer { display: flex; justify-content: space-between; gap: 20px; padding: 28px
   .proof-grid { font-size: 12px; }
   .proof-grid dd { font-size: 15px; }
   .social-strip { grid-template-columns: 1fr; padding: 12px 0; }
+  .client-brief-heading { grid-template-columns: 1fr; gap: 18px; }
+  .client-format { grid-template-columns: 36px 1fr; }
+  .client-format-prices { grid-column: 2; }
   .content-stack { padding-top: 42px; }
   .work-section + .work-section { margin-top: 58px; }
   .section-heading { align-items: start; }

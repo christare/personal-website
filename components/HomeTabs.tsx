@@ -79,6 +79,19 @@ export type ResolvedSocial = {
   count: string;
 };
 
+export type ClientBrief = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  formats: {
+    number: string;
+    title: string;
+    description: string;
+    prices?: string[];
+    references: { label: string; url: string }[];
+  }[];
+};
+
 type HomeTabsProps = {
   name: string;
   tagline: string;
@@ -100,6 +113,7 @@ type HomeTabsProps = {
     skills: ResumeSection[];
   };
   tare: { title: string; href: string; logoUrl: string; images: string[] };
+  clientBrief?: ClientBrief;
 };
 
 function VideoCard({
@@ -287,6 +301,42 @@ export function HomeTabs(props: HomeTabsProps) {
             </a>
           ))}
         </div>
+
+        {tab === "video" && props.clientBrief ? (
+          <section className="client-brief" aria-labelledby="client-brief-title">
+            <div className="client-brief-heading">
+              <div>
+                <p className="eyebrow">{props.clientBrief.eyebrow}</p>
+                <h2 id="client-brief-title">{props.clientBrief.title}</h2>
+              </div>
+              <p>{props.clientBrief.description}</p>
+            </div>
+
+            <div className="client-format-list">
+              {props.clientBrief.formats.map((format) => (
+                <article key={format.number} className="client-format">
+                  <span className="client-format-number">{format.number}</span>
+                  <div className="client-format-copy">
+                    <h3>{format.title}</h3>
+                    <p>{format.description}</p>
+                    <div className="client-format-references" aria-label={`${format.title} references`}>
+                      {format.references.map((reference) => (
+                        <a key={reference.url} href={reference.url} target="_blank" rel="noopener noreferrer">
+                          {reference.label} <ArrowIcon />
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                  {format.prices ? (
+                    <div className="client-format-prices">
+                      {format.prices.map((price) => <strong key={price}>{price}</strong>)}
+                    </div>
+                  ) : null}
+                </article>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         {tab === "video" ? (
           <section className="content-stack" aria-label="Video work">

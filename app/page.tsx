@@ -1,4 +1,8 @@
-import { HomeTabs, type ResolvedPortfolioItem } from "@/components/HomeTabs";
+import {
+  HomeTabs,
+  type ClientBrief,
+  type ResolvedPortfolioItem,
+} from "@/components/HomeTabs";
 import { site, type PortfolioItem } from "@/data/site";
 import { formatCount } from "@/lib/format";
 import {
@@ -153,7 +157,7 @@ async function fetchExternalThumbnail(
   return null;
 }
 
-export default async function Home() {
+export async function PortfolioHome({ clientBrief }: { clientBrief?: ClientBrief } = {}) {
   const youtubeIds = site.portfolioSections
     .flatMap((section) => section.items)
     .filter((item) => item.platform === "youtube")
@@ -238,6 +242,11 @@ export default async function Home() {
       software={site.software}
       resume={site.resume}
       tare={site.tare}
+      clientBrief={clientBrief}
     />
   );
+}
+
+export default function Home() {
+  return <PortfolioHome />;
 }
