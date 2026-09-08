@@ -101,6 +101,12 @@ export const site: {
       description: "Favorite long-form pieces across shows, interviews, and film.",
       items: [
         {
+          title: "Happy To Announce — Short Film by Chris Jereza",
+          url: "https://youtu.be/VXJwJSI1Dqo",
+          platform: "youtube",
+          note: "Made in <36 hours on a $50 budget",
+        },
+        {
           title: "We Tested ChatGPT 5.6 For A Month",
           url: "https://youtu.be/uUW0rLfgg2g",
           platform: "youtube",
@@ -109,12 +115,6 @@ export const site: {
           title: "Korean Girl Picks a Date Based on Their Tteokbokki (Plate to Date)",
           url: "https://youtu.be/NC-iKvZNhy4?si=Hb5_l8mLB_mvRFfc",
           platform: "youtube",
-        },
-        {
-          title: "Happy to Announce — A Short Film by Chris Jereza",
-          url: "https://www.youtube.com/watch?v=zZAfjmVZcvI",
-          platform: "youtube",
-          note: "Made in <36 hours on a $50 budget",
         },
         {
           title: "Uber CEO Interview (Decoder)",
