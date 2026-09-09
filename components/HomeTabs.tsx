@@ -127,10 +127,10 @@ function VideoCard({
 }) {
   const portrait = isPortraitVideo(item);
   const viewLabel =
-    item.viewsLabel ??
-    (item.computedViewCount != null
+    (item.liveViews && item.computedViewCount != null
       ? formatViewCount(item.computedViewCount)
-      : null);
+      : item.viewsLabel ??
+        (item.computedViewCount != null ? formatViewCount(item.computedViewCount) : null));
   const canPlayHere = item.embeddable && Boolean(item.embedSrc);
   const mediaClass = portrait ? "aspect-[9/16]" : "aspect-video";
   const playerSrc = item.embedSrc
@@ -217,6 +217,7 @@ function VideoCard({
 export function HomeTabs(props: HomeTabsProps) {
   const [tab, setTab] = useState<TabId>("video");
   const [playingUrls, setPlayingUrls] = useState<string[]>([]);
+  const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const portfolioByUrl = new Map(
     props.portfolioSections.flatMap((section) => section.items).map((item) => [item.url, item]),
   );
@@ -380,14 +381,21 @@ export function HomeTabs(props: HomeTabsProps) {
                 </div>
                 <p>
                   Broader editorial, branded, viral, and independent work. These are
-                  portfolio examples—not additional CIS format options.
+                  portfolio examples, not additional CIS format options.
                 </p>
               </section>
             ) : null}
 
             {displayedPortfolioSections.map((section) => {
-              const landscape = section.items.filter((item) => !isPortraitVideo(item));
-              const portrait = section.items.filter(isPortraitVideo);
+              const isExpanded = expandedSections.includes(section.title);
+              const hasMore = Boolean(
+                section.initialItemCount && section.items.length > section.initialItemCount,
+              );
+              const visibleItems = hasMore && !isExpanded
+                ? section.items.slice(0, section.initialItemCount)
+                : section.items;
+              const landscape = visibleItems.filter((item) => !isPortraitVideo(item));
+              const portrait = visibleItems.filter(isPortraitVideo);
               return (
                 <section key={section.title} className="work-section">
                   <div className="section-heading">
@@ -410,6 +418,21 @@ export function HomeTabs(props: HomeTabsProps) {
                         <VideoCard key={item.url} item={item} playing={playingUrls.includes(item.url)} onToggle={() => togglePlayer(item.url)} />
                       ))}
                     </div>
+                  ) : null}
+                  {hasMore ? (
+                    <button
+                      type="button"
+                      className="section-expand"
+                      onClick={() => setExpandedSections((current) =>
+                        isExpanded
+                          ? current.filter((title) => title !== section.title)
+                          : [...current, section.title],
+                      )}
+                    >
+                      {isExpanded
+                        ? "Show fewer"
+                        : `Show ${section.items.length - visibleItems.length} more`}
+                    </button>
                   ) : null}
                 </section>
               );

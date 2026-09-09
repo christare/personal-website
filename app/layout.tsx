@@ -16,11 +16,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://chrisjereza.io"),
-  title: `${site.name} — Video Producer, Editor & Engineer`,
+  title: `${site.name} | Video Producer, Editor & Engineer`,
   description:
     "Selected video, editorial, branded, and engineering work by Chris Jereza.",
   openGraph: {
-    title: `${site.name} — Video Producer, Editor & Engineer`,
+    title: `${site.name} | Video Producer, Editor & Engineer`,
     description:
       "Selected video, editorial, branded, and engineering work by Chris Jereza.",
     type: "website",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.name} — Video Producer, Editor & Engineer`,
+    title: `${site.name} | Video Producer, Editor & Engineer`,
     description:
       "Selected video, editorial, branded, and engineering work by Chris Jereza.",
     images: ["/og.png"],

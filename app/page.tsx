@@ -88,22 +88,38 @@ async function fetchTikTokThumbnail(url: string): Promise<string | null> {
   }
 }
 
-async function fetchInstagramThumbnail(url: string): Promise<string | null> {
+type ExternalMediaMetadata = {
+  thumbnail: string | null;
+  viewCount: number | null;
+};
+
+async function fetchInstagramMetadata(url: string): Promise<ExternalMediaMetadata> {
   try {
-    const res = await fetch(url, {
-      headers: { "User-Agent": "facebookexternalhit/1.1" },
+    const mediaPath = instagramPathFromUrl(url);
+    if (!mediaPath) return { thumbnail: null, viewCount: null };
+
+    const res = await fetch(`https://www.instagram.com/${mediaPath}/embed/captioned/`, {
+      headers: { "User-Agent": "Mozilla/5.0" },
       signal: AbortSignal.timeout(8000),
       redirect: "follow",
+      next: { revalidate: 3600 },
     });
-    if (!res.ok) return null;
+    if (!res.ok) return { thumbnail: null, viewCount: null };
     const html = await res.text();
-    const match =
-      html.match(/<meta\s+property="og:image"\s+content="([^"]+)"/) ??
-      html.match(/<meta\s+content="([^"]+)"\s+property="og:image"/);
-    if (!match?.[1]) return null;
-    return match[1].replace(/&amp;/g, "&");
+    const rawThumbnail = html.match(/display_url\\":\\"(.*?)\\"/)?.[1] ?? null;
+    const thumbnail = rawThumbnail
+      ? JSON.parse(`"${rawThumbnail}"`)
+          .replaceAll("\\/", "/")
+          .replaceAll("\\u00253D", "%3D")
+      : null;
+    const rawViewCount = html.match(/video_view_count\\?":(\d+)/)?.[1] ?? null;
+
+    return {
+      thumbnail,
+      viewCount: rawViewCount ? Number(rawViewCount) : null,
+    };
   } catch {
-    return null;
+    return { thumbnail: null, viewCount: null };
   }
 }
 
@@ -117,14 +133,18 @@ function driveThumbnailUrl(url: string): string | null {
   return id ? `https://lh3.googleusercontent.com/d/${id}=w640` : null;
 }
 
-async function fetchExternalThumbnail(
+async function fetchExternalMetadata(
   url: string,
   platform: string,
-): Promise<string | null> {
-  if (platform === "tiktok") return fetchTikTokThumbnail(url);
-  if (platform === "instagram") return fetchInstagramThumbnail(url);
-  if (platform === "drive") return driveThumbnailUrl(url);
-  return null;
+): Promise<ExternalMediaMetadata> {
+  if (platform === "instagram") return fetchInstagramMetadata(url);
+  if (platform === "tiktok") {
+    return { thumbnail: await fetchTikTokThumbnail(url), viewCount: null };
+  }
+  if (platform === "drive") {
+    return { thumbnail: driveThumbnailUrl(url), viewCount: null };
+  }
+  return { thumbnail: null, viewCount: null };
 }
 
 export async function PortfolioHome({ clientBrief }: { clientBrief?: ClientBrief } = {}) {
@@ -140,13 +160,13 @@ export async function PortfolioHome({ clientBrief }: { clientBrief?: ClientBrief
       (i) => i.platform === "tiktok" || i.platform === "instagram",
     );
 
-  const [youtubeViews, externalThumbnails] =
+  const [youtubeViews, externalMetadata] =
     await Promise.all([
       fetchYoutubeViewCounts(youtubeIds),
       Promise.all(
         nonYtItems.map(async (item) => ({
           url: item.url,
-          thumbnail: await fetchExternalThumbnail(item.url, item.platform),
+          metadata: await fetchExternalMetadata(item.url, item.platform),
         })),
       ),
     ]);
@@ -158,8 +178,8 @@ export async function PortfolioHome({ clientBrief }: { clientBrief?: ClientBrief
     count: s.fallbackCount,
   }));
 
-  const thumbnailMap = new Map(
-    externalThumbnails.map((r) => [r.url, r.thumbnail]),
+  const metadataMap = new Map(
+    externalMetadata.map((result) => [result.url, result.metadata]),
   );
 
   const portfolioSections = site.portfolioSections.map((section) => ({
@@ -168,13 +188,15 @@ export async function PortfolioHome({ clientBrief }: { clientBrief?: ClientBrief
       const youtubeId = item.platform === "youtube" ? youtubeIdFromUrl(item.url) : null;
       const itemEmbedSrc = embedSrc(item);
       const computedViewCount =
-        youtubeId && youtubeViews[youtubeId] != null ? youtubeViews[youtubeId] : null;
+        youtubeId && youtubeViews[youtubeId] != null
+          ? youtubeViews[youtubeId]
+          : metadataMap.get(item.url)?.viewCount ?? null;
       const localThumbnail = (thumbnailManifest as Record<string, string>)[item.url] ?? null;
       const thumbnailUrl =
         localThumbnail ??
         (item.platform === "youtube" && youtubeId
           ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`
-          : thumbnailMap.get(item.url) ?? null);
+          : metadataMap.get(item.url)?.thumbnail ?? null);
 
       return {
         ...item,

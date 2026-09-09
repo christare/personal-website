@@ -11,12 +11,14 @@ export type PortfolioItem = {
   url: string;
   platform: PortfolioPlatform;
   viewsLabel?: string;
+  liveViews?: boolean;
   note?: string;
 };
 
 export type PortfolioSection = {
   title: string;
   description?: string;
+  initialItemCount?: number;
   items: PortfolioItem[];
 };
 
@@ -101,7 +103,7 @@ export const site: {
       description: "Favorite long-form pieces across shows, interviews, and film.",
       items: [
         {
-          title: "Happy To Announce — Short Film by Chris Jereza",
+          title: "Happy To Announce: Short Film by Chris Jereza",
           url: "https://youtu.be/VXJwJSI1Dqo",
           platform: "youtube",
           note: "Made in <36 hours on a $50 budget",
@@ -132,9 +134,107 @@ export const site: {
           platform: "youtube",
         },
         {
-          title: "What to Expect at a Muay Thai Class",
-          url: "https://drive.google.com/file/d/1xkHsvXqYAS3c0kdW_ZaIXN0lQpuLsDzx/view?usp=sharing",
-          platform: "drive",
+          title: "Your First Day Of Muay Thai: What To Expect",
+          url: "https://youtu.be/1XIg7DHjYFI",
+          platform: "youtube",
+        },
+      ],
+    },
+    {
+      title: "The Verge: Tech News + Decoder",
+      description:
+        "Rapid-turn tech news from IFA Berlin, shot and edited against same-day or next-day embargoes. Also social and long-form cuts for Decoder.",
+      initialItemCount: 10,
+      items: [
+        {
+          title: "Daily Objects",
+          url: "https://www.instagram.com/reel/Dc8Y20oFJoH/",
+          platform: "instagram",
+          liveViews: true,
+          viewsLabel: "106.7K views",
+        },
+        {
+          title: "Xiaomi 18 Fold",
+          url: "https://www.instagram.com/reel/DdB2XRViAbQ/",
+          platform: "instagram",
+          liveViews: true,
+          viewsLabel: "38.9K views",
+        },
+        {
+          title: "Roomba Duo",
+          url: "https://www.instagram.com/reel/Dc55z84FLIK/",
+          platform: "instagram",
+          liveViews: true,
+          viewsLabel: "23K views",
+        },
+        {
+          title: "RugOne Snap7 Pro",
+          url: "https://www.instagram.com/reel/Dc5y6dZjwCz/",
+          platform: "instagram",
+          liveViews: true,
+          viewsLabel: "26.5K views",
+        },
+        {
+          title: "HoverAir Versa",
+          url: "https://www.instagram.com/reel/Dc5sEAlkrqu/",
+          platform: "instagram",
+          liveViews: true,
+          viewsLabel: "30.2K views",
+        },
+        {
+          title: "Dyson CameraJet",
+          url: "https://www.instagram.com/reel/Dc3HQ96lKI8/",
+          platform: "instagram",
+          liveViews: true,
+          viewsLabel: "37.7K views",
+        },
+        {
+          title: "Acer DualPlay",
+          url: "https://www.instagram.com/reel/DczDw1ApmyC/",
+          platform: "instagram",
+          liveViews: true,
+          viewsLabel: "20.5K views",
+        },
+        {
+          title: "Altana CEO: Decoder Social",
+          url: "https://www.instagram.com/reel/DbTNXMBDv-8/",
+          platform: "instagram",
+          liveViews: true,
+          viewsLabel: "497 views",
+        },
+        {
+          title: "Bose CEO: Decoder Social",
+          url: "https://www.instagram.com/reel/DcRb_-RkhJr/",
+          platform: "instagram",
+          liveViews: true,
+          viewsLabel: "4.9K views",
+        },
+        {
+          title: "Semafor CEO: Decoder Social",
+          url: "https://www.instagram.com/reel/DcYpNWpgG-F/",
+          platform: "instagram",
+          liveViews: true,
+          viewsLabel: "5.8K views",
+        },
+        {
+          title: "GM CEO Interview (Decoder)",
+          url: "https://www.youtube.com/watch?v=GIr_oscnob4&t=922s",
+          platform: "youtube",
+        },
+        {
+          title: "Zocdoc CEO Interview (Decoder)",
+          url: "https://www.youtube.com/watch?v=Atg-gDBPrEY&t=34s",
+          platform: "youtube",
+        },
+        {
+          title: "Hinge CEO Interview (Decoder)",
+          url: "https://www.youtube.com/watch?v=PSI3q0kyrx0",
+          platform: "youtube",
+        },
+        {
+          title: "Lyft CEO Interview (Decoder)",
+          url: "https://www.youtube.com/watch?v=XEg_8Fi9Nuw&t=6s",
+          platform: "youtube",
         },
       ],
     },
@@ -249,33 +349,6 @@ export const site: {
         {
           title: "We Ran A 5K Every Day For 5 Days",
           url: "https://www.youtube.com/watch?v=1jz7msnmFLU&t=295s&ab_channel=Goodful",
-          platform: "youtube",
-        },
-      ],
-    },
-    {
-      title: "The Verge: Decoder",
-      description:
-        "Main editor for The Verge's flagship tech CEO interview series Decoder.",
-      items: [
-        {
-          title: "GM CEO Interview (Decoder)",
-          url: "https://www.youtube.com/watch?v=GIr_oscnob4&t=922s",
-          platform: "youtube",
-        },
-        {
-          title: "Zocdoc CEO Interview (Decoder)",
-          url: "https://www.youtube.com/watch?v=Atg-gDBPrEY&t=34s",
-          platform: "youtube",
-        },
-        {
-          title: "Hinge CEO Interview (Decoder)",
-          url: "https://www.youtube.com/watch?v=PSI3q0kyrx0",
-          platform: "youtube",
-        },
-        {
-          title: "Lyft CEO Interview (Decoder)",
-          url: "https://www.youtube.com/watch?v=XEg_8Fi9Nuw&t=6s",
           platform: "youtube",
         },
       ],
@@ -545,7 +618,7 @@ export const site: {
     education: {
       title: "Education",
       lines: [
-        "University of California, Berkeley — Computer Science",
+        "University of California, Berkeley, Computer Science",
         "Coursework: Data Structures, Statistics, Algorithms, AI, Computer Security, Databases, Discrete Math, Linear Algebra",
       ],
     },

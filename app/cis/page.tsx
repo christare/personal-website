@@ -6,18 +6,18 @@ const shareImage =
   "https://chris-jereza-portfolio.chrisnjereza.chatgpt.site/thumbnails/yt-uUW0rLfgg2g.jpg";
 
 export const metadata: Metadata = {
-  title: "CIS × Chris Jereza — Creative Formats",
+  title: "CIS × Chris Jereza | Creative Formats",
   description: "Format options, pricing, and reference work for CIS.",
   robots: { index: false, follow: false },
   openGraph: {
-    title: "CIS × Chris Jereza — Creative Formats",
+    title: "CIS × Chris Jereza | Creative Formats",
     description: "Format options, pricing, and reference work for CIS.",
     type: "website",
     images: [{ url: shareImage, width: 1280, height: 720, alt: "We Tested ChatGPT 5.6 For A Month" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "CIS × Chris Jereza — Creative Formats",
+    title: "CIS × Chris Jereza | Creative Formats",
     description: "Format options, pricing, and reference work for CIS.",
     images: [shareImage],
   },
@@ -69,7 +69,7 @@ const cisBrief: ClientBrief = {
       references: [
         { label: "Adderall / startup", url: "https://www.youtube.com/watch?v=Q5oDnaYrz3s" },
         { label: "Hangover drink", url: "https://www.youtube.com/watch?v=45kYpBJEC1w" },
-        { label: "Muay Thai", url: "https://drive.google.com/file/d/1xkHsvXqYAS3c0kdW_ZaIXN0lQpuLsDzx/view?usp=sharing" },
+        { label: "Muay Thai", url: "https://youtu.be/1XIg7DHjYFI" },
         { label: "Life after addiction", url: "https://www.youtube.com/watch?v=8dW2xiKmJso" },
       ],
     },

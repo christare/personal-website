@@ -131,7 +131,7 @@ async function main() {
     }
 
     if (!filename) {
-      console.log("    — no ID extracted, skipping");
+      console.log("    - no ID extracted, skipping");
       failed++;
       continue;
     }
