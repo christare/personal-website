@@ -1,14 +1,14 @@
 # Last Shuttle: interview demo
 
-Aim for two minutes. Keep the game open before the call. Dialogue waits for you; click NEXT or press Space. A first click reveals a typing line, and the next advances. Turn sound on before sharing and keep it quiet enough to speak over.
+Aim for two minutes. Keep the game open before the call. The opening is an edited sequence; PAUSE INTRO lets you talk over it. After the first choice, dialogue waits for you; click NEXT or press Space. A first click reveals a typing line, and the next advances. Turn sound on before sharing and keep it quiet enough to speak over.
 
 ## Opening, 15 seconds
 
-“I made a playable sci-fi story with eight Runway shots. Your friend is trapped on an infected station. You can leave Alex, open the lab door, or investigate a safer way out. I wanted to turn generated imagery into something an audience participates in.”
+“I made a playable sci-fi story with Runway footage. Your friend is trapped on an infected station. You can leave Alex, open the lab door, or investigate a safer way out. I wanted to turn generated imagery into something an audience participates in.”
 
 ## Play, about 75 seconds
 
-Enter your first name → BEGIN → [Answer Alex.] → I can't leave Alex here. → Wait. Let me check what happened. → Get in the capsule. I'll bring you over. → [Launch with Alex.] → CONTINUE.
+Watch the compression hook → enter your first name → CONTINUE → coffee memory and live call play automatically → I can't leave Alex here. → Wait. Let me check what happened. → Get in the capsule. I'll bring you over. → [Launch with Alex.] → CONTINUE.
 
 Move through the individual dialogue beats between decisions. After the final “Of course,” press CONTINUE once more to show the ending and credits. Let the door, lab feed, and capsule shots breathe for a few seconds. You can talk over a scene without losing a line.
 
@@ -22,7 +22,7 @@ At the capsule: “The generated shot already had the capsule sealed and moving 
 
 “For YouTube, I'd make one complete build tutorial, cut the strongest decision into a Short, and invite viewers to share which ending they found. I'd judge the lesson by whether viewers can reproduce the workflow, alongside retention and clicks through to the game.”
 
-Suggested video title: “I Made a Playable Sci-Fi Story With 8 AI Shots.”
+Suggested video title: “I Made a Playable Sci-Fi Story With AI Video.”
 
 ## If asked how it was made
 
@@ -32,11 +32,11 @@ The interface, branching logic and text run in the browser. Each video uses its 
 
 ## Backup
 
-Use the local game at http://localhost:3000/last-shuttle if the public site is not available. Start it with `npm run dev` from the personal-website folder. Keep a short screen recording of the rescue route available before the interview, using your normal recording setup.
+Use the local game at http://localhost:3001/last-shuttle if the public site is not available. Start it with `npm run sites:build` followed by `npm run sites:start -- --port 3001` from the personal-website folder. Keep a short screen recording of the rescue route available before the interview, using your normal recording setup.
 
 ## Visual direction
 
-No people, faces, hands, silhouettes or designed creature. Alex stays unseen; two coffee mugs, a packed bag, an empty seat and the radio establish the relationship. The memory has a warm inset frame; present-day scenes use the existing full-frame visual language. Six original motion environments, the supplied capsule and shuttle-vent payoff videos, and nine supporting stills are integrated. Dialogue, narration and system records share one reading area with different text styles. No lab cable beat is used. See PAYOFF-SHOTS.md for the integrated payoff assets.
+No people, faces, hands, silhouettes or designed creature. Alex stays unseen; two coffee mugs, a packed bag, an empty seat and the radio establish the relationship. The memory has a warm inset frame; present-day scenes use the existing full-frame visual language. Five original motion environments, the supplied capsule and shuttle-vent payoffs, the new compression export (opening and later aftermath), and nine supporting stills are integrated. The old moving-chair clip is no longer used. Dialogue, narration and system records share one reading area with different text styles. No lab cable beat is used. See PAYOFF-SHOTS.md for the integrated payoff assets.
 
 
 ## Restored story
@@ -46,4 +46,4 @@ The fuller pre-trim narrative is restored, including the shared plans, promise, 
 
 ## Current script
 
-Use `LAST-SHUTTLE-SCREENPLAY-v3.md` for the full dialogue, directions and branches, and `NARRATIVE-REVIEW-v3.md` for the selective response to external feedback. The two added player responses give the lie and the open-door rescue an emotional reply. All four routes and three ending categories remain.
+Use `LAST-SHUTTLE-SCREENPLAY-v4.md` for the full dialogue, directions and branches, and `NARRATIVE-REVIEW-v3.md` for the selective response to external feedback. The two added player responses give the lie and the open-door rescue an emotional reply. All four routes and three ending categories remain.

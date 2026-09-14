@@ -94,7 +94,7 @@
 .ls-still { z-index: 0; }
 .ls-drift { animation: ls-drift 28s linear forwards; }
 @keyframes ls-drift { from { transform: scale(1.001); } to { transform: scale(1.09) translate(-0.6%, -0.8%); } }
-.ls-root-intro .ls-media { animation: ls-fadeup 2.6s ease-out both; }
+.ls-root-intro .ls-media { animation: none; }
 @keyframes ls-fadeup { from { opacity: 0; } to { opacity: 1; } }
 
 .ls-placeholder {
@@ -558,7 +558,7 @@
   .ls-h1-big { margin-bottom: 16px; }
 }
 
-/* Shot-by-shot storytelling: prioritize faces and physical details. */
+/* Shot-by-shot storytelling: objects carry the relationship. */
 .ls-choice { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; }
 .ls-choice small { font-family: var(--font-geist-sans), system-ui, sans-serif; font-size: 12px; font-weight: 400; letter-spacing: .01em; line-height: 1.4; text-transform: none; opacity: .7; }
 .ls-root-memory .ls-status { color: #b9ada0; }
@@ -619,7 +619,21 @@
 .ls-root:not(.ls-root-intro) .ls-choice { text-transform: none; letter-spacing: .01em; font-family: var(--font-geist-sans), system-ui, sans-serif; font-size: 16px; font-weight: 500; }
 .ls-choice-action { font-style: italic; font-weight: 400; }
 .ls-root-memory .ls-reading-radio .ls-radio-head, .ls-root-memory .ls-reading-you .ls-you-label { color: #e2c69f; }
+
+/* A film before setup. Keep the full geometry and leave the impact unobscured. */
+.ls-opening-media .ls-video, .ls-opening-media .ls-still { object-fit: contain; }
+.ls-root-hook .ls-vignette { background: linear-gradient(to top, rgba(5,6,7,.65), transparent 25%); }
+.ls-root-hook .ls-panel { display: none; }
+.ls-hook-heading { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.ls-hook-caption { position: relative; z-index: 8; width: min(760px, calc(100% - 40px)); min-height: 96px; margin: 0 auto 24px; text-align: center; text-shadow: 0 2px 10px #000; }
+.ls-hook-caption span { color: #e5cda4; font: 11px var(--font-geist-mono), monospace; letter-spacing: .1em; }
+.ls-hook-caption p { margin: 8px 0 0; color: #f0f1ee; font-size: 22px; line-height: 1.5; }
+.ls-root-opening .ls-reading, .ls-root-opening .ls-in { animation: none; }
+.ls-root-opening .ls-skiphint { display: none; }
+.ls-util:disabled { opacity: .4; cursor: default; }
 @media (max-width: 720px) {
   .ls-root:not(.ls-root-intro) .ls-choice { font-size: 15px; }
   .ls-reading-hud .ls-hud-line { font-size: 12px; }
+  .ls-hook-caption { min-height: 80px; margin: 14px auto 12px; }
+  .ls-hook-caption p { font-size: 19px; }
 }
