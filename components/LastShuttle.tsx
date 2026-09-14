@@ -36,8 +36,8 @@ const STILL_EXTENSIONS = ["png", "jpg"] as const;
 /*  Scene graph. One beat on screen at a time.                          */
 /*  sub   = narration, bottom center, replaces the previous beat        */
 /*  you   = your own line, same place, quieter                          */
-/*  radio = a transmission card, left side, typed out                   */
-/*  hud   = diegetic screen text, top right, stays for the scene        */
+/*  radio = speech, typed out in the shared reading area               */
+/*  hud   = diegetic screen text, replaces the current line             */
 /* ------------------------------------------------------------------ */
 
 type Beat = (
@@ -106,8 +106,8 @@ const scenes: Record<SceneId, Scene> = {
     ticker: "YOUR SHUTTLE IS READY · ALEX IS STILL IN LAB 3",
     beats: [
       { kind: "radio", who: ALEX, shot: "A", text: "{name}? You're still here, right?" },
-      { kind: "radio", who: ALEX, shot: "intercom", text: "I'm locked in the lab. My keycard keeps flashing red." },
-      { kind: "radio", who: ALEX, shot: "intercom", text: "You promised you'd wait. Please. I'm still in here." },
+      { kind: "radio", who: ALEX, shot: "intercom", text: "I'm stuck in the lab. The reader won't take my card." },
+      { kind: "radio", who: ALEX, shot: "intercom", text: "My bag's already on your shuttle, {name}. Don't leave without me." },
     ],
     choices: [
       { label: "I can't leave Alex here.", detail: "Go back. Your keycard can override the lab door.", to: "door" },
@@ -119,7 +119,7 @@ const scenes: Record<SceneId, Scene> = {
     ticker: "LAUNCH COMPLETE · ONE ABOARD · ALEX STILL ON STATION",
     beats: [
       { kind: "radio", who: ALEX, shot: "E", text: "{name}? Was that you taking off?" },
-      { kind: "radio", who: ALEX, shot: "empty-seat", text: "Something's moving in here. Please come back. I need you." },
+      { kind: "radio", who: ALEX, shot: "empty-seat", text: "Something's moving in here. {name}, come back." },
       { kind: "hud", shot: "shuttle-radio", header: "COMMS", lines: ["CONNECTION LOST"] },
     ],
     choices: [{ label: "CONTINUE", to: "survivor_alone" }],
@@ -128,9 +128,9 @@ const scenes: Record<SceneId, Scene> = {
     id: "door", clip: "B", status: "EVACUATION ACTIVE",
     ticker: "LAB 3 · ALEX IS ON THE OTHER SIDE",
     beats: [
-      { kind: "radio", who: ALEX, shot: "B", text: "I can hear you. Please, just open the door." },
+      { kind: "radio", who: ALEX, shot: "B", text: "You're there. Okay. The release is on your side." },
       { kind: "hud", shot: "door-control", header: "QUARANTINE INTERLOCK", lines: ["LAB 3 SEALED", "OVERRIDE RELEASES LAB AIR", "INCIDENT LOG AVAILABLE"] },
-      { kind: "radio", who: ALEX, shot: "intercom", text: "I know what the light means. I don't want to die in here." },
+      { kind: "radio", who: ALEX, shot: "intercom", text: "I know what the light means. Just open it." },
     ],
     choices: [
       { label: "I'm getting you out.", detail: "Open the door. Release the lab air.", to: "released" },
@@ -143,6 +143,7 @@ const scenes: Record<SceneId, Scene> = {
     beats: [
       { kind: "sub", shot: "E", text: "You get Alex aboard and close the hatch." },
       { kind: "radio", who: "ALEX · SEAT 2", shot: "shuttle-radio", text: "Just get us out of here. I'll explain. I promise." },
+      { kind: "you", shot: "shuttle-radio", text: "Sit down. I've got you." },
       { kind: "hud", shot: "cabin-air", header: "CABIN AIR", lines: ["AIRBORNE ORGANISM DETECTED", "EXPOSURE: BOTH OCCUPANTS"] },
       { kind: "payoff", id: "cabin" },
     ],
@@ -153,8 +154,9 @@ const scenes: Record<SceneId, Scene> = {
     ticker: "ALEX IS INFECTED · SHARED AIR IS UNSAFE",
     beats: [
       { kind: "hud", shot: "lab-terminal", header: "INCIDENT LOG", lines: ["ALEX: INFECTED", "TRANSMISSION: AIRBORNE", "DO NOT OPEN THE LAB"] },
-      { kind: "radio", who: ALEX, shot: "C", text: "Can you see the room? Tell me you're seeing this." },
-      { kind: "radio", who: ALEX, shot: "intercom", text: "I saw the result. I thought you'd leave if I told you." },
+      { kind: "radio", who: ALEX, shot: "C", text: "Tell me you're seeing this." },
+      { kind: "radio", who: ALEX, shot: "intercom", text: "I saw the result. I was going to tell you, I just—" },
+      { kind: "you", shot: "intercom", text: "You were going to let me open it." },
       { kind: "hud", shot: "lab-terminal", header: "SEALED TRANSFER", lines: ["CC-2: INDEPENDENT AIR SUPPLY", "ENCLOSED RAIL TO SHUTTLE: ONLINE", "LAB DOOR REMAINS CLOSED"] },
       { kind: "you", shot: "capsule-seal", text: "Can you reach that capsule?" },
       { kind: "radio", who: ALEX, shot: "intercom", text: "Yeah. Keep talking while I do it." },
@@ -421,6 +423,7 @@ export function LastShuttle({ payoffs = {} }: { payoffs?: Partial<Record<"cabin"
   const [beat, setBeat] = useState(-1); // index of the beat on screen; -1 = nothing yet
   const [typed, setTyped] = useState(false); // current radio beat finished typing
   const [instant, setInstant] = useState(false); // user clicked through a radio beat
+  const [endingRevealed, setEndingRevealed] = useState(false);
   const [soundOn, setSoundOn] = useState(true);
   const [found, setFound] = useState<EndingKey[]>([]);
   const [cut, setCut] = useState(false);
@@ -440,7 +443,8 @@ export function LastShuttle({ payoffs = {} }: { payoffs?: Partial<Record<"cabin"
   const current: Beat | null = beat >= 0 ? scene.beats[beat] : null;
   const currentIsRadio = current?.kind === "radio";
   const beatSettled = !currentIsRadio || typed;
-  const done = isStart || (beat >= last && beatSettled);
+  const done = isStart || (beat >= last && beatSettled && (!scene.ending || endingRevealed));
+  const showEnding = Boolean(scene.ending && endingRevealed);
 
   const huds = scene.beats
     .map((b, i) => ({ b, i }))
@@ -516,6 +520,7 @@ export function LastShuttle({ payoffs = {} }: { payoffs?: Partial<Record<"cabin"
       setBeat(-1);
       setTyped(false);
       setInstant(false);
+      setEndingRevealed(false);
       setCut(false);
     }, 180);
   }, []);
@@ -531,8 +536,11 @@ export function LastShuttle({ payoffs = {} }: { payoffs?: Partial<Record<"cabin"
       setBeat((b) => b + 1);
       setTyped(false);
       setInstant(false);
+    } else if (scene.ending) {
+      // Let the player finish reading the final line before showing the result.
+      setEndingRevealed(true);
     }
-  }, [isStart, beat, last, currentIsRadio, typed]);
+  }, [isStart, beat, last, currentIsRadio, typed, scene.ending]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -557,15 +565,15 @@ export function LastShuttle({ payoffs = {} }: { payoffs?: Partial<Record<"cabin"
   const onTick = useCallback(() => {}, []);
   const onTyped = useCallback(() => setTyped(true), []);
 
-  const grade = scene.ending ? scene.ending.grade : "none";
+  const grade = showEnding && scene.ending ? scene.ending.grade : "none";
   const headingText = useMemo(() => {
-    if (scene.ending) return `ENDING ${scene.ending.number} OF 3: ${scene.ending.name}`;
+    if (showEnding && scene.ending) return `ENDING ${scene.ending.number} OF 3: ${scene.ending.name}`;
     return sceneId === "memory" ? "FOUR HOURS EARLIER" : clips[activeShot].label;
-  }, [scene, activeShot, sceneId]);
+  }, [scene, activeShot, sceneId, showEnding]);
 
   const rootClass = [
     "ls-root",
-    scene.ending ? "ls-root-ending" : "",
+    showEnding ? "ls-root-ending" : "",
     isStart ? "ls-root-intro" : "",
     cut ? "ls-root-cut" : "",
     done ? "ls-root-done" : "",
@@ -584,12 +592,14 @@ export function LastShuttle({ payoffs = {} }: { payoffs?: Partial<Record<"cabin"
           CJ
         </a>
         <div className="ls-ticker" aria-hidden>
-          <span key={`${scene.id}-${visit}`}>{scene.ticker}</span>
+          <span key={`${scene.id}-${visit}`}>{scene.ending && !showEnding ? clips[activeShot].label : scene.ticker}</span>
         </div>
+        {!scene.ending || showEnding ? (
         <div className="ls-status" aria-live="polite">
           <span className="ls-dot" />
           {scene.status}
         </div>
+        ) : null}
       </header>
 
       <main className="ls-stage">
@@ -600,7 +610,7 @@ export function LastShuttle({ payoffs = {} }: { payoffs?: Partial<Record<"cabin"
           {/* scene label, top left, small */}
           {!isStart ? (
             <h1 id="ls-heading" ref={headingRef} tabIndex={-1} className="ls-label ls-in" key={`h-${scene.id}-${visit}`}>
-              {scene.ending ? (
+              {showEnding ? (
                 <>
                   <span className="ls-label-kicker">STATION DESTRUCTION CONFIRMED</span>
                   <span className="ls-label-ending">{headingText}</span>
@@ -717,11 +727,11 @@ export function LastShuttle({ payoffs = {} }: { payoffs?: Partial<Record<"cabin"
 
             {!done && beat >= 0 ? (
               <button type="button" className="ls-next" onClick={(e) => { e.stopPropagation(); advance(); }}>
-                {currentIsRadio && !typed ? "REVEAL LINE" : "NEXT"} <span aria-hidden="true">→</span>
+                {currentIsRadio && !typed ? "REVEAL LINE" : scene.ending && beat === last ? "CONTINUE" : "NEXT"} <span aria-hidden="true">→</span>
               </button>
             ) : null}
 
-            {scene.ending && done ? (
+            {showEnding ? (
               <div className="ls-credits" aria-label="Credits">
                 {credits.map((c, i) => (
                   <p key={c} className="ls-in" style={{ animationDelay: `${i * 0.06}s` }}>
