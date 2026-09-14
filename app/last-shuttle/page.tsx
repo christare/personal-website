@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { LastShuttle } from "@/components/LastShuttle";
 import "./last-shuttle.css";
 
-const title = "Last Shuttle — An Interactive Sci-Fi Story";
+const title = "Last Shuttle. An Interactive Sci-Fi Story";
 const description =
   "An evacuation, a locked laboratory, and a colleague asking for help. Your choices decide who makes it out.";
 
@@ -24,5 +24,5 @@ export const metadata: Metadata = {
 };
 
 export default function LastShuttlePage() {
-  return <LastShuttle payoffs={{ cabin: "/last-shuttle/h_cabin.mp4", capsule: "/last-shuttle/h_capsule.mp4" }} />;
+  return <LastShuttle memoryBridge={process.env.NEXT_PUBLIC_LAST_SHUTTLE_MEMORY_BRIDGE || undefined} payoffs={{ cabin: "/last-shuttle/h_cabin.mp4", capsule: "/last-shuttle/h_capsule.mp4" }} />;
 }

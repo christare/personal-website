@@ -1,6 +1,6 @@
 # Last Shuttle: interview demo
 
-Aim for two minutes. Keep the game open before the call. The opening is an edited sequence; Pause intro lets you talk over it. After the first choice, dialogue waits for you; tap Continue or press Space. Subtitles appear whole; a single input advances. Turn sound on before sharing and keep it quiet enough to speak over.
+Aim for two minutes. Keep the game open before the call. The compression clip opens immediately. All dialogue waits for you, including the memory; tap the picture or press Space. The pause icon stops video if you want to talk over it. Subtitles appear whole; a single input advances. Turn sound on before sharing and keep it quiet enough to speak over.
 
 ## Opening, 15 seconds
 
@@ -8,7 +8,7 @@ Aim for two minutes. Keep the game open before the call. The opening is an edite
 
 ## Play, about 75 seconds
 
-Watch the compression hook → enter your first name → CONTINUE → coffee memory and live call play automatically → I said I'd wait. I'm coming back. → You knew it was quarantine. What aren't you telling me? → Get in CC-2. I'll stay on the channel. → Launch. Keep CC-2 sealed. → CONTINUE.
+Watch the compression hook → enter your name → I'm here. → click through the coffee memory and call → I'm not breaking that promise. I'm coming back. → Why didn't you tell me about the lockdown? → Get in CC-2. I'm staying with you. → Launch with CC-2 sealed.
 
 Move through the individual dialogue beats between decisions. After the final “Of course,” press CONTINUE once more to show the ending and credits. Let the door, lab feed, and capsule shots breathe for a few seconds. You can talk over a scene without losing a line.
 
@@ -46,8 +46,13 @@ The fuller pre-trim narrative is restored, including the shared plans, promise, 
 
 ## Current script
 
-Use `LAST-SHUTTLE-SCREENPLAY-v5.md` for the full dialogue, directions and branches, and `NARRATIVE-REVIEW-v3.md` for the selective response to external feedback. The two added player responses give the lie and the open-door rescue an emotional reply. All four routes and three ending categories remain.
+Use `LAST-SHUTTLE-SCREENPLAY-v6.md` for the full dialogue, directions and branches, and `NARRATIVE-REVIEW-v3.md` for the selective response to external feedback. The two added player responses give the lie and the open-door rescue an emotional reply. All four routes and three ending categories remain.
 
 ## Final visual addition
 
 Use `final-visual-pack-v5/README.md` and its matched coffee frames for the only proposed remaining Runway render. The current live cut uses the end image for the brief memory interruption. The animation has not yet been generated or integrated.
+
+
+## Coffee video drop-in
+
+The matched reference images and prompt in final-visual-pack-v5 still apply. Save the inspected, trimmed final clip at public/last-shuttle/j_memory_bridge.mp4. The next build and publish select it automatically. No component edit is required. Until then, the game uses the existing interrupted-memory still. If the video cannot play, the image remains the fallback.
