@@ -1,0 +1,14 @@
+Built-in OpenAI image tool. One edit. No CLI fallback. Input 1: existing shared-coffee.png; input 2: i_compression.png as steel-geometry reference.
+
+Use case: precise-object-edit.
+Asset type: single cinematic 16:9 end frame for a Runway start/end reference pair.
+
+Input images: Image 1 (shared-coffee.png) is the EDIT TARGET and the exact composition to preserve. Image 2 (i_compression.png) is a supporting reference only for hard, mechanically plausible compressed steel structures; do not adopt its camera or composition.
+
+Primary request: Edit ONLY the background galley architecture of Image 1. Its empty galley has impossibly compressed in depth into a dense, nearly flat stack of closely spaced PARALLEL RECTANGULAR steel wall and ceiling frames directly behind the two mugs. The galley has lost all of its former corridor depth. Large rectangular metal sections, angular steel pleats and broad dark gaps make this impossible compression immediately legible at a glance. The piled architecture should look like physical, hard worn steel compressed into a shallow slab, with a small cold emergency practical light in the gaps. Preserve enough clear structure to read the rectangular compression; no obscuring mist. This is a subjective corrupted-memory transition, not pathogen-in-coffee lore.
+
+Strict foreground invariants: Preserve the EXACT camera, crop, perspective and 16:9 composition from Image 1. Keep the entire foreground metal table, its edges and surface marks unchanged. Preserve the worn cream mug on the left and blue mug on the right, their exact positions, sizes, silhouettes, handles, material wear, rim and calm coffee. Keep the folded striped towel and all visible chairs in their precise original positions with their original shapes and textures. The two cups remain impossibly unchanged while the background room loses all depth. Do not move, resize or redesign foreground objects. Remove any prominent steam that would obscure the new background geometry; otherwise keep the foreground appearance closely matched.
+
+Style/lighting: Cinematic photorealism, muted cold steel and dying amber practical light, rich shadows with legible detail and cinematic film texture. Background geometry change must be strong and unmistakable, not a subtle lighting shift. Preserve the original foreground exposure and highlights closely enough for matched start/end frames.
+
+Avoid: humans, faces, hands, body parts, silhouettes, creatures, blood, tendrils, organic monsters, glowing magic, words, captions, logos or overlays. Exactly one finished image.
