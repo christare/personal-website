@@ -5,7 +5,7 @@ import vm from 'node:vm';
 const root=fileURLToPath(new URL('../', import.meta.url)).replace(/\/$/, '');
 const text=fs.readFileSync(root+'/components/LastShuttle.tsx','utf8');
 const graph=vm.runInNewContext(ts.transpile(text.slice(text.indexOf('const ELLIS ='),text.indexOf('const credits =')))+';scenes');
-const old=JSON.parse(fs.readFileSync(root+'/runway-interview/cinematic-pass-v5.json','utf8'));
+const old=JSON.parse(fs.readFileSync(root+'/runway-interview/cinematic-pass-v6.json','utf8'));
 for (const [id, scene] of Object.entries(graph)) {
  const before=old[id];
  if(JSON.stringify(scene.choices.map(c=>c.to))!==JSON.stringify(before.choices.map(c=>c.to))) throw Error('Changed branch '+id);
@@ -50,23 +50,23 @@ const order=['start','memory','corridor','alone','survivor_alone','door','releas
 const routes=[['Early departure','start','memory','corridor','alone','survivor_alone'],['Open the door','start','memory','corridor','door','released','contamination'],['Investigate, then leave','start','memory','corridor','door','report','leave','survivor_leave'],['Sealed rescue','start','memory','corridor','door','report','capsule','rescued_departure','rescue']];
 let out=`# LAST SHUTTLE
 
-## Complete branching screenplay. Clarity Pass V6
+## Complete branching screenplay. Title and Coffee Pass V7
 
 September 14, 2026. Creative direction: Chris Jereza
 
-Exported from the current game. All 14 scene IDs, branch destinations and ending categories match V5. All non-intro beat kinds and shots remain intact. Only the two introductory explanations were condensed into a single premise. V1, V3, V4 and V5 remain preserved.
+Exported from the current game. All 14 scene IDs, branch destinations and ending categories match V6. All non-intro beat kinds and shots remain intact. Only the two introductory explanations were condensed into a single premise. V1, V3, V4, V5 and V6 remain preserved.
 
 ### Presentation
 
-The compression clip plays immediately. Ellis: “Are you there?” appears at 1.1 seconds and stays anchored in the same reading position while the name form fades in beneath it. The only premise is “One shuttle left. The station is coming apart.” The response to name entry is “I'm here.” No title stack, station status, duplicate input label or privacy aside appears.
+A minimal title screen shows LAST SHUTTLE, a sound recommendation, click/Space instructions, and a quiet Chris Jereza / Runway / 9-14-26 credit. The first click or Space starts the compression clip and enables audio directly from the gesture. Ellis: “Are you there?” appears at 1.1 seconds and stays anchored in the same reading position while the name form fades in beneath it. The only premise is “One shuttle left. The station is coming apart.” The response to name entry is “I'm here.” No title stack, station status, duplicate input label or privacy aside appears.
 
-Every dialogue beat is manual, including both memory lines and the corridor. Click or Space advances one beat; the instruction appears once on the name screen. The small chevron is a Continue button. The two-response choices are explicitly labeled You, with no redundant consequence descriptions or visible numbers. Arrow keys and number shortcuts remain available. Video plays once and holds its final frame, never advancing dialogue. Player-initiated memory interruption is the only short automatic transition.
+Every dialogue beat is manual, including both memory lines and the corridor. Click or Space advances one beat; the instruction appears once on the title screen. The small chevron is a Continue button. The two-response choices are explicitly labeled You, with no redundant consequence descriptions or visible numbers. Arrow keys and number shortcuts remain available. Video plays once and holds its final frame, never advancing dialogue. Player-initiated memory interruption is the only short automatic transition.
 
-Speaker names sit inline with speech. Ellis is warm white with an amber name; the player's lines and responses use cool blue plus the explicit You label. Narration is italic. System information is one readable sentence, not a stack of all-caps labels. A feathered dark blur gives the reading area consistent contrast. The reading origin remains fixed as controls appear. Only the active beat is displayed. Final lines precede the ending and credits.
+Speaker names sit inline with speech. Ellis is warm white with an amber name; the player's lines and responses use cool blue plus the explicit You label. Narration is italic. System information is one readable sentence, not a stack of all-caps labels. There is no persistent panel background or blur. Text shadows and the full-frame vignette support contrast. System records use monospaced text, a small uppercase heading and a thin rule; dialogue remains proportional and inline. The reading origin remains fixed as controls appear. Only the active beat is displayed. Final lines precede the ending and credits.
 
 The media player holds the actual outgoing frame until the next still or video is decoded. It does not reset the beat index or briefly replay the scene's default shot. Source changes retain one audio element. Videos carry their existing embedded sound; stills are silent. Audio activation runs directly in a user gesture. Physical iPhone Safari still needs a device check.
 
-The coffee memory is warm and marked Four hours earlier. The return is marked Now. A single 0.48-second damaged-memory image currently links them. Adding public/last-shuttle/j_memory_bridge.mp4 automatically selects the video at the next build and deployment, with no component edit or missing-file request. Failed playback falls back to the image. The two supplied reference frames and Runway prompt from V5 still apply. No new footage has been generated in V6.
+The coffee memory is warm and marked Four hours earlier. The return is marked Now. The supplied coffee warp clip links them, starting at source second 1. It runs 7.096 seconds with a slow 4.5% push-in and its original embedded audio. Its warm-to-damaged color transition remains intact. Adding public/last-shuttle/j_memory_bridge.mp4 automatically selects the video at the next build and deployment, with no component edit or missing-file request. Failed playback falls back to the image. The two supplied reference frames and Runway prompt from V5 still apply. The user supplied the coffee footage. No additional generation was required.
 
 Reference principles: [Skyrim's official manual, dialogue section](https://cdn.akamai.steamstatic.com/steam/apps/72850/manuals/skyrim_gfw_manual-07.pdf) separates character speech from selectable player responses. [Xbox subtitle guidance](https://learn.microsoft.com/en-us/xbox/accessibility/xbox-accessibility-guidelines/104) supports inline speaker identification, supplementary color, readable contrast and short subtitle blocks. This game has no visible speaker to position text beside, so its reading area remains stable in the lower middle of the frame.
 
@@ -100,12 +100,12 @@ for(const id of order){const scene=graph[id];const [num,slug,intent]=info[id];ou
   else if(b.kind==='sub')out+=`*NARRATION:* ${b.text}\n\n`;
   else out+=`**${b.kind==='you'?'YOU':b.who}**\n\n> ${b.text}\n\n`;
  }
- if(id==='memory') { out+='**MEMORY INTERRUPTION:** after the promise, cut back to the matching galley image with its background compressed into steel planes. Hold this single dark interruption for 0.48 seconds, clear subtitles, then cut to 02 CORRIDOR / NOW. A future video at public/last-shuttle/j_memory_bridge.mp4 replaces this cut at build time without a component edit. No new dialogue, branch or pathogen lore is introduced.\n\n---\n\n'; continue; }
+ if(id==='memory') { out+='**MEMORY INTERRUPTION:** after the promise, cut back to the matching galley image with its background compressed into steel planes. Play j_memory_bridge.mp4, trimmed from source second 1 with a slow 4.5% push-in. Clear subtitles, preserve the twist and embedded audio, then cut to 02 CORRIDOR / NOW. The original 0.48-second still remains an error fallback. No new dialogue, branch or pathogen lore is introduced.\n\n---\n\n'; continue; }
  out+=scene.choices.length>1?'**PLAYER CHOICE . select one:**\n\n':'**CONTINUE / ACTION:**\n\n';
  for(const c of scene.choices){const dest=info[c.to];out+=`- **${c.label}**${c.detail?' . '+c.detail:''} → **${dest[0]} ${dest[1]}** (\`${c.to}\`).\n`;}
  out+='\n---\n\n';
 }
 out+=`## Complete path reading order\n\n`+routes.map(([label,...ids])=>`- **${label}:** ${ids.map(id=>info[id][0]).join(' → ')}.`).join('\n')+`\n\n## Questions for an external script reviewer\n\n1. Which exact lines sound authored for the audience rather than spoken to another person? Offer replacements of comparable length.\n2. Does the ordinary memory earn concern for Ellis without assigning a face, gender or elaborate history?\n3. Track Ellis's tactics: checking for a response, requesting help, invoking the promise, overriding hesitation, concealing, admitting, asking for connection. Where do these repeat without developing?\n4. Does the informed-abandonment branch feel different from leaving before reading the warning?\n5. Does the open-door branch communicate both a compassionate impulse and the cost of Ellis's concealment?\n6. Is sealed rescue too obviously the correct answer once the transfer appears? Propose a cost or ambiguity separately; do not quietly rewrite the current mechanics.\n7. Which necessary off-screen actions would become confusing if their narration were deleted? Which captions can disappear because the image already carries them?\n8. Do the three final images and final lines leave distinct feelings? Identify any line that is trying too hard to be quotable.\n9. Can the connection between infection and environmental movement remain unsettling without additional monster lore?\n10. Give a line-level pass first. Put all new scenes, facts, sounds, deaths, loops and mechanics in a clearly separate proposal.\n\nThe preserved prior version is **LAST SHUTTLE . BASELINE V1**, under \`versions/last-shuttle-baseline-v1-2026-09-14/\`. Do not alter it.\n`;
-fs.writeFileSync(root+'/runway-interview/LAST-SHUTTLE-SCREENPLAY-v6.md',out);
-fs.writeFileSync(root+'/runway-interview/cinematic-pass-v6.json',JSON.stringify(graph,null,2)+'\n');
-console.log('V6 exported. All 14 scenes and branches preserved; all non-intro beat/shot structures match V5.');
+fs.writeFileSync(root+'/runway-interview/LAST-SHUTTLE-SCREENPLAY-v7.md',out);
+fs.writeFileSync(root+'/runway-interview/cinematic-pass-v7.json',JSON.stringify(graph,null,2)+'\n');
+console.log('V7 exported. All 14 scenes and branches preserved; all non-intro beat/shot structures match V6.');

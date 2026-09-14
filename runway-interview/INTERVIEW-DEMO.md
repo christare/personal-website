@@ -1,6 +1,6 @@
 # Last Shuttle: interview demo
 
-Aim for two minutes. Keep the game open before the call. The compression clip opens immediately. All dialogue waits for you, including the memory; tap the picture or press Space. The pause icon stops video if you want to talk over it. Subtitles appear whole; a single input advances. Turn sound on before sharing and keep it quiet enough to speak over.
+Aim for two minutes. Keep the game open before the call. Click the title screen to start the compression clip with sound. All dialogue waits for you, including the memory; tap the picture or press Space. The pause icon stops video if you want to talk over it. Subtitles appear whole; a single input advances. Turn sound on before sharing and keep it quiet enough to speak over.
 
 ## Opening, 15 seconds
 
@@ -46,13 +46,13 @@ The fuller pre-trim narrative is restored, including the shared plans, promise, 
 
 ## Current script
 
-Use `LAST-SHUTTLE-SCREENPLAY-v6.md` for the full dialogue, directions and branches, and `NARRATIVE-REVIEW-v3.md` for the selective response to external feedback. The two added player responses give the lie and the open-door rescue an emotional reply. All four routes and three ending categories remain.
+Use `LAST-SHUTTLE-SCREENPLAY-v7.md` for the full dialogue, directions and branches, and `NARRATIVE-REVIEW-v3.md` for the selective response to external feedback. The two added player responses give the lie and the open-door rescue an emotional reply. All four routes and three ending categories remain.
 
 ## Final visual addition
 
-Use `final-visual-pack-v5/README.md` and its matched coffee frames for the only proposed remaining Runway render. The current live cut uses the end image for the brief memory interruption. The animation has not yet been generated or integrated.
+Use `final-visual-pack-v5/README.md` and its matched coffee frames for the only proposed remaining Runway render. The current live cut uses the end image for the brief memory interruption. The supplied coffee warp video is integrated, starting at source second 1 with a slow 4.5% push-in and its embedded audio.
 
 
 ## Coffee video drop-in
 
-The matched reference images and prompt in final-visual-pack-v5 still apply. Save the inspected, trimmed final clip at public/last-shuttle/j_memory_bridge.mp4. The next build and publish select it automatically. No component edit is required. Until then, the game uses the existing interrupted-memory still. If the video cannot play, the image remains the fallback.
+The matched reference images and prompt in final-visual-pack-v5 still apply. Save the inspected, trimmed final clip at public/last-shuttle/j_memory_bridge.mp4. The next build and publish select it automatically. No component edit is required. The supplied clip is now present; the interrupted-memory still remains the error fallback. If the video cannot play, the image remains the fallback.

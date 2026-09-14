@@ -1,0 +1,471 @@
+{
+  "start": {
+    "id": "start",
+    "clip": "compression",
+    "beats": [
+      {
+        "kind": "radio",
+        "who": "Ellis",
+        "text": "Are you there?"
+      },
+      {
+        "kind": "sub",
+        "text": "One shuttle left. The station is coming apart."
+      }
+    ],
+    "choices": [
+      {
+        "label": "CONTINUE",
+        "to": "memory"
+      }
+    ]
+  },
+  "memory": {
+    "id": "memory",
+    "clip": "memory",
+    "beats": [
+      {
+        "kind": "radio",
+        "who": "Ellis",
+        "shot": "memory",
+        "text": "Carnegie Diner when we land. Coffee and eggs. I'm paying this time."
+      },
+      {
+        "kind": "you",
+        "shot": "empty-seat",
+        "text": "Your bag's under the spare seat. I'm not leaving without you."
+      }
+    ],
+    "choices": [
+      {
+        "label": "CONTINUE",
+        "to": "corridor"
+      }
+    ]
+  },
+  "corridor": {
+    "id": "corridor",
+    "clip": "A",
+    "beats": [
+      {
+        "kind": "radio",
+        "who": "Ellis",
+        "shot": "A",
+        "text": "Lab 3 won't take my card. Yours will. Come on."
+      },
+      {
+        "kind": "radio",
+        "who": "Ellis",
+        "shot": "A",
+        "text": "{name}, my bag's already on your shuttle. You said you'd wait."
+      }
+    ],
+    "choices": [
+      {
+        "label": "I'm not breaking that promise. I'm coming back.",
+        "to": "door"
+      },
+      {
+        "label": "I'm scared too, Ellis. I'm taking the shuttle.",
+        "to": "alone"
+      }
+    ]
+  },
+  "alone": {
+    "id": "alone",
+    "clip": "E",
+    "beats": [
+      {
+        "kind": "radio",
+        "who": "Ellis",
+        "shot": "E",
+        "text": "{name}? Was that you taking off?"
+      },
+      {
+        "kind": "radio",
+        "who": "Ellis",
+        "shot": "empty-seat",
+        "text": "The floor's coming up. {name}, pick up. Pick up."
+      },
+      {
+        "kind": "hud",
+        "shot": "shuttle-radio",
+        "header": "Radio",
+        "lines": [
+          "Signal lost."
+        ]
+      }
+    ],
+    "choices": [
+      {
+        "label": "CONTINUE",
+        "to": "survivor_alone"
+      }
+    ]
+  },
+  "door": {
+    "id": "door",
+    "clip": "B",
+    "beats": [
+      {
+        "kind": "radio",
+        "who": "Ellis",
+        "shot": "B",
+        "text": "Hold the release next to the reader. Don't let go."
+      },
+      {
+        "kind": "hud",
+        "shot": "door-control",
+        "header": "Door seal",
+        "lines": [
+          "Opening it vents the lab."
+        ]
+      },
+      {
+        "kind": "radio",
+        "who": "Ellis",
+        "shot": "intercom",
+        "text": "I know the light's on. That doesn't mean you leave me here."
+      }
+    ],
+    "choices": [
+      {
+        "label": "I'm opening it. Stay close to me.",
+        "to": "released"
+      },
+      {
+        "label": "Why didn't you tell me about the lockdown?",
+        "to": "report"
+      }
+    ]
+  },
+  "released": {
+    "id": "released",
+    "clip": "E",
+    "beats": [
+      {
+        "kind": "sub",
+        "shot": "E",
+        "text": "You get Ellis aboard and close the hatch."
+      },
+      {
+        "kind": "radio",
+        "who": "Ellis",
+        "shot": "shuttle-radio",
+        "text": "Go. Get us clear. You can hate me when we're out."
+      },
+      {
+        "kind": "you",
+        "shot": "shuttle-radio",
+        "text": "Sit down. I've got you."
+      },
+      {
+        "kind": "hud",
+        "shot": "cabin-air",
+        "header": "Cabin air",
+        "lines": [
+          "Contamination detected. Both occupants exposed."
+        ]
+      },
+      {
+        "kind": "payoff",
+        "id": "cabin"
+      }
+    ],
+    "choices": [
+      {
+        "label": "[Call for medical help.]",
+        "to": "contamination"
+      }
+    ]
+  },
+  "report": {
+    "id": "report",
+    "clip": "C",
+    "crt": true,
+    "beats": [
+      {
+        "kind": "hud",
+        "shot": "lab-terminal",
+        "header": "Incident log",
+        "lines": [
+          "Airborne spread detected in Lab 3."
+        ]
+      },
+      {
+        "kind": "radio",
+        "who": "Ellis",
+        "shot": "C",
+        "text": "That bench was bolted to the floor."
+      },
+      {
+        "kind": "radio",
+        "who": "Ellis",
+        "shot": "intercom",
+        "text": "I saw the warning. I just needed you to open the door."
+      },
+      {
+        "kind": "you",
+        "shot": "intercom",
+        "text": "You lied to me."
+      },
+      {
+        "kind": "hud",
+        "shot": "lab-terminal",
+        "header": "CC-2",
+        "lines": [
+          "Sealed transfer to shuttle available."
+        ]
+      },
+      {
+        "kind": "you",
+        "shot": "capsule-seal",
+        "text": "CC-2 has its own air. Can you get inside?"
+      },
+      {
+        "kind": "radio",
+        "who": "Ellis",
+        "shot": "intercom",
+        "text": "You'd have the only release. Don't send me off in that thing alone."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Get in CC-2. I'm staying with you.",
+        "to": "capsule"
+      },
+      {
+        "label": "I don't believe you anymore. I'm leaving.",
+        "to": "leave"
+      }
+    ]
+  },
+  "capsule": {
+    "id": "capsule",
+    "clip": "D",
+    "beats": [
+      {
+        "kind": "hud",
+        "shot": "D",
+        "header": "RNWAY / CC-2",
+        "lines": [
+          "Aboard. Seal holding."
+        ]
+      },
+      {
+        "kind": "radio",
+        "who": "Ellis",
+        "shot": "capsule-seal",
+        "text": "It's shut. {name}, I can't open it from here."
+      },
+      {
+        "kind": "you",
+        "shot": "capsule-seal",
+        "text": "The seal's holding. Keep talking to me."
+      },
+      {
+        "kind": "payoff",
+        "id": "capsule"
+      }
+    ],
+    "choices": [
+      {
+        "label": "[Launch with CC-2 sealed.]",
+        "to": "rescued_departure"
+      }
+    ]
+  },
+  "rescued_departure": {
+    "id": "rescued_departure",
+    "clip": "E",
+    "beats": [
+      {
+        "kind": "you",
+        "shot": "E",
+        "text": "Medical, RNWAY shuttle. Two aboard. Possible exposure. One sealed in CC-2."
+      },
+      {
+        "kind": "radio",
+        "who": "Medical",
+        "shot": "shuttle-radio",
+        "text": "Bay four. Keep the capsule sealed. We're coming to you."
+      },
+      {
+        "kind": "radio",
+        "who": "Ellis",
+        "shot": "capsule-seal",
+        "text": "{name}? Stay on till they get here. Please."
+      },
+      {
+        "kind": "you",
+        "shot": "shuttle-radio",
+        "text": "I'm here."
+      }
+    ],
+    "choices": [
+      {
+        "label": "CONTINUE",
+        "to": "rescue"
+      }
+    ]
+  },
+  "leave": {
+    "id": "leave",
+    "clip": "E",
+    "beats": [
+      {
+        "kind": "you",
+        "shot": "E",
+        "text": "I wanted to believe you. I can't risk it, Ellis."
+      },
+      {
+        "kind": "radio",
+        "who": "Ellis",
+        "shot": "empty-seat",
+        "text": "Okay. Leave the channel open."
+      },
+      {
+        "kind": "hud",
+        "shot": "shuttle-radio",
+        "header": "Radio",
+        "lines": [
+          "Signal lost."
+        ]
+      }
+    ],
+    "choices": [
+      {
+        "label": "CONTINUE",
+        "to": "survivor_leave"
+      }
+    ]
+  },
+  "survivor_alone": {
+    "id": "survivor_alone",
+    "clip": "F",
+    "ending": {
+      "number": 1,
+      "name": "SURVIVOR",
+      "key": "survivor",
+      "grade": "none"
+    },
+    "beats": [
+      {
+        "kind": "hud",
+        "shot": "F",
+        "header": "Halden",
+        "lines": [
+          "Station destroyed. No life signs."
+        ]
+      },
+      {
+        "kind": "sub",
+        "shot": "empty-seat",
+        "text": "Ellis's bag is still under the seat."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Play again",
+        "to": "corridor"
+      }
+    ]
+  },
+  "survivor_leave": {
+    "id": "survivor_leave",
+    "clip": "F",
+    "ending": {
+      "number": 1,
+      "name": "SURVIVOR",
+      "key": "survivor",
+      "grade": "none"
+    },
+    "beats": [
+      {
+        "kind": "hud",
+        "shot": "F",
+        "header": "Halden",
+        "lines": [
+          "Station destroyed. No life signs."
+        ]
+      },
+      {
+        "kind": "sub",
+        "shot": "empty-seat",
+        "text": "You leave the radio on."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Play again",
+        "to": "corridor"
+      }
+    ]
+  },
+  "contamination": {
+    "id": "contamination",
+    "clip": "F",
+    "ending": {
+      "number": 2,
+      "name": "CONTAMINATION",
+      "key": "contamination",
+      "grade": "red"
+    },
+    "beats": [
+      {
+        "kind": "radio",
+        "who": "Medical",
+        "shot": "F",
+        "text": "RNWAY, stop. We can't let you dock. Your cabin is contaminated."
+      },
+      {
+        "kind": "sub",
+        "shot": "cabin-air",
+        "text": "You hold your breath. It doesn't help."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Play again",
+        "to": "corridor"
+      }
+    ]
+  },
+  "rescue": {
+    "id": "rescue",
+    "clip": "F",
+    "ending": {
+      "number": 3,
+      "name": "RESCUE",
+      "key": "rescue",
+      "grade": "cyan"
+    },
+    "beats": [
+      {
+        "kind": "hud",
+        "shot": "F",
+        "header": "Halden",
+        "lines": [
+          "Station destroyed. Shuttle clear."
+        ]
+      },
+      {
+        "kind": "radio",
+        "who": "Ellis",
+        "shot": "medical-bay",
+        "text": "They've locked the bay. You'll wait outside, won't you?"
+      },
+      {
+        "kind": "you",
+        "shot": "medical-bay",
+        "text": "Of course."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Play again",
+        "to": "corridor"
+      }
+    ]
+  }
+}

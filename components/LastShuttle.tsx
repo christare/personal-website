@@ -121,7 +121,7 @@ const scenes: Record<SceneId, Scene> = {
     beats: [
       { kind: "radio", who: ELLIS, shot: "B", text: "Hold the release next to the reader. Don't let go." },
       { kind: "hud", shot: "door-control", header: "Door seal", lines: ["Opening it vents the lab."] },
-      { kind: "radio", who: ELLIS, shot: "intercom", text: "I know it's red. That doesn't mean you leave me here." },
+      { kind: "radio", who: ELLIS, shot: "intercom", text: "I know the light's on. That doesn't mean you leave me here." },
     ],
     choices: [
       { label: "I'm opening it. Stay close to me.", to: "released" },
@@ -331,6 +331,7 @@ type Payoffs = Partial<Record<"cabin" | "capsule", string>>;
 const EMPTY_PAYOFFS: Payoffs = {};
 
 export function LastShuttle({ payoffs = EMPTY_PAYOFFS, memoryBridge }: { payoffs?: Payoffs; memoryBridge?: string }) {
+  const [titleVisible, setTitleVisible] = useState(true);
   const [playerName, setPlayerName] = useState("");
   const name = playerName.trim().replace(/\s+/g, " ");
   const personalize = (text: string) => text.replaceAll("{name}", name);
@@ -355,8 +356,8 @@ export function LastShuttle({ payoffs = EMPTY_PAYOFFS, memoryBridge }: { payoffs
 
   const scene = useMemo(() => ({ ...scenes[sceneId], beats: scenes[sceneId].beats.filter((b) => b.kind !== "payoff" || Boolean(payoffs[b.id])) }), [sceneId, payoffs]);
   const isStart = sceneId === "start";
-  const isHook = isStart && !hookComplete;
-  const playbackPaused = tabHidden || paused || (isStart && hookComplete);
+  const isHook = isStart && !hookComplete && !titleVisible;
+  const playbackPaused = titleVisible || tabHidden || paused || (isStart && hookComplete);
   const last = scene.beats.length - 1;
   const current = scene.beats[beat];
   const done = !isStart && !memoryExit && beat >= last && (!scene.ending || endingRevealed);
@@ -400,7 +401,7 @@ export function LastShuttle({ payoffs = EMPTY_PAYOFFS, memoryBridge }: { payoffs
   const transition = useCallback((to: SceneId) => {
     const ending = scenes[to].ending;
     if (ending) setFound((f) => f.includes(ending.key) ? f : [...f, ending.key]);
-    if (to === "start") { setHookComplete(false); setHookCallVisible(false); }
+    if (to === "start") { setTitleVisible(true); setHookComplete(false); setHookCallVisible(false); }
     setMemoryExit(false); setSceneId(to); setVisit((v) => v + 1); setBeat(0); setEndingRevealed(false); setPaused(false);
   }, []);
   const finishHook = useCallback(() => { setHookComplete(true); setHookCallVisible(true); setPaused(false); }, []);
@@ -415,7 +416,13 @@ export function LastShuttle({ payoffs = EMPTY_PAYOFFS, memoryBridge }: { payoffs
     const timer = window.setTimeout(() => transition("corridor"), 480);
     return () => window.clearTimeout(timer);
   }, [memoryExit, memoryBridge, bridgeFailed, mediaReady, playbackPaused, transition]);
+  const begin = useCallback(() => {
+    setTitleVisible(false); setSoundOn(true); lastInput.current = performance.now();
+    const video = videoRef.current;
+    if (video) { video.currentTime = 0; video.muted = false; void video.play().catch(() => setSoundOn(false)); }
+  }, []);
   const advance = useCallback(() => {
+    if (titleVisible) { begin(); return; }
     if (isHook) { finishHook(); return; }
     if (isStart || !mediaReady || paused) return;
     const now = performance.now();
@@ -426,7 +433,7 @@ export function LastShuttle({ payoffs = EMPTY_PAYOFFS, memoryBridge }: { payoffs
     else if (scene.ending) setEndingRevealed(true);
     else if (sceneId === "memory") setMemoryExit(true);
     else if (scene.choices.length === 1) transition(scene.choices[0].to);
-  }, [isHook, finishHook, isStart, mediaReady, paused, memoryExit, transition, beat, last, scene.ending, scene.choices, sceneId]);
+  }, [titleVisible, begin, isHook, finishHook, isStart, mediaReady, paused, memoryExit, transition, beat, last, scene.ending, scene.choices, sceneId]);
   const choose = useCallback((to: SceneId) => { if (!mediaReady) return; lastInput.current = performance.now(); transition(to); }, [mediaReady, transition]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -468,15 +475,22 @@ export function LastShuttle({ payoffs = EMPTY_PAYOFFS, memoryBridge }: { payoffs
     else void rootRef.current?.requestFullscreen?.().catch(() => {});
   }, []);
   const tone = sceneId === "memory" ? "memory" : sceneId === "door" ? "door" : sceneId === "report" ? "report"
+    : sceneId === "capsule" ? "capsule" : sceneId === "rescued_departure" ? "departure"
     : sceneId === "released" || sceneId === "contamination" ? "exposure"
     : sceneId === "rescue" ? "rescue" : sceneId.startsWith("survivor") ? "alone" : "station";
-  const rootClass = ["ls-root", `ls-tone-${tone}`, isStart ? "ls-root-intro" : "", isHook ? "ls-root-hook" : "", memoryExit ? "ls-memory-exit" : "", showEnding ? "ls-root-ending" : "", payoffSrc ? "ls-root-payoff" : ""].filter(Boolean).join(" ");
+  const rootClass = ["ls-root", `ls-tone-${tone}`, titleVisible ? "ls-root-title" : "", isStart ? "ls-root-intro" : "", isHook ? "ls-root-hook" : "", memoryExit ? "ls-memory-exit" : "", showEnding ? "ls-root-ending" : "", payoffSrc ? "ls-root-payoff" : ""].filter(Boolean).join(" ");
 
   return <div ref={rootRef} className={rootClass} data-shot={activeShot} data-scene={sceneId} data-beat={beat} data-media-ready={mediaReady}>
     <main className="ls-stage">
       <section className="ls-screen" aria-labelledby="ls-heading" onClick={advance}>
         <FilmStage videoRef={videoRef} videoSrc={videoSrc} poster={poster} paused={playbackPaused} soundOn={soundOn} visit={visit} crt={Boolean(scene.crt) && activeShot === "C"} onAudioBlocked={audioBlocked} onEnded={onFilmEnded} onProgress={onFilmProgress} onReady={mediaLoaded} />
         <h1 id="ls-heading" ref={headingRef} tabIndex={-1} className="ls-sr-only">{isStart ? TITLE : meta.label}</h1>
+        {titleVisible ? <button type="button" className="ls-title-screen" aria-label="Begin Last Shuttle with sound" onClick={(e) => { e.stopPropagation(); begin(); }}>
+          <span className="ls-title-name">LAST SHUTTLE</span>
+          <span className="ls-title-sound">Sound on. Headphones recommended.</span>
+          <span className="ls-title-instruction">Click anywhere or press Space to continue.</span>
+          <span className="ls-title-credit">By Chris Jereza for Runway · 9/14/26</span>
+        </button> : null}
         <div className={`ls-panel${isStart ? " ls-panel-start" : ""}`}>
           {sceneId === "memory" || (sceneId === "corridor" && beat === 0) ? <div className="ls-time-mark">{sceneId === "memory" ? "Four hours earlier" : "Now"}</div> : null}
           {isStart ? <>
@@ -487,11 +501,10 @@ export function LastShuttle({ payoffs = EMPTY_PAYOFFS, memoryBridge }: { payoffs
                 <label className="ls-sr-only" htmlFor="crew-name">Your name</label>
                 <div className="ls-name-row"><input id="crew-name" value={playerName} onChange={(e) => setPlayerName(e.target.value)} maxLength={24} autoComplete="off" required placeholder="Your name" /><button type="submit" disabled={!name}>I'm here.</button></div>
               </form>
-              <p className="ls-instruction">Click anywhere or press Space to advance.</p>
             </div>
           </> : null}
           {!isStart && !payoffSrc && current && current.kind !== "payoff" && !showEnding ? <div className={`ls-reading ls-reading-${current.kind}`} key={`${sceneId}-${beat}`} role="status">
-            {current.kind === "hud" ? <p className="ls-dialogue ls-system"><span className="ls-system-label">{current.header}: </span>{current.lines.join(" ")}</p>
+            {current.kind === "hud" ? <div className="ls-system"><span className="ls-system-label">{current.header}</span><p>{current.lines.join(" ")}</p></div>
             : <p className="ls-dialogue">{current.kind !== "sub" ? <span className="ls-speaker">{current.kind === "you" ? "You" : current.who}: </span> : null}{personalize(current.text)}</p>}
           </div> : null}
           {choiceVisible || actionVisible ? <div className="ls-response-area" onClick={(e) => e.stopPropagation()}>
