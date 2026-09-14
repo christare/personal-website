@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import type {
   PortfolioItem,
@@ -269,6 +270,9 @@ export function HomeTabs(props: HomeTabsProps) {
               {item.label}
             </button>
           ))}
+          <Link href="/last-shuttle" className="header-tab-link">
+            Last Shuttle
+          </Link>
         </nav>
         <a className="contact-button" href={`mailto:${props.email}`}>
           <MailIcon />

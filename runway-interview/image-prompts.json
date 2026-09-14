@@ -1,0 +1,94 @@
+[
+  {
+    "file": "runway-interview/unused-face-concepts/alex-memory.png",
+    "generator": "OpenAI built-in image_gen",
+    "prompt": "Use case: photorealistic-natural. Create ONE new full-screen 16:9 cinematic still for the interactive sci-fi story Last Shuttle, not a collage. The attached corridor is a STYLE AND WORLD REFERENCE ONLY: worn ivory bulkheads, graphite ribs, believable utilitarian spacecraft, cold cyan practical lights with small amber accents, photographic realism. This new shot is a very brief memory before the emergency: in the station's cramped off-duty galley, Alex, an adult male maintenance technician about 32, medium olive skin, short dark wavy hair, faint stubble, tired kind eyes, plain charcoal work coverall, is sitting opposite the camera (the player's point of view). A candid medium close shot; he is passing a chipped cobalt-blue enamel coffee mug toward the viewer, laughing quietly at a private joke, not posing. A second plain mug near the camera softly out of focus establishes two friends without showing or defining the player. Warm practical task lamp on his face while the same cold station surrounds him, subdued color, organic film texture, real skin, gentle imperfect moment. Face and mug in the upper-middle picture so bottom fifth can hold subtitles. No captions, no text, no UI, no logos, no cinematic bars, no exaggerated grin, no generic heroic portrait. Make this person specific and likable without sentimentality. Landscape 16:9.",
+    "status": "Archived, not used: superseded by the no-people editorial decision."
+  },
+  {
+    "file": "public/last-shuttle/inserts/intercom.png",
+    "generator": "OpenAI built-in image_gen",
+    "prompt": "Create ONE new photorealistic full-screen 16:9 landscape cinematic still for Last Shuttle. Attached images are world/style references, not edit targets. Match worn ivory metal, graphite structural ribs, small amber indicators and cyan practical lighting, damp industrial spacecraft realism, textured restrained photography. No lettering, logos, UI, overlays, collage or cinematic bars. Keep the important subject in the central upper two-thirds; the game adds a discreet subtitle below. Close insert of a wall-mounted analog intercom beside a sealed corridor door, ribbed black handset on a short coiled cord, worn speaker grille, one tiny lit amber receiving light. Eye-level shallow-depth composition, intercom right of center, recognizably the same station background receding left into darkness. Fine scratches and fingerprints. A mundane piece of equipment suddenly feels like the only connection to someone alive. No hands, no people.",
+    "status": "Used in game."
+  },
+  {
+    "file": "public/last-shuttle/inserts/door-control.png",
+    "generator": "OpenAI built-in image_gen",
+    "prompt": "Create ONE new photorealistic full-screen 16:9 landscape cinematic still for Last Shuttle. Attached images are world/style references, not edit targets. Match worn ivory metal, graphite structural ribs, small amber indicators and cyan practical lighting, damp industrial spacecraft realism, textured restrained photography. No lettering, logos, UI, overlays, collage or cinematic bars. Keep the important subject in the central upper two-thirds; the game adds a discreet subtitle below. Close side-angle insert of the laboratory door override mechanism, a guarded mechanical lever beneath a hinged transparent safety cover next to a small amber warning lamp. The massive closed door and its locking bolts occupy the soft-focus background. The lever is untouched. This is a real physical decision to break quarantine; visually readable utilitarian hardware, not a futuristic hologram. No hands, no people. Preserve the door reference's design and closed state.",
+    "status": "Used in game."
+  },
+  {
+    "file": "public/last-shuttle/inserts/empty-seat.png",
+    "generator": "OpenAI built-in image_gen",
+    "prompt": "Create ONE new photorealistic full-screen 16:9 landscape cinematic still for Last Shuttle. Attached images are world/style references, not edit targets. Match worn ivory metal, graphite structural ribs, small amber indicators and cyan practical lighting, damp industrial spacecraft realism, textured restrained photography. No lettering, logos, UI, overlays, collage or cinematic bars. Keep the important subject in the central upper two-thirds; the game adds a discreet subtitle below. A reverse three-quarter view inside this same shuttle cockpit: the EMPTY passenger seat, its dark fabric harness laid open, an ordinary packed charcoal duffel tucked under it and a small chipped cobalt-blue enamel mug secured in the adjacent cup holder. Pilot point of view from the other seat, no person visible. The other seat has clearly been prepared for a friend who has not arrived. Warm indicator against cold dim cabin. Quiet, specific, emotionally spare, realistic physical layout. No face reflection.",
+    "status": "Used in game."
+  },
+  {
+    "file": "runway-interview/unused-face-concepts/alex-trapped.png",
+    "generator": "OpenAI built-in image_gen",
+    "prompt": "Create ONE new photorealistic full-screen 16:9 landscape cinematic still for Last Shuttle. Attached images are world/style references, not edit targets. Match worn ivory metal, graphite structural ribs, small amber indicators and cyan practical lighting, damp industrial spacecraft realism, textured restrained photography. No lettering, logos, UI, overlays, collage or cinematic bars. Keep the important subject in the central upper two-thirds; the game adds a discreet subtitle below. Use image 1 as Alex's EXACT facial identity and clothing reference; image 2 as the laboratory environment. A waist-up low-quality but physically realistic emergency video-call view of the SAME adult man, short dark wavy hair, olive skin, stubble, charcoal maintenance coverall. He sits on the laboratory floor with his back against an equipment cabinet, one knee raised, trying to keep composed while frightened. Sweaty forehead, minor dark discoloration on neck but no monstrous transformation and no gore. He looks directly toward the lens as if searching for his friend's response. Cold practical light instead of the reference's warm memory. Off-center human framing, overhead lab space behind. Do NOT put him inside a screen or add UI; this is the actual video-call camera image filling the frame.",
+    "status": "Archived, not used: superseded by the no-people editorial decision."
+  },
+  {
+    "file": "public/last-shuttle/inserts/lab-terminal.png",
+    "generator": "OpenAI built-in image_gen",
+    "prompt": "undefinedA close insert of a recessed laboratory quarantine terminal outside the lab: thick worn ivory casing, a dark cyan glass screen with a very faint abstract line graph only, physical metal keys and one amber warning light. Screen right of center, large enough to read spatially, but ABSOLUTELY NO LETTERS OR NUMBERS. Game supplies the infection record separately. Cold spill light on fingerprints and scratched metal. Background suggests the sealed laboratory door, no people, no holograms.",
+    "status": "Used in game."
+  },
+  {
+    "file": "public/last-shuttle/inserts/capsule-seal.png",
+    "generator": "OpenAI built-in image_gen",
+    "prompt": "undefinedExtreme close insert of this EXACT opaque containment capsule's heavy locking clamp and black rubber gasket, showing the lid fully SEALED. Same ivory finish, graphite bands and hardware. One tiny steady green status lamp next to the seated latch. Condensation on metal, physical believable bolts and a clean unbroken seam. The audience should understand the friend is safely separated by this barrier. No window, no visible occupant, no text, no added handles or redesign. Upper center mechanism, shallow focus beyond.",
+    "status": "Used in game."
+  },
+  {
+    "file": "public/last-shuttle/inserts/cabin-air.png",
+    "generator": "OpenAI built-in image_gen",
+    "prompt": "undefinedAn intimate insert from the same shuttle cockpit of a shared-air ventilation grille beside the passenger seat: damp scratched ivory frame, graphite louvers, condensation collecting along the slats and one dull red indicator replacing the normal amber. A few very fine dark organic strands lie across the wet grille, understated but wrong. No creature, no gore, no face, no text. This image makes the risk of sharing a sealed cabin's air tangible. Cinematic 85mm close framing, cold utilitarian light, no spectacular effects.",
+    "status": "Used in game."
+  },
+  {
+    "file": "runway-interview/unused-face-concepts/medical-bay.png",
+    "generator": "OpenAI built-in image_gen",
+    "prompt": "undefinedA quiet wide shot at arrival on a medical rescue carrier. The EXACT same opaque sealed ivory-and-graphite containment capsule from the reference, recognizable proportions, bands, rails and tiny green indicator, is being received in a clean but utilitarian isolation bay. Two medical workers wearing plain pale protective suits stand at the far end preparing to move it; faces obscured, not the image's subject. Foreground: a simple waiting chair on the observer's side of a glass isolation partition. Soft clean off-white practical light with a little cyan, still industrial and believable, restrained relief after a dark journey. Capsule stays CLOSED, no coffin symbolism, no text or logos, no new futuristic style. Through the partition, a hand of a worker resting reassuringly on the capsule's end.",
+    "status": "Archived, not used: superseded by the no-people editorial decision."
+  },
+  {
+    "file": "public/last-shuttle/inserts/shuttle-radio.png",
+    "generator": "OpenAI built-in image_gen",
+    "prompt": "Create ONE new photorealistic full-screen 16:9 landscape cinematic still for Last Shuttle. Attached images are world/style references, not edit targets. Match worn ivory metal, graphite structural ribs, small amber indicators and cyan practical lighting, damp industrial spacecraft realism, textured restrained photography. No lettering, logos, UI, overlays, collage or cinematic bars. Keep the important subject in the central upper two-thirds; the game adds a discreet subtitle below. Close insert of the shuttle's built-in radio console from the attached cockpit. A small square graphite speaker grille and a recessed push-to-talk switch among scratched dark metal panels with two amber indicator lights. A short coiled microphone cable lies across the console. Shallow-focus background is cockpit instruments and a sliver of black space through the viewport, NOT a corridor or a door. No people or hands. Keep the subject near center-right and leave the bottom unobstructed for subtitles. The visual should support a desperate voice connection during departure and quiet relief on approach. No generated lettering or numbers.",
+    "status": "Used in game."
+  },
+  {
+    "file": "public/last-shuttle/inserts/shared-coffee.png",
+    "generator": "OpenAI built-in image_gen",
+    "prompt": "ONE full-screen landscape 16:9 photorealistic cinematic game still. Match the reference's worn ivory metal, graphite structure, amber and cyan practical lighting, and grounded industrial space-station design. NO people, faces, bodies, hands, silhouettes, humanoid shapes, face-like patterns, creatures, eyes, mouths, photos of people, text, logos, overlays, or black cinematic bars. New scene, references for world and blue mug only. A small quiet galley table aboard the station, viewed from one empty place at the table. Two used coffee mugs close together, one chipped cobalt-blue enamel mug identical to the reference and one plain cream enamel mug. One cup still has a faint thread of steam. A small folded cloth and coffee rings on the brushed metal surface imply an ordinary shared break. Two unoccupied chair edges, no other personalized belongings. A warm task lamp lights the mugs within the cold industrial surroundings. Medium-close composition, mugs centered above lower third, no sentimental keepsakes, no birthday items, no background screens or pictures. It should feel like someone you know has just stepped out, without defining who that person is.",
+    "status": "Used in game."
+  },
+  {
+    "file": "public/last-shuttle/inserts/isolation-bay.png",
+    "generator": "OpenAI built-in image_gen",
+    "prompt": "ONE full-screen landscape 16:9 photorealistic cinematic game still. Match the reference's worn ivory metal, graphite structure, amber and cyan practical lighting, and grounded industrial space-station design. NO people, faces, bodies, hands, silhouettes, humanoid shapes, face-like patterns, creatures, eyes, mouths, photos of people, text, logos, overlays, or black cinematic bars. EDIT the attached medical-isolation bay: remove both protective-suited medical workers COMPLETELY. Preserve the exact sealed capsule, its orientation and condition, the glass partition, the empty waiting chair in the foreground, the medical equipment and lighting. Fill the removed workers naturally with the existing room, floor and capsule. No replacements or people in reflections. This is a quiet empty room where someone you care about is inside an opaque sealed medical capsule; no occupant can be seen. The empty waiting chair is the emotional focus, not a person.",
+    "status": "Used in game."
+  },
+  {
+    "file": "public/last-shuttle/g_feed.png",
+    "generator": "OpenAI built-in image_gen",
+    "prompt": "ONE full-screen landscape 16:9 photorealistic cinematic game still. Match the reference's worn ivory metal, graphite structure, amber and cyan practical lighting, and grounded industrial space-station design. NO people, faces, bodies, hands, silhouettes, humanoid shapes, face-like patterns, creatures, eyes, mouths, photos of people, text, logos, overlays, or black cinematic bars. Use the same laboratory and high-corner surveillance-camera viewpoint as the reference. This is an exact starting keyframe for a later horror animation: the lab is empty, but its ordinary industrial wiring is pulled impossibly UPWARD toward the camera. Three thick, recognizably manufactured black ribbed electrical cables have lifted off the workbench, their solid rectangular connectors suspended near the lens in the foreground, still physically trailing back to equipment. The overturned stool remains recognizable below. No tentacles, no organic tendrils, no monster design, no lightning or sparks. The wrongness is an invisible force pulling real equipment toward us against gravity. Tension in the cables, shallow near-lens focus, cold practical light. Keep complete spatial continuity with the reference room. A horrifyingly close physical intrusion without showing what causes it.",
+    "status": "Used in game."
+  },
+  {
+    "file": "public/last-shuttle/h_capsule.png",
+    "generator": "OpenAI built-in image_gen",
+    "prompt": "ONE full-screen landscape 16:9 photorealistic cinematic game still. Match the reference's worn ivory metal, graphite structure, amber and cyan practical lighting, and grounded industrial space-station design. NO people, faces, bodies, hands, silhouettes, humanoid shapes, face-like patterns, creatures, eyes, mouths, photos of people, text, logos, overlays, or black cinematic bars. Use the exact opaque containment capsule from the reference. Very close oblique view of its end plate and adjoining clamp. The thick ivory end plate is visibly BOWED OUTWARD under impossible pressure from within, a large smooth asymmetric distortion, with no handprint, facial relief or anatomy. The graphite clamp strains but stays engaged; the black gasket is continuous and sealed, the tiny green indicator remains on. No open seam and no visible interior. No new handles or windows. End plate fills much of the picture, upper-middle focus. This is the starting frame for one short violent flex in a later animation. Frightening force against a solid barrier, very grounded physical metal, minimal light, not a designed creature.",
+    "reference": "/Users/chrisjereza/personal-website/public/last-shuttle/d_capsule.png",
+    "status": "Used in game; exact Runway animation reference."
+  },
+  {
+    "file": "public/last-shuttle/h_cabin.png",
+    "generator": "OpenAI built-in image_gen",
+    "prompt": "ONE full-screen landscape 16:9 photorealistic cinematic game still. Match the reference's worn ivory metal, graphite structure, amber and cyan practical lighting, and grounded industrial space-station design. NO people, faces, bodies, hands, silhouettes, humanoid shapes, face-like patterns, creatures, eyes, mouths, photos of people, text, logos, overlays, or black cinematic bars. Use the attached shuttle ventilation close-up as an exact environment and hardware reference. Make an intense macro starting frame for a horror animation. The rigid graphite grille is still recognizable, wet with condensation; the slats are bowed subtly toward the viewer under pressure. Several droplets are suspended just above the wet surface, implying reversed gravity or suction toward the lens. Remove any organic strands: only water, manufactured metal, rubber and a dull red indicator. No creature behind the grille, no tendrils, no eye-like holes. What threatens the passenger is inside the shared air, completely unseen. Dramatic near-lens proximity with restrained practical light and no added special-effect glow.",
+    "reference": "/Users/chrisjereza/personal-website/public/last-shuttle/inserts/cabin-air.png",
+    "status": "Used in game; exact Runway animation reference."
+  }
+]
