@@ -406,7 +406,15 @@ export function LastShuttle({ payoffs = EMPTY_PAYOFFS, memoryBridge }: { payoffs
     }, 120);
   }, []);
   const finishHook = useCallback(() => { setHookComplete(true); setHookCallVisible(true); setOpeningPaused(false); }, []);
-  const toggleOpeningPause = useCallback(() => setOpeningPaused((paused) => !paused), []);
+  const toggleOpeningPause = useCallback(() => {
+    setOpeningPaused(!openingPaused);
+    // Resuming after enabling sound while paused also needs a direct user gesture.
+    const video = videoRef.current;
+    if (openingPaused && video && videoSrc) {
+      video.muted = !soundOn;
+      void video.play().catch(() => setSoundOn(false));
+    }
+  }, [openingPaused, soundOn, videoSrc]);
   const nextOpeningBeat = useCallback(() => {
     if (transitioning.current) return;
     if (memoryExit) transition("corridor");
