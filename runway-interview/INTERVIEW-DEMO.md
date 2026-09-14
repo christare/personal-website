@@ -38,6 +38,7 @@ Use the local game at http://localhost:3000/last-shuttle if the public site is n
 
 No people, faces, hands, silhouettes or designed creature. Alex stays unseen; two coffee mugs, a packed bag, an empty seat and the radio establish the relationship. The tightened cut uses only three emotional stills: shared coffee, the empty seat, and the isolation bay. Dialogue stays over the six original motion environments. Three additional payoff stills are integrated; their Runway animations are pending. Use PAYOFF-SHOTS.md for the exact input images, motion prompts and export filenames.
 
-## Tight-cut verification
 
-Across the complete graph: 44 → 28 beats; dialogue and record text 313 → 163 words; ordinary still-backed beats 27 → 6. The three payoff references remain stills until their Runway MP4s are supplied. These are graph counts, not a measured screen-time ratio. All three ending categories remain.
+## Restored story
+
+The fuller pre-trim narrative is restored, including the shared plans, promise, access problem, fear, concealed infection, rescue exchange, and different abandonment responses. The lab cable insert remains removed. The two supplied payoff videos and native audio remain integrated.

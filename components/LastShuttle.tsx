@@ -94,29 +94,33 @@ const scenes: Record<SceneId, Scene> = {
   },
   memory: {
     id: "memory", clip: "memory", status: "MEMORY",
-    ticker: "FOUR HOURS EARLIER",
+    ticker: "FOUR HOURS EARLIER · YOUR LAST SHIFT TOGETHER",
     beats: [
-      { kind: "radio", who: ALEX, text: "Breakfast tomorrow. Real coffee. My treat." },
-      { kind: "you", text: "I'll wait for you at the shuttle." },
+      { kind: "radio", who: ALEX, shot: "memory", text: "Tomorrow, breakfast. Somewhere with real coffee. My treat." },
+      { kind: "you", shot: "empty-seat", text: "Your bag's already aboard. I'll wait for you at the shuttle." },
     ],
     choices: [{ label: "ANSWER THE EMERGENCY CALL", to: "corridor" }],
   },
   corridor: {
     id: "corridor", clip: "A", status: "EVACUATION ACTIVE",
-    ticker: "LAST SHUTTLE READY · ALEX TRAPPED IN LAB 3",
+    ticker: "YOUR SHUTTLE IS READY · ALEX IS STILL IN LAB 3",
     beats: [
-      { kind: "radio", who: ALEX, text: "{name}? The lab sealed. You said you'd wait." },
+      { kind: "radio", who: ALEX, shot: "A", text: "{name}? Please tell me you haven't launched." },
+      { kind: "radio", who: ALEX, shot: "intercom", text: "The lab sealed. My access won't open it." },
+      { kind: "radio", who: ALEX, shot: "intercom", text: "You said you'd wait. Please don't leave without me." },
     ],
     choices: [
-      { label: "GO BACK FOR ALEX", detail: "Use your access to reach Alex.", to: "door" },
-      { label: "LAUNCH ALONE", detail: "Leave Alex behind.", to: "alone" },
+      { label: "GO BACK FOR ALEX", detail: "Your access can open the lab.", to: "door" },
+      { label: "LAUNCH ALONE", detail: "Get clear of the station. Leave Alex behind.", to: "alone" },
     ],
   },
   alone: {
     id: "alone", clip: "E", status: "IN TRANSIT",
     ticker: "LAUNCH COMPLETE · ONE ABOARD · ALEX STILL ON STATION",
     beats: [
-      { kind: "radio", who: ALEX, text: "{name}? I heard the launch clamps. Please come back." },
+      { kind: "radio", who: ALEX, shot: "E", text: "{name}? I heard the launch clamps." },
+      { kind: "radio", who: ALEX, shot: "empty-seat", text: "I can't get out on my own. Please come back." },
+      { kind: "hud", shot: "shuttle-radio", header: "COMMS", lines: ["CONNECTION LOST"] },
     ],
     choices: [{ label: "CONTINUE", to: "survivor_alone" }],
   },
@@ -124,20 +128,22 @@ const scenes: Record<SceneId, Scene> = {
     id: "door", clip: "B", status: "EVACUATION ACTIVE",
     ticker: "LAB 3 · ALEX IS ON THE OTHER SIDE",
     beats: [
-      { kind: "hud", header: "QUARANTINE", lines: ["OVERRIDE RELEASES LAB AIR", "YOUR ACCESS: AUTHORIZED"] },
-      { kind: "radio", who: ALEX, text: "I know what the warning says. Please open it." },
+      { kind: "radio", who: ALEX, shot: "B", text: "I can hear you outside. Can you open it?" },
+      { kind: "hud", shot: "door-control", header: "QUARANTINE INTERLOCK", lines: ["LAB 3 SEALED", "OVERRIDE RELEASES LAB AIR", "INCIDENT LOG AVAILABLE"] },
+      { kind: "radio", who: ALEX, shot: "intercom", text: "I know what the light says. I don't want to die in here." },
     ],
     choices: [
       { label: "OPEN THE DOOR", detail: "Bring Alex aboard. Break quarantine.", to: "released" },
-      { label: "READ THE INCIDENT LOG", detail: "Keep the door sealed.", to: "report" },
+      { label: "READ THE INCIDENT LOG", detail: "Keep the lab sealed. Look for another way.", to: "report" },
     ],
   },
   released: {
     id: "released", clip: "E", status: "IN TRANSIT",
-    ticker: "LAB OPENED · TWO ABOARD · SHARED AIR",
+    ticker: "TWO ABOARD · CABIN AIR SHARED",
     beats: [
-      { kind: "radio", who: "ALEX · SEAT 2", text: "I thought you'd leave me." },
-      { kind: "hud", header: "CABIN AIR", lines: ["AIRBORNE INFECTION", "BOTH OCCUPANTS EXPOSED"] },
+      { kind: "sub", shot: "E", text: "You open the lab. Alex follows you to the shuttle." },
+      { kind: "radio", who: "ALEX · SEAT 2", shot: "shuttle-radio", text: "You came back. I thought you were going to leave me." },
+      { kind: "hud", shot: "cabin-air", header: "CABIN AIR", lines: ["AIRBORNE ORGANISM DETECTED", "EXPOSURE: BOTH OCCUPANTS"] },
       { kind: "payoff", id: "cabin" },
     ],
     choices: [{ label: "CONTACT THE MEDICAL CARRIER", to: "contamination" }],
@@ -146,21 +152,25 @@ const scenes: Record<SceneId, Scene> = {
     id: "report", clip: "C", status: "EVACUATION ACTIVE", crt: true,
     ticker: "ALEX IS INFECTED · SHARED AIR IS UNSAFE",
     beats: [
-      { kind: "hud", header: "INCIDENT LOG", lines: ["ALEX: INFECTED", "TRANSMISSION: AIRBORNE"] },
-      { kind: "radio", who: ALEX, text: "I knew. I thought you'd leave if I told you." },
-      { kind: "hud", header: "SEALED TRANSFER AVAILABLE", lines: ["CAPSULE: INDEPENDENT AIR", "ENCLOSED RAIL TO SHUTTLE", "LAB DOOR STAYS CLOSED"] },
+      { kind: "hud", shot: "lab-terminal", header: "INCIDENT LOG", lines: ["ALEX: INFECTED", "TRANSMISSION: AIRBORNE", "DO NOT OPEN THE LAB"] },
+      { kind: "radio", who: ALEX, shot: "C", text: "Is that camera working? I can't see the light." },
+      { kind: "radio", who: ALEX, shot: "intercom", text: "I saw the result. I thought if I told you, you'd go." },
+      { kind: "hud", shot: "lab-terminal", header: "SEALED TRANSFER", lines: ["CC-2: INDEPENDENT AIR SUPPLY", "ENCLOSED RAIL TO SHUTTLE: ONLINE", "LAB DOOR REMAINS CLOSED"] },
+      { kind: "you", shot: "capsule-seal", text: "There's a sealed capsule. Can you reach it?" },
+      { kind: "radio", who: ALEX, shot: "intercom", text: "I can try. Stay on the radio." },
     ],
     choices: [
       { label: "USE THE SEALED CAPSULE", detail: "Separate air. Keep the lab sealed.", to: "capsule" },
-      { label: "LEAVE ALEX HERE", detail: "Alex cannot get out.", to: "leave" },
+      { label: "LEAVE ALEX HERE", detail: "Launch alone. Alex cannot get out.", to: "leave" },
     ],
   },
   capsule: {
     id: "capsule", clip: "D", status: "EVACUATION ACTIVE",
     ticker: "SEALED TRANSFER · LAB DOOR CLOSED",
     beats: [
-      { kind: "hud", header: "CAPSULE RECEIVED", lines: ["ONE OCCUPANT", "SEAL LOCKED · AIR ISOLATED"] },
-      { kind: "radio", who: ALEX_IC, text: "{name}? Stay on the radio." },
+      { kind: "hud", shot: "D", header: "CARGO CONTROL", lines: ["CAPSULE RECEIVED", "ONE OCCUPANT", "CABIN AIR ISOLATED"] },
+      { kind: "radio", who: ALEX_IC, shot: "capsule-seal", text: "I'm in. Is it locked?" },
+      { kind: "you", shot: "capsule-seal", text: "Green light. It's locked." },
       { kind: "payoff", id: "capsule" },
     ],
     choices: [{ label: "LAUNCH WITH ALEX", to: "rescued_departure" }],
@@ -169,7 +179,10 @@ const scenes: Record<SceneId, Scene> = {
     id: "rescued_departure", clip: "E", status: "IN TRANSIT",
     ticker: "TWO ABOARD · ALEX IN SEALED CONTAINMENT",
     beats: [
-      { kind: "radio", who: "MEDICAL CARRIER", text: "Cleared for isolation dock. Keep the capsule sealed." },
+      { kind: "you", shot: "E", text: "Halden shuttle to medical carrier. Two aboard. One in sealed containment." },
+      { kind: "radio", who: "MEDICAL CARRIER", shot: "shuttle-radio", text: "We have you. Isolation bay four. Keep the capsule closed." },
+      { kind: "radio", who: ALEX_IC, shot: "capsule-seal", text: "{name}? Don't turn the radio off." },
+      { kind: "you", shot: "shuttle-radio", text: "I'm here." },
     ],
     choices: [{ label: "CONTINUE", to: "rescue" }],
   },
@@ -177,7 +190,9 @@ const scenes: Record<SceneId, Scene> = {
     id: "leave", clip: "E", status: "IN TRANSIT",
     ticker: "ONE ABOARD · RADIO LINK TO LAB 3",
     beats: [
-      { kind: "radio", who: ALEX, text: "You're leaving? Will you stay on the line?" },
+      { kind: "you", shot: "E", text: "Alex. I can't take that risk. I'm leaving." },
+      { kind: "radio", who: ALEX, shot: "empty-seat", text: "Okay. Will you stay on the line?" },
+      { kind: "hud", shot: "shuttle-radio", header: "COMMS", lines: ["CONNECTION LOST"] },
     ],
     choices: [{ label: "CONTINUE", to: "survivor_leave" }],
   },
@@ -206,7 +221,8 @@ const scenes: Record<SceneId, Scene> = {
     ticker: "DOCKING REFUSED · BOTH OCCUPANTS EXPOSED",
     ending: { number: 2, name: "CONTAMINATION", key: "contamination", grade: "red" },
     beats: [
-      { kind: "radio", who: "MEDICAL CARRIER", text: "Both exposed. We can't let you dock." },
+      { kind: "radio", who: "MEDICAL CARRIER", shot: "F", text: "We can't let you dock. Hold your position." },
+      { kind: "sub", shot: "cabin-air", text: "Two aboard. No way to separate the air." },
     ],
     choices: [{ label: "PLAY AGAIN", to: "corridor" }],
   },
@@ -215,8 +231,8 @@ const scenes: Record<SceneId, Scene> = {
     ticker: "TWO RECOVERED · ALEX IN MEDICAL ISOLATION",
     ending: { number: 3, name: "RESCUE", key: "rescue", grade: "cyan" },
     beats: [
-      { kind: "hud", header: "HALDEN STATION", lines: ["SCUTTLE COMPLETE", "SHUTTLE CLEAR"] },
-      { kind: "radio", who: "ALEX · MEDICAL BAY", shot: "medical-bay", text: "Can you wait outside?" },
+      { kind: "hud", shot: "F", header: "HALDEN STATION", lines: ["SCUTTLE COMPLETE", "SHUTTLE CLEAR"] },
+      { kind: "radio", who: "ALEX · MEDICAL BAY", shot: "medical-bay", text: "They say I have to stay here a while. Can you wait outside?" },
       { kind: "you", shot: "medical-bay", text: "Of course." },
     ],
     choices: [{ label: "PLAY AGAIN", to: "corridor" }],
@@ -695,7 +711,7 @@ export function LastShuttle({ payoffs = {} }: { payoffs?: Partial<Record<"cabin"
 
             {isStart ? (
               <p className="ls-footnote ls-in" style={{ animationDelay: "0.3s" }}>
-                Three endings · 1–2 minutes · Click the image or press Space.
+                Three endings · 2–3 minutes · Click the image or press Space.
               </p>
             ) : null}
 

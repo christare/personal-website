@@ -578,7 +578,7 @@
 
 /* One reading rail: context, current line, then actions. */
 .ls-root:not(.ls-root-intro) .ls-panel { width: min(760px, calc(100% - 40px)); margin: 0 auto; padding: 20px 0 28px; }
-.ls-reading { min-height: 108px; padding: 16px 22px; margin-bottom: 16px; background: rgba(7,12,16,.92); border-top: 1px solid rgba(169,207,218,.4); text-align: left; }
+.ls-reading { min-height: 108px; padding: 16px 22px; margin-bottom: 16px; background: rgba(7,12,16,.78); border-top: 1px solid rgba(169,207,218,.4); text-align: left; }
 .ls-context { margin-bottom: 12px; color: #a1b6c1; font: 10px var(--font-geist-mono), monospace; letter-spacing: .14em; }
 .ls-reading .ls-radiocard, .ls-reading .ls-hud { position: static; width: 100%; max-width: none; margin: 0; padding: 0; transform: none; border: 0; background: none; }
 .ls-reading .ls-hudpanel { padding: 0; border: 0; background: none; }
@@ -595,7 +595,7 @@
 .ls-root-memory .ls-header { background: #241d15; border-bottom-color: #9d8059; }
 .ls-root-memory .ls-media { inset: 16px 28px; border: 1px solid rgba(216,182,132,.45); }
 .ls-root-memory .ls-layer { filter: sepia(.25) saturate(.7); }
-.ls-root-memory .ls-reading { background: rgba(34,26,18,.95); border-top-color: #c5a375; }
+.ls-root-memory .ls-reading { background: rgba(34,26,18,.82); border-top-color: #c5a375; }
 .ls-root-memory .ls-context, .ls-root-memory .ls-radio-head, .ls-root-memory .ls-you-label { color: #e2c69f; }
 .ls-root-memory .ls-status { color: #e2c69f; }
 .ls-root-ending .ls-credits { font-size: 10px; }
