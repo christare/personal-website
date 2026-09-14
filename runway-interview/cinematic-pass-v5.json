@@ -1,0 +1,521 @@
+{
+  "start": {
+    "id": "start",
+    "clip": "compression",
+    "status": "EVACUATION ACTIVE",
+    "ticker": "HALDEN STATION · FINAL EVACUATION",
+    "beats": [
+      {
+        "kind": "radio",
+        "who": "ELLIS",
+        "text": "Are you there?"
+      },
+      {
+        "kind": "sub",
+        "text": "Halden is being scuttled. Yours is the last shuttle docked."
+      },
+      {
+        "kind": "sub",
+        "text": "Ellis is still inside Lab 3."
+      }
+    ],
+    "choices": [
+      {
+        "label": "CONTINUE",
+        "to": "memory"
+      }
+    ]
+  },
+  "memory": {
+    "id": "memory",
+    "clip": "memory",
+    "status": "MEMORY",
+    "ticker": "FOUR HOURS EARLIER · YOUR LAST SHIFT TOGETHER",
+    "beats": [
+      {
+        "kind": "radio",
+        "who": "ELLIS",
+        "shot": "memory",
+        "text": "Nico's when we land. Coffee, eggs on toast. My turn to pay."
+      },
+      {
+        "kind": "you",
+        "shot": "empty-seat",
+        "text": "Your bag's under the spare seat. I'll wait for you there."
+      }
+    ],
+    "choices": [
+      {
+        "label": "CONTINUE",
+        "to": "corridor"
+      }
+    ]
+  },
+  "corridor": {
+    "id": "corridor",
+    "clip": "A",
+    "status": "EVACUATION ACTIVE",
+    "ticker": "YOUR SHUTTLE IS READY · ELLIS IS STILL IN LAB 3",
+    "beats": [
+      {
+        "kind": "radio",
+        "who": "ELLIS",
+        "shot": "A",
+        "text": "Lab 3 won't take my card. Yours still has the override."
+      },
+      {
+        "kind": "radio",
+        "who": "ELLIS",
+        "shot": "A",
+        "text": "My bag's under your spare seat, {name}. You said you'd wait."
+      }
+    ],
+    "choices": [
+      {
+        "label": "I said I'd wait. I'm coming back.",
+        "detail": "Go back. Your keycard can override the lab door.",
+        "to": "door"
+      },
+      {
+        "label": "If I miss this launch, neither of us gets out.",
+        "detail": "Launch alone. Leave Ellis behind.",
+        "to": "alone"
+      }
+    ]
+  },
+  "alone": {
+    "id": "alone",
+    "clip": "E",
+    "status": "IN TRANSIT",
+    "ticker": "LAUNCH COMPLETE · ONE ABOARD · ELLIS STILL ON STATION",
+    "beats": [
+      {
+        "kind": "radio",
+        "who": "ELLIS",
+        "shot": "E",
+        "text": "{name}? Was that you taking off?"
+      },
+      {
+        "kind": "radio",
+        "who": "ELLIS",
+        "shot": "empty-seat",
+        "text": "The benches are coming off the floor. {name}, answer me."
+      },
+      {
+        "kind": "hud",
+        "shot": "shuttle-radio",
+        "header": "COMMS",
+        "lines": [
+          "CONNECTION LOST"
+        ]
+      }
+    ],
+    "choices": [
+      {
+        "label": "CONTINUE",
+        "to": "survivor_alone"
+      }
+    ]
+  },
+  "door": {
+    "id": "door",
+    "clip": "B",
+    "status": "EVACUATION ACTIVE",
+    "ticker": "LAB 3 · ELLIS IS ON THE OTHER SIDE",
+    "beats": [
+      {
+        "kind": "radio",
+        "who": "ELLIS",
+        "shot": "B",
+        "text": "The override by the reader. Hold it down till the seal breaks."
+      },
+      {
+        "kind": "hud",
+        "shot": "door-control",
+        "header": "QUARANTINE INTERLOCK",
+        "lines": [
+          "LAB 3 SEALED",
+          "OVERRIDE RELEASES LAB AIR",
+          "INCIDENT LOG AVAILABLE"
+        ]
+      },
+      {
+        "kind": "radio",
+        "who": "ELLIS",
+        "shot": "intercom",
+        "text": "I can see the quarantine light. I'm asking you anyway."
+      }
+    ],
+    "choices": [
+      {
+        "label": "I'm opening Lab 3. Be ready to run.",
+        "detail": "Open the door. Release the lab air.",
+        "to": "released"
+      },
+      {
+        "label": "You knew it was quarantine. What aren't you telling me?",
+        "detail": "Read the incident log. Keep the door sealed.",
+        "to": "report"
+      }
+    ]
+  },
+  "released": {
+    "id": "released",
+    "clip": "E",
+    "status": "IN TRANSIT",
+    "ticker": "TWO ABOARD · CABIN AIR SHARED",
+    "beats": [
+      {
+        "kind": "sub",
+        "shot": "E",
+        "text": "You get Ellis aboard and close the hatch."
+      },
+      {
+        "kind": "radio",
+        "who": "ELLIS · SEAT 2",
+        "shot": "shuttle-radio",
+        "text": "Clear the docking arm. I'll tell you everything, I promise."
+      },
+      {
+        "kind": "you",
+        "shot": "shuttle-radio",
+        "text": "Sit down. I've got you."
+      },
+      {
+        "kind": "hud",
+        "shot": "cabin-air",
+        "header": "CABIN AIR",
+        "lines": [
+          "AIRBORNE ORGANISM DETECTED",
+          "EXPOSURE: BOTH OCCUPANTS"
+        ]
+      },
+      {
+        "kind": "payoff",
+        "id": "cabin"
+      }
+    ],
+    "choices": [
+      {
+        "label": "[Call for medical help.]",
+        "to": "contamination"
+      }
+    ]
+  },
+  "report": {
+    "id": "report",
+    "clip": "C",
+    "status": "EVACUATION ACTIVE",
+    "crt": true,
+    "ticker": "ELLIS IS INFECTED · SHARED AIR IS UNSAFE",
+    "beats": [
+      {
+        "kind": "hud",
+        "shot": "lab-terminal",
+        "header": "INCIDENT LOG",
+        "lines": [
+          "ELLIS: INFECTED",
+          "TRANSMISSION: AIRBORNE",
+          "DO NOT OPEN THE LAB"
+        ]
+      },
+      {
+        "kind": "radio",
+        "who": "ELLIS",
+        "shot": "C",
+        "text": "That's the bench bolted to the deck."
+      },
+      {
+        "kind": "radio",
+        "who": "ELLIS",
+        "shot": "intercom",
+        "text": "I read the test. Then the scuttle alarm went off, and I—"
+      },
+      {
+        "kind": "you",
+        "shot": "intercom",
+        "text": "You were going to let me open it."
+      },
+      {
+        "kind": "hud",
+        "shot": "lab-terminal",
+        "header": "SEALED TRANSFER",
+        "lines": [
+          "CC-2: INDEPENDENT AIR SUPPLY",
+          "ENCLOSED RAIL TO SHUTTLE: ONLINE",
+          "LAB DOOR REMAINS CLOSED"
+        ]
+      },
+      {
+        "kind": "you",
+        "shot": "capsule-seal",
+        "text": "Can you reach CC-2? The transfer capsule."
+      },
+      {
+        "kind": "radio",
+        "who": "ELLIS",
+        "shot": "intercom",
+        "text": "Yeah. It locks from outside. You'd have the release."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Get in CC-2. I'll stay on the channel.",
+        "detail": "Use the sealed transfer. Keep the air separate.",
+        "to": "capsule"
+      },
+      {
+        "label": "You let me walk up to that door. I'm done.",
+        "detail": "Leave Ellis behind. Launch alone.",
+        "to": "leave"
+      }
+    ]
+  },
+  "capsule": {
+    "id": "capsule",
+    "clip": "D",
+    "status": "EVACUATION ACTIVE",
+    "ticker": "SEALED TRANSFER · LAB DOOR CLOSED",
+    "beats": [
+      {
+        "kind": "hud",
+        "shot": "D",
+        "header": "CARGO CONTROL",
+        "lines": [
+          "CAPSULE RECEIVED",
+          "ONE OCCUPANT",
+          "CABIN AIR ISOLATED"
+        ]
+      },
+      {
+        "kind": "radio",
+        "who": "ELLIS · INTERCOM",
+        "shot": "capsule-seal",
+        "text": "The lid's shut. There's no handle on this side."
+      },
+      {
+        "kind": "you",
+        "shot": "capsule-seal",
+        "text": "CC-2's green. I'm keeping your air separate."
+      },
+      {
+        "kind": "payoff",
+        "id": "capsule"
+      }
+    ],
+    "choices": [
+      {
+        "label": "Launch. Keep CC-2 sealed.",
+        "to": "rescued_departure"
+      }
+    ]
+  },
+  "rescued_departure": {
+    "id": "rescued_departure",
+    "clip": "E",
+    "status": "IN TRANSIT",
+    "ticker": "TWO ABOARD · ELLIS IN SEALED CONTAINMENT",
+    "beats": [
+      {
+        "kind": "you",
+        "shot": "E",
+        "text": "Medical, Halden shuttle. Two aboard. One infected, sealed in CC-2."
+      },
+      {
+        "kind": "radio",
+        "who": "MEDICAL CARRIER",
+        "shot": "shuttle-radio",
+        "text": "Bay four. Leave CC-2 sealed until our team takes it."
+      },
+      {
+        "kind": "radio",
+        "who": "ELLIS · INTERCOM",
+        "shot": "capsule-seal",
+        "text": "{name}? Leave the channel open till they take me."
+      },
+      {
+        "kind": "you",
+        "shot": "shuttle-radio",
+        "text": "I'm here."
+      }
+    ],
+    "choices": [
+      {
+        "label": "CONTINUE",
+        "to": "rescue"
+      }
+    ]
+  },
+  "leave": {
+    "id": "leave",
+    "clip": "E",
+    "status": "IN TRANSIT",
+    "ticker": "ONE ABOARD · RADIO LINK TO LAB 3",
+    "beats": [
+      {
+        "kind": "you",
+        "shot": "E",
+        "text": "Ellis. I'm taking the shuttle. I can't bring you."
+      },
+      {
+        "kind": "radio",
+        "who": "ELLIS",
+        "shot": "empty-seat",
+        "text": "Okay. Leave the channel open."
+      },
+      {
+        "kind": "hud",
+        "shot": "shuttle-radio",
+        "header": "COMMS",
+        "lines": [
+          "CONNECTION LOST"
+        ]
+      }
+    ],
+    "choices": [
+      {
+        "label": "CONTINUE",
+        "to": "survivor_leave"
+      }
+    ]
+  },
+  "survivor_alone": {
+    "id": "survivor_alone",
+    "clip": "F",
+    "status": "MISSION COMPLETE",
+    "ticker": "ONE RECOVERED · ELLIS: LOST",
+    "ending": {
+      "number": 1,
+      "name": "SURVIVOR",
+      "key": "survivor",
+      "grade": "none"
+    },
+    "beats": [
+      {
+        "kind": "hud",
+        "shot": "F",
+        "header": "HALDEN STATION",
+        "lines": [
+          "SCUTTLE COMPLETE",
+          "NO FURTHER LIFE SIGNS"
+        ]
+      },
+      {
+        "kind": "sub",
+        "shot": "empty-seat",
+        "text": "Ellis's bag is still under the seat."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Play again",
+        "to": "corridor"
+      }
+    ]
+  },
+  "survivor_leave": {
+    "id": "survivor_leave",
+    "clip": "F",
+    "status": "MISSION COMPLETE",
+    "ticker": "ONE RECOVERED · ELLIS: LOST",
+    "ending": {
+      "number": 1,
+      "name": "SURVIVOR",
+      "key": "survivor",
+      "grade": "none"
+    },
+    "beats": [
+      {
+        "kind": "hud",
+        "shot": "F",
+        "header": "HALDEN STATION",
+        "lines": [
+          "SCUTTLE COMPLETE",
+          "NO FURTHER LIFE SIGNS"
+        ]
+      },
+      {
+        "kind": "sub",
+        "shot": "empty-seat",
+        "text": "You leave the radio on."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Play again",
+        "to": "corridor"
+      }
+    ]
+  },
+  "contamination": {
+    "id": "contamination",
+    "clip": "F",
+    "status": "MISSION COMPLETE",
+    "ticker": "DOCKING REFUSED · BOTH OCCUPANTS EXPOSED",
+    "ending": {
+      "number": 2,
+      "name": "CONTAMINATION",
+      "key": "contamination",
+      "grade": "red"
+    },
+    "beats": [
+      {
+        "kind": "radio",
+        "who": "MEDICAL CARRIER",
+        "shot": "F",
+        "text": "Halden, hold outside the docking ring. We can't take contaminated air."
+      },
+      {
+        "kind": "sub",
+        "shot": "cabin-air",
+        "text": "You hold your breath. It doesn't help."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Play again",
+        "to": "corridor"
+      }
+    ]
+  },
+  "rescue": {
+    "id": "rescue",
+    "clip": "F",
+    "status": "MISSION COMPLETE",
+    "ticker": "TWO RECOVERED · ELLIS IN MEDICAL ISOLATION",
+    "ending": {
+      "number": 3,
+      "name": "RESCUE",
+      "key": "rescue",
+      "grade": "cyan"
+    },
+    "beats": [
+      {
+        "kind": "hud",
+        "shot": "F",
+        "header": "HALDEN STATION",
+        "lines": [
+          "SCUTTLE COMPLETE",
+          "SHUTTLE CLEAR"
+        ]
+      },
+      {
+        "kind": "radio",
+        "who": "ELLIS · MEDICAL BAY",
+        "shot": "medical-bay",
+        "text": "Bay four's locked. Will you wait outside?"
+      },
+      {
+        "kind": "you",
+        "shot": "medical-bay",
+        "text": "Of course."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Play again",
+        "to": "corridor"
+      }
+    ]
+  }
+}

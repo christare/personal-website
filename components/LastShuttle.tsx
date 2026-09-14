@@ -1,7 +1,7 @@
 "use client";
 
 import NextImage, { getImageProps } from "next/image";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from "react";
 
 /* ------------------------------------------------------------------ */
 /*  Media                                                              */
@@ -30,8 +30,6 @@ const clips: Record<ClipId, { file: string; label: string; bed: BedName; still?:
   "shuttle-radio": { file: "inserts/shuttle-radio", label: "SHUTTLE · RADIO", bed: "engine", still: true },
   "medical-bay": { file: "inserts/isolation-bay", label: "MEDICAL CARRIER · ISOLATION", bed: "wind", still: true },
 };
-
-const STILL_EXTENSIONS = ["png", "jpg"] as const;
 
 /* ------------------------------------------------------------------ */
 /*  Scene graph. One beat on screen at a time.                          */
@@ -80,8 +78,8 @@ type Scene = {
   crt?: boolean;
 };
 
-const ALEX = "ALEX";
-const ALEX_IC = "ALEX · INTERCOM";
+const ELLIS = "ELLIS";
+const ELLIS_IC = "ELLIS · INTERCOM";
 const OPENING_CALL = "Are you there?";
 
 const scenes: Record<SceneId, Scene> = {
@@ -89,9 +87,9 @@ const scenes: Record<SceneId, Scene> = {
     id: "start", clip: "compression", status: "EVACUATION ACTIVE",
     ticker: "HALDEN STATION · FINAL EVACUATION",
     beats: [
-      { kind: "radio", who: ALEX, text: OPENING_CALL },
-      { kind: "sub", text: "The station is being destroyed. You have the last shuttle." },
-      { kind: "sub", text: "Alex, your friend and crewmate, is still inside." },
+      { kind: "radio", who: ELLIS, text: OPENING_CALL },
+      { kind: "sub", text: "Halden is being scuttled. Yours is the last shuttle docked." },
+      { kind: "sub", text: "Ellis is still inside Lab 3." },
     ],
     choices: [{ label: "CONTINUE", to: "memory" }],
   },
@@ -99,52 +97,52 @@ const scenes: Record<SceneId, Scene> = {
     id: "memory", clip: "memory", status: "MEMORY",
     ticker: "FOUR HOURS EARLIER · YOUR LAST SHIFT TOGETHER",
     beats: [
-      { kind: "radio", who: ALEX, shot: "memory", text: "Breakfast tomorrow. My treat. Somewhere with actual coffee." },
-      { kind: "you", shot: "empty-seat", text: "Your bag's on the shuttle. I'll wait for you there." },
+      { kind: "radio", who: ELLIS, shot: "memory", text: "Nico's when we land. Coffee, eggs on toast. My turn to pay." },
+      { kind: "you", shot: "empty-seat", text: "Your bag's under the spare seat. I'll wait for you there." },
     ],
     choices: [{ label: "CONTINUE", to: "corridor" }],
   },
   corridor: {
     id: "corridor", clip: "A", status: "EVACUATION ACTIVE",
-    ticker: "YOUR SHUTTLE IS READY · ALEX IS STILL IN LAB 3",
+    ticker: "YOUR SHUTTLE IS READY · ELLIS IS STILL IN LAB 3",
     beats: [
-      { kind: "radio", who: ALEX, shot: "A", text: "I'm stuck in the lab. The reader won't take my card." },
-      { kind: "radio", who: ALEX, shot: "A", text: "My bag's already on your shuttle, {name}. Don't leave without me." },
+      { kind: "radio", who: ELLIS, shot: "A", text: "Lab 3 won't take my card. Yours still has the override." },
+      { kind: "radio", who: ELLIS, shot: "A", text: "My bag's under your spare seat, {name}. You said you'd wait." },
     ],
     choices: [
-      { label: "I can't leave Alex here.", detail: "Go back. Your keycard can override the lab door.", to: "door" },
-      { label: "[Say nothing. Head for the shuttle.]", detail: "Launch alone. Leave Alex behind.", to: "alone" },
+      { label: "I said I'd wait. I'm coming back.", detail: "Go back. Your keycard can override the lab door.", to: "door" },
+      { label: "If I miss this launch, neither of us gets out.", detail: "Launch alone. Leave Ellis behind.", to: "alone" },
     ],
   },
   alone: {
     id: "alone", clip: "E", status: "IN TRANSIT",
-    ticker: "LAUNCH COMPLETE · ONE ABOARD · ALEX STILL ON STATION",
+    ticker: "LAUNCH COMPLETE · ONE ABOARD · ELLIS STILL ON STATION",
     beats: [
-      { kind: "radio", who: ALEX, shot: "E", text: "{name}? Was that you taking off?" },
-      { kind: "radio", who: ALEX, shot: "empty-seat", text: "Something's moving in here. {name}, come back." },
+      { kind: "radio", who: ELLIS, shot: "E", text: "{name}? Was that you taking off?" },
+      { kind: "radio", who: ELLIS, shot: "empty-seat", text: "The benches are coming off the floor. {name}, answer me." },
       { kind: "hud", shot: "shuttle-radio", header: "COMMS", lines: ["CONNECTION LOST"] },
     ],
     choices: [{ label: "CONTINUE", to: "survivor_alone" }],
   },
   door: {
     id: "door", clip: "B", status: "EVACUATION ACTIVE",
-    ticker: "LAB 3 · ALEX IS ON THE OTHER SIDE",
+    ticker: "LAB 3 · ELLIS IS ON THE OTHER SIDE",
     beats: [
-      { kind: "radio", who: ALEX, shot: "B", text: "You're there. Okay. The release is on your side." },
+      { kind: "radio", who: ELLIS, shot: "B", text: "The override by the reader. Hold it down till the seal breaks." },
       { kind: "hud", shot: "door-control", header: "QUARANTINE INTERLOCK", lines: ["LAB 3 SEALED", "OVERRIDE RELEASES LAB AIR", "INCIDENT LOG AVAILABLE"] },
-      { kind: "radio", who: ALEX, shot: "intercom", text: "I know what the light means. Just open it." },
+      { kind: "radio", who: ELLIS, shot: "intercom", text: "I can see the quarantine light. I'm asking you anyway." },
     ],
     choices: [
-      { label: "I'm getting you out.", detail: "Open the door. Release the lab air.", to: "released" },
-      { label: "Wait. Let me check what happened.", detail: "Read the incident log. Keep the door sealed.", to: "report" },
+      { label: "I'm opening Lab 3. Be ready to run.", detail: "Open the door. Release the lab air.", to: "released" },
+      { label: "You knew it was quarantine. What aren't you telling me?", detail: "Read the incident log. Keep the door sealed.", to: "report" },
     ],
   },
   released: {
     id: "released", clip: "E", status: "IN TRANSIT",
     ticker: "TWO ABOARD · CABIN AIR SHARED",
     beats: [
-      { kind: "sub", shot: "E", text: "You get Alex aboard and close the hatch." },
-      { kind: "radio", who: "ALEX · SEAT 2", shot: "shuttle-radio", text: "Just get us out of here. I'll explain. I promise." },
+      { kind: "sub", shot: "E", text: "You get Ellis aboard and close the hatch." },
+      { kind: "radio", who: "ELLIS · SEAT 2", shot: "shuttle-radio", text: "Clear the docking arm. I'll tell you everything, I promise." },
       { kind: "you", shot: "shuttle-radio", text: "Sit down. I've got you." },
       { kind: "hud", shot: "cabin-air", header: "CABIN AIR", lines: ["AIRBORNE ORGANISM DETECTED", "EXPOSURE: BOTH OCCUPANTS"] },
       { kind: "payoff", id: "cabin" },
@@ -153,19 +151,19 @@ const scenes: Record<SceneId, Scene> = {
   },
   report: {
     id: "report", clip: "C", status: "EVACUATION ACTIVE", crt: true,
-    ticker: "ALEX IS INFECTED · SHARED AIR IS UNSAFE",
+    ticker: "ELLIS IS INFECTED · SHARED AIR IS UNSAFE",
     beats: [
-      { kind: "hud", shot: "lab-terminal", header: "INCIDENT LOG", lines: ["ALEX: INFECTED", "TRANSMISSION: AIRBORNE", "DO NOT OPEN THE LAB"] },
-      { kind: "radio", who: ALEX, shot: "C", text: "Tell me you're seeing this." },
-      { kind: "radio", who: ALEX, shot: "intercom", text: "I saw the result. I was going to tell you, I just—" },
+      { kind: "hud", shot: "lab-terminal", header: "INCIDENT LOG", lines: ["ELLIS: INFECTED", "TRANSMISSION: AIRBORNE", "DO NOT OPEN THE LAB"] },
+      { kind: "radio", who: ELLIS, shot: "C", text: "That's the bench bolted to the deck." },
+      { kind: "radio", who: ELLIS, shot: "intercom", text: "I read the test. Then the scuttle alarm went off, and I—" },
       { kind: "you", shot: "intercom", text: "You were going to let me open it." },
       { kind: "hud", shot: "lab-terminal", header: "SEALED TRANSFER", lines: ["CC-2: INDEPENDENT AIR SUPPLY", "ENCLOSED RAIL TO SHUTTLE: ONLINE", "LAB DOOR REMAINS CLOSED"] },
-      { kind: "you", shot: "capsule-seal", text: "Can you reach that capsule?" },
-      { kind: "radio", who: ALEX, shot: "intercom", text: "Yeah. Keep talking while I do it." },
+      { kind: "you", shot: "capsule-seal", text: "Can you reach CC-2? The transfer capsule." },
+      { kind: "radio", who: ELLIS, shot: "intercom", text: "Yeah. It locks from outside. You'd have the release." },
     ],
     choices: [
-      { label: "Get in the capsule. I'll bring you over.", detail: "Use the sealed transfer. Keep the air separate.", to: "capsule" },
-      { label: "I need to get out of here.", detail: "Leave Alex behind. Launch alone.", to: "leave" },
+      { label: "Get in CC-2. I'll stay on the channel.", detail: "Use the sealed transfer. Keep the air separate.", to: "capsule" },
+      { label: "You let me walk up to that door. I'm done.", detail: "Leave Ellis behind. Launch alone.", to: "leave" },
     ],
   },
   capsule: {
@@ -173,19 +171,19 @@ const scenes: Record<SceneId, Scene> = {
     ticker: "SEALED TRANSFER · LAB DOOR CLOSED",
     beats: [
       { kind: "hud", shot: "D", header: "CARGO CONTROL", lines: ["CAPSULE RECEIVED", "ONE OCCUPANT", "CABIN AIR ISOLATED"] },
-      { kind: "radio", who: ALEX_IC, shot: "capsule-seal", text: "Is it locked? I can't tell from in here." },
-      { kind: "you", shot: "capsule-seal", text: "It's locked. I've got a green light." },
+      { kind: "radio", who: ELLIS_IC, shot: "capsule-seal", text: "The lid's shut. There's no handle on this side." },
+      { kind: "you", shot: "capsule-seal", text: "CC-2's green. I'm keeping your air separate." },
       { kind: "payoff", id: "capsule" },
     ],
-    choices: [{ label: "[Launch with Alex.]", to: "rescued_departure" }],
+    choices: [{ label: "Launch. Keep CC-2 sealed.", to: "rescued_departure" }],
   },
   rescued_departure: {
     id: "rescued_departure", clip: "E", status: "IN TRANSIT",
-    ticker: "TWO ABOARD · ALEX IN SEALED CONTAINMENT",
+    ticker: "TWO ABOARD · ELLIS IN SEALED CONTAINMENT",
     beats: [
-      { kind: "you", shot: "E", text: "Medical, this is the Halden shuttle. Two aboard. One infected, in a sealed capsule." },
-      { kind: "radio", who: "MEDICAL CARRIER", shot: "shuttle-radio", text: "Bring them to isolation bay four. Keep that capsule shut." },
-      { kind: "radio", who: ALEX_IC, shot: "capsule-seal", text: "{name}? Don't turn this off yet." },
+      { kind: "you", shot: "E", text: "Medical, Halden shuttle. Two aboard. One infected, sealed in CC-2." },
+      { kind: "radio", who: "MEDICAL CARRIER", shot: "shuttle-radio", text: "Bay four. Leave CC-2 sealed until our team takes it." },
+      { kind: "radio", who: ELLIS_IC, shot: "capsule-seal", text: "{name}? Leave the channel open till they take me." },
       { kind: "you", shot: "shuttle-radio", text: "I'm here." },
     ],
     choices: [{ label: "CONTINUE", to: "rescue" }],
@@ -194,25 +192,25 @@ const scenes: Record<SceneId, Scene> = {
     id: "leave", clip: "E", status: "IN TRANSIT",
     ticker: "ONE ABOARD · RADIO LINK TO LAB 3",
     beats: [
-      { kind: "you", shot: "E", text: "Alex. I'm sorry. I'm leaving." },
-      { kind: "radio", who: ALEX, shot: "empty-seat", text: "Okay. Just don't hang up." },
+      { kind: "you", shot: "E", text: "Ellis. I'm taking the shuttle. I can't bring you." },
+      { kind: "radio", who: ELLIS, shot: "empty-seat", text: "Okay. Leave the channel open." },
       { kind: "hud", shot: "shuttle-radio", header: "COMMS", lines: ["CONNECTION LOST"] },
     ],
     choices: [{ label: "CONTINUE", to: "survivor_leave" }],
   },
   survivor_alone: {
     id: "survivor_alone", clip: "F", status: "MISSION COMPLETE",
-    ticker: "ONE RECOVERED · ALEX: LOST",
+    ticker: "ONE RECOVERED · ELLIS: LOST",
     ending: { number: 1, name: "SURVIVOR", key: "survivor", grade: "none" },
     beats: [
       { kind: "hud", shot: "F", header: "HALDEN STATION", lines: ["SCUTTLE COMPLETE", "NO FURTHER LIFE SIGNS"] },
-      { kind: "sub", shot: "empty-seat", text: "Alex's bag is still under the seat." },
+      { kind: "sub", shot: "empty-seat", text: "Ellis's bag is still under the seat." },
     ],
     choices: [{ label: "Play again", to: "corridor" }],
   },
   survivor_leave: {
     id: "survivor_leave", clip: "F", status: "MISSION COMPLETE",
-    ticker: "ONE RECOVERED · ALEX: LOST",
+    ticker: "ONE RECOVERED · ELLIS: LOST",
     ending: { number: 1, name: "SURVIVOR", key: "survivor", grade: "none" },
     beats: [
       { kind: "hud", shot: "F", header: "HALDEN STATION", lines: ["SCUTTLE COMPLETE", "NO FURTHER LIFE SIGNS"] },
@@ -225,18 +223,18 @@ const scenes: Record<SceneId, Scene> = {
     ticker: "DOCKING REFUSED · BOTH OCCUPANTS EXPOSED",
     ending: { number: 2, name: "CONTAMINATION", key: "contamination", grade: "red" },
     beats: [
-      { kind: "radio", who: "MEDICAL CARRIER", shot: "F", text: "Stay where you are. We can't let you dock." },
+      { kind: "radio", who: "MEDICAL CARRIER", shot: "F", text: "Halden, hold outside the docking ring. We can't take contaminated air." },
       { kind: "sub", shot: "cabin-air", text: "You hold your breath. It doesn't help." },
     ],
     choices: [{ label: "Play again", to: "corridor" }],
   },
   rescue: {
     id: "rescue", clip: "F", status: "MISSION COMPLETE",
-    ticker: "TWO RECOVERED · ALEX IN MEDICAL ISOLATION",
+    ticker: "TWO RECOVERED · ELLIS IN MEDICAL ISOLATION",
     ending: { number: 3, name: "RESCUE", key: "rescue", grade: "cyan" },
     beats: [
       { kind: "hud", shot: "F", header: "HALDEN STATION", lines: ["SCUTTLE COMPLETE", "SHUTTLE CLEAR"] },
-      { kind: "radio", who: "ALEX · MEDICAL BAY", shot: "medical-bay", text: "They won't let me out yet. Will you wait outside?" },
+      { kind: "radio", who: "ELLIS · MEDICAL BAY", shot: "medical-bay", text: "Bay four's locked. Will you wait outside?" },
       { kind: "you", shot: "medical-bay", text: "Of course." },
     ],
     choices: [{ label: "Play again", to: "corridor" }],
@@ -252,158 +250,42 @@ const credits = [
   "Made for Runway. September 2026.",
 ];
 
-/* ------------------------------------------------------------------ */
-/*  Native clip audio only.                                           */
-/* ------------------------------------------------------------------ */
-
-/* ------------------------------------------------------------------ */
-/*  Background media: crossfade between clips, hold and drift at end   */
-/* ------------------------------------------------------------------ */
-
-function VideoLayer({ clip, leaving, crt, stillOnly, soundOn, suspended, onAudioBlocked }: { clip: ClipId; leaving: boolean; crt: boolean; stillOnly: boolean; soundOn: boolean; suspended: boolean; onAudioBlocked: () => void }) {
-  const meta = clips[clip];
-  const showStill = stillOnly || Boolean(meta.still);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [videoFailed, setVideoFailed] = useState(false);
-  const [stillIndex, setStillIndex] = useState(0);
-  const [stillFailed, setStillFailed] = useState(false);
-  const [held, setHeld] = useState(false);
-
-  const stillSrc =
-    stillIndex < STILL_EXTENSIONS.length
-      ? `${MEDIA_BASE}/${meta.file}.${STILL_EXTENSIONS[stillIndex]}`
-      : null;
-
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    v.muted = !soundOn || suspended;
-    if (suspended) { v.pause(); return; }
-    if (v.ended) return;
-    void v.play().catch((error: DOMException) => {
-      if (error.name === "NotAllowedError") onAudioBlocked();
-    });
-  }, [videoFailed, showStill, soundOn, suspended, onAudioBlocked]);
-
-  return (
-    <div className={`ls-layer${leaving ? " ls-layer-leaving" : ""}`}>
-      {!stillFailed && stillSrc ? (
-        <NextImage
-          fill
-          sizes="100vw"
-          loading="eager"
-          className={`ls-still${(videoFailed || stillOnly) && !meta.still ? " ls-drift" : ""}`}
-          src={stillSrc}
-          alt=""
-          onError={() => {
-            if (stillIndex + 1 < STILL_EXTENSIONS.length) setStillIndex(stillIndex + 1);
-            else setStillFailed(true);
-          }}
-        />
-      ) : null}
-      {!videoFailed && !showStill ? (
-        <video
-          ref={videoRef}
-          className={`ls-video${held ? " ls-drift" : ""}`}
-          src={`${MEDIA_BASE}/${meta.file}.mp4`}
-          poster={stillSrc ?? undefined}
-          muted={!soundOn || suspended}
-          autoPlay
-          playsInline
-          preload="auto"
-          onEnded={() => setHeld(true)}
-          onError={() => setVideoFailed(true)}
-        />
-      ) : null}
-      {videoFailed && stillFailed ? (
-        <div className={`ls-placeholder ls-placeholder-${clip} ls-drift`}>
-          <span>{meta.label}</span>
-          <small>Signal interrupted. Story controls remain available.</small>
-        </div>
-      ) : null}
-      {crt ? (
-        <>
-          <div className="ls-scanlines" />
-          <div className="ls-rec">
-            <span className="ls-rec-dot" /> REC · CAM 3 · 21:52:07
-          </div>
-        </>
-      ) : null}
-    </div>
-  );
-}
-
-function SceneMedia({ clip, crt, grade, stillOnly, soundOn, suspended, onAudioBlocked }: { clip: ClipId; crt: boolean; grade: string; stillOnly: boolean; soundOn: boolean; suspended: boolean; onAudioBlocked: () => void }) {
-  return (
-    <div className={`ls-media ls-grade-${grade}`} aria-hidden>
-      <VideoLayer key={clip} clip={clip} leaving={false} crt={crt} stillOnly={stillOnly} soundOn={soundOn} suspended={suspended} onAudioBlocked={onAudioBlocked} />
-      <div className="ls-grain" />
-      <div className="ls-vignette" />
-    </div>
-  );
-}
-
-function PayoffShot({ src, soundOn, onAudioBlocked }: { src: string; soundOn: boolean; onAudioBlocked: () => void }) {
-  const [failed, setFailed] = useState(false);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+/* One persistent media element keeps audio permission across scene cuts. */
+function FilmStage({ videoRef, videoSrc, poster, paused, soundOn, visit, crt, onAudioBlocked, onEnded, onProgress, onError }: {
+  videoRef: RefObject<HTMLVideoElement | null>; videoSrc?: string; poster: string;
+  paused: boolean; soundOn: boolean; visit: number; crt: boolean;
+  onAudioBlocked: () => void; onEnded: () => void; onProgress: (time: number) => void; onError: () => void;
+}) {
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const [posterFailed, setPosterFailed] = useState<string | null>(null);
+  const priorSource = useRef("");
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    video.muted = !soundOn;
-    if (video.ended) return;
+    const newSource = priorSource.current !== `${videoSrc}-${visit}`;
+    priorSource.current = `${videoSrc}-${visit}`;
+    video.muted = !soundOn || paused || !videoSrc;
+    if (!videoSrc || paused || failedSrc === videoSrc) { video.pause(); return; }
+    if (video.ended && !newSource) return;
+    if (newSource) video.currentTime = 0;
     void video.play().catch((error: DOMException) => {
       if (error.name === "NotAllowedError") onAudioBlocked();
     });
-  }, [soundOn, onAudioBlocked]);
-  if (failed) return null;
-  if (/\.(png|jpe?g|webp)$/i.test(src)) {
-    // eslint-disable-next-line @next/next/no-img-element -- a full-frame narrative insert
-    return <img className="ls-payoff" src={src} alt="" onError={() => setFailed(true)} />;
-  }
-  return <video ref={videoRef} className="ls-payoff" src={src} autoPlay muted={!soundOn} playsInline preload="auto" onError={() => setFailed(true)} />;
-}
-
-/* The opening follows the media clock, so buffering cannot skip the impact. */
-function OpeningHook({ complete, paused, soundOn, onComplete, onAudioBlocked }: {
-  complete: boolean; paused: boolean; soundOn: boolean;
-  onComplete: () => void; onAudioBlocked: () => void;
-}) {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [callVisible, setCallVisible] = useState(false);
-  const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video || failed) return;
-    video.muted = !soundOn;
-    if (paused || complete) { video.pause(); return; }
-    void video.play().catch((error: DOMException) => {
-      if (error.name === "NotAllowedError") onAudioBlocked();
-    });
-  }, [complete, paused, soundOn, failed, onAudioBlocked]);
-
-  return <>
-    <div className="ls-media ls-opening-media" aria-hidden>
-      <NextImage src={`${MEDIA_BASE}/i_compression.png`} alt="" fill sizes="100vw" loading="eager" className="ls-still" />
-      {!failed ? <video
-        ref={videoRef}
-        className="ls-video"
-        src={`${MEDIA_BASE}/i_compression.mp4`}
-        poster={`${MEDIA_BASE}/i_compression.png`}
-        autoPlay muted={!soundOn} playsInline preload="auto"
-        onTimeUpdate={(event) => { if (event.currentTarget.currentTime >= 1.1) setCallVisible(true); }}
-        onEnded={onComplete}
-        onError={() => { setFailed(true); onComplete(); }}
-      /> : null}
-      <div className="ls-vignette" />
+  }, [videoRef, videoSrc, paused, soundOn, visit, failedSrc, onAudioBlocked]);
+  return <div className={`ls-media${crt ? " ls-media-feed" : ""}`} aria-hidden>
+    <div className="ls-layer">
+      {posterFailed !== poster ? <NextImage key={poster} src={poster} alt="" fill sizes="100vw" loading="eager" className="ls-still" onError={() => setPosterFailed(poster)} /> : null}
+      <video ref={videoRef} className="ls-video" src={videoSrc} poster={poster}
+        style={{ visibility: videoSrc && failedSrc !== videoSrc ? "visible" : "hidden" }}
+        muted={!soundOn || paused || !videoSrc} playsInline preload="auto"
+        onEnded={onEnded} onTimeUpdate={(e) => onProgress(e.currentTarget.currentTime)}
+        onError={() => { if (videoSrc) { setFailedSrc(videoSrc); onError(); } }} />
     </div>
-    {!complete ? <div className="ls-hook-caption" role="status">
-      {callVisible ? <><span>ALEX</span><p>{OPENING_CALL}</p></> : null}
-    </div> : null}
-  </>;
+    {crt ? <div className="ls-scanlines" /> : null}
+    <div className="ls-grain" /><div className="ls-vignette" />
+  </div>;
 }
 
-/* Preserve the unread portion of a caption when paused or in a hidden tab. */
 function useOpeningTimer(key: string, duration: number | null, paused: boolean, onComplete: () => void) {
   const clock = useRef({ key: "", remaining: 0 });
   useEffect(() => {
@@ -419,167 +301,94 @@ function useOpeningTimer(key: string, duration: number | null, paused: boolean, 
   }, [key, duration, paused, onComplete]);
 }
 
-/* ------------------------------------------------------------------ */
-/*  Typewriter                                                          */
-/* ------------------------------------------------------------------ */
-
-function Typewriter({
-  text,
-  instant,
-  onTick,
-  onDone,
-  typeMs,
-}: {
-  text: string;
-  instant: boolean;
-  onTick: () => void;
-  onDone: () => void;
-  typeMs: number;
-}) {
-  const [n, setN] = useState(0);
-
-  useEffect(() => {
-    if (instant) {
-      onDone();
-      return;
-    }
-    let i = 0;
-    const id = window.setInterval(() => {
-      i += 1;
-      setN(i);
-      if (i % 2 === 0) onTick();
-      if (i >= text.length) {
-        window.clearInterval(id);
-        onDone();
-      }
-    }, typeMs);
-    return () => window.clearInterval(id);
-  }, [instant, text, typeMs, onTick, onDone]);
-
-  const shown = instant ? text.length : Math.min(n, text.length);
-  return (
-    <>
-      {text.slice(0, shown)}
-      {shown < text.length ? <span className="ls-caret" /> : null}
-    </>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/*  Game                                                                */
-/* ------------------------------------------------------------------ */
-
-const TYPE_MS = 20;
 const TITLE = "LAST SHUTTLE";
+type Payoffs = Partial<Record<"cabin" | "capsule", string>>;
+const EMPTY_PAYOFFS: Payoffs = {};
 
-export function LastShuttle({ payoffs = {} }: { payoffs?: Partial<Record<"cabin" | "capsule", string>> }) {
+export function LastShuttle({ payoffs = EMPTY_PAYOFFS, memoryBridge }: { payoffs?: Payoffs; memoryBridge?: string }) {
   const [playerName, setPlayerName] = useState("");
   const name = playerName.trim().replace(/\s+/g, " ");
   const personalize = (text: string) => text.replaceAll("{name}", name);
   const [sceneId, setSceneId] = useState<SceneId>("start");
   const [visit, setVisit] = useState(0);
-  const [beat, setBeat] = useState(-1); // index of the beat on screen; -1 = nothing yet
-  const [typed, setTyped] = useState(false); // current radio beat finished typing
-  const [instant, setInstant] = useState(false); // user clicked through a radio beat
+  const [beat, setBeat] = useState(-1);
   const [endingRevealed, setEndingRevealed] = useState(false);
-  const [soundOn, setSoundOn] = useState(true);
+  const [soundOn, setSoundOn] = useState(false);
   const [found, setFound] = useState<EndingKey[]>([]);
   const [cut, setCut] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [hookComplete, setHookComplete] = useState(false);
+  const [hookCallVisible, setHookCallVisible] = useState(false);
   const [openingRunning, setOpeningRunning] = useState(true);
   const [openingPaused, setOpeningPaused] = useState(false);
+  const [memoryExit, setMemoryExit] = useState(false);
   const [tabHidden, setTabHidden] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
-  const firstRender = useRef(true);
   const transitionTimer = useRef<number | undefined>(undefined);
   const transitioning = useRef(false);
   const entryBeat = useRef(0);
 
-  const scene = useMemo(() => ({
-    ...scenes[sceneId],
-    beats: scenes[sceneId].beats.filter((b) => b.kind !== "payoff" || Boolean(payoffs[b.id])),
-  }), [sceneId, payoffs]);
+  const scene = useMemo(() => ({ ...scenes[sceneId], beats: scenes[sceneId].beats.filter((b) => b.kind !== "payoff" || Boolean(payoffs[b.id])) }), [sceneId, payoffs]);
   const isStart = sceneId === "start";
   const isHook = isStart && !hookComplete;
   const autoOpening = openingRunning && (sceneId === "memory" || sceneId === "corridor");
   const openingActive = isHook || autoOpening;
-  const playbackPaused = openingActive && (openingPaused || tabHidden);
+  const playbackPaused = tabHidden || (openingActive && openingPaused);
   const last = scene.beats.length - 1;
-  const current: Beat | null = beat >= 0 ? scene.beats[beat] : null;
-  const currentIsRadio = current?.kind === "radio";
-  const beatSettled = !currentIsRadio || typed;
-  const done = isStart || (!autoOpening && beat >= last && beatSettled && (!scene.ending || endingRevealed));
+  const current = beat >= 0 ? scene.beats[beat] : null;
+  const done = isStart || (!autoOpening && beat >= last && (!scene.ending || endingRevealed));
   const showEnding = Boolean(scene.ending && endingRevealed);
-
-  const huds = scene.beats
-    .map((b, i) => ({ b, i }))
-    .filter(({ b, i }) => b.kind === "hud" && i <= beat).slice(-1) as { b: Extract<Beat, { kind: "hud" }>; i: number }[];
-  const fore = current && current.kind !== "hud" && current.kind !== "payoff" ? current : null;
   const payoffSrc = current?.kind === "payoff" ? payoffs[current.id] : undefined;
-  const activeShot = current?.shot ?? (beat < 0 ? scene.beats[0]?.shot : undefined) ?? scene.clip;
-  const showHud = !payoffSrc && current?.kind === "hud";
+  const activeShot = memoryExit ? "memory" : current?.shot ?? scene.beats[Math.max(0, beat)]?.shot ?? scene.clip;
+  const meta = clips[activeShot];
+  const videoSrc = isStart ? `${MEDIA_BASE}/i_compression.mp4`
+    : memoryExit ? memoryBridge
+    : payoffSrc?.endsWith(".mp4") ? payoffSrc
+    : meta.still || payoffSrc ? undefined : `${MEDIA_BASE}/${meta.file}.mp4`;
+  const poster = memoryExit ? `${MEDIA_BASE}/inserts/coffee-rupture.png`
+    : payoffSrc ? payoffSrc.replace(/\.mp4$/, ".png") : `${MEDIA_BASE}/${meta.file}.png`;
 
-  // Decode nearby stills ahead of their cut; never wait for all media to start playing.
   useEffect(() => {
     const upcoming = isStart ? scenes.memory.beats : scene.beats.slice(Math.max(0, beat), beat + 4);
     for (const next of upcoming) {
-      if (next.kind === "payoff") {
-        const src = payoffs[next.id];
-        if (src && !src.endsWith(".mp4")) {
-          const image = new window.Image();
-          image.src = src;
-          void image.decode().catch(() => {});
-        }
-      }
       const shot = clips[next.shot ?? scene.clip];
-      if (shot.still) {
-        const img = new window.Image();
-        const { props } = getImageProps({ src: `${MEDIA_BASE}/${shot.file}.png`, alt: "", fill: true, sizes: "100vw" });
-        if (props.sizes) img.sizes = props.sizes;
-        if (props.srcSet) img.srcset = props.srcSet;
-        img.src = props.src;
-        void img.decode().catch(() => {});
-      }
+      if (!shot.still) continue;
+      const img = new window.Image();
+      const { props } = getImageProps({ src: `${MEDIA_BASE}/${shot.file}.png`, alt: "", fill: true, sizes: "100vw" });
+      if (props.sizes) img.sizes = props.sizes;
+      if (props.srcSet) img.srcset = props.srcSet;
+      img.src = props.src;
+      void img.decode().catch(() => {});
     }
-  }, [scene, beat, isStart, payoffs]);
+    if (isStart) {
+      const image = new window.Image();
+      image.src = `${MEDIA_BASE}/inserts/coffee-rupture.png`;
+      void image.decode().catch(() => {});
+    }
+  }, [scene, beat, isStart]);
 
-  /* first beat lands after the cut */
   useEffect(() => {
     if (isStart) return;
-    const id = window.setTimeout(() => setBeat(entryBeat.current), 180);
-    return () => window.clearTimeout(id);
+    const timer = window.setTimeout(() => setBeat(entryBeat.current), 100);
+    return () => window.clearTimeout(timer);
   }, [sceneId, visit, isStart]);
-
   useEffect(() => {
-    const updateVisibility = () => setTabHidden(document.hidden);
-    updateVisibility();
-    document.addEventListener("visibilitychange", updateVisibility);
-    return () => document.removeEventListener("visibilitychange", updateVisibility);
+    if (!isStart) headingRef.current?.focus({ preventScroll: true });
+  }, [sceneId, visit, isStart]);
+  useEffect(() => {
+    const update = () => setTabHidden(document.hidden);
+    update();
+    document.addEventListener("visibilitychange", update);
+    return () => document.removeEventListener("visibilitychange", update);
   }, []);
-
-  /* Keep keyboard focus on the new scene. */
   useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
-    headingRef.current?.focus({ preventScroll: true });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [scene, visit]);
-
-  useEffect(() => {
-    const onFs = () => setFullscreen(Boolean(document.fullscreenElement));
-    document.addEventListener("fullscreenchange", onFs);
-    return () => document.removeEventListener("fullscreenchange", onFs);
+    const update = () => setFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", update);
+    return () => document.removeEventListener("fullscreenchange", update);
   }, []);
-
-  useEffect(() => {
-    return () => {
-      window.clearTimeout(transitionTimer.current);
-    };
-  }, []);
+  useEffect(() => () => window.clearTimeout(transitionTimer.current), []);
 
   const transition = useCallback((to: SceneId, firstBeat = 0) => {
     if (transitioning.current) return;
@@ -588,304 +397,134 @@ export function LastShuttle({ payoffs = {} }: { payoffs?: Partial<Record<"cabin"
     transitionTimer.current = window.setTimeout(() => {
       transitioning.current = false;
       const ending = scenes[to].ending;
-      if (ending) setFound((f) => (f.includes(ending.key) ? f : [...f, ending.key]));
+      if (ending) setFound((f) => f.includes(ending.key) ? f : [...f, ending.key]);
       entryBeat.current = firstBeat;
       if (to === "start") {
-        setHookComplete(false);
-        setOpeningRunning(true);
-        setOpeningPaused(false);
+        setHookComplete(false); setHookCallVisible(false); setOpeningRunning(true); setOpeningPaused(false);
       }
-      setSceneId(to);
-      setVisit((v) => v + 1);
-      setBeat(-1);
-      setTyped(false);
-      setInstant(false);
-      setEndingRevealed(false);
-      setCut(false);
-    }, 180);
+      setMemoryExit(false); setSceneId(to); setVisit((v) => v + 1); setBeat(-1); setEndingRevealed(false); setCut(false);
+    }, 120);
   }, []);
-
-  const finishHook = useCallback(() => { setHookComplete(true); setOpeningPaused(false); }, []);
+  const finishHook = useCallback(() => { setHookComplete(true); setHookCallVisible(true); setOpeningPaused(false); }, []);
   const toggleOpeningPause = useCallback(() => setOpeningPaused((paused) => !paused), []);
   const nextOpeningBeat = useCallback(() => {
     if (transitioning.current) return;
-    if (beat < last) {
-      setBeat((b) => b + 1);
-    } else if (sceneId === "memory") {
-      transition("corridor");
-    } else {
-      setOpeningRunning(false);
-    }
-  }, [beat, last, sceneId, transition]);
+    if (memoryExit) transition("corridor");
+    else if (beat < last) setBeat((b) => b + 1);
+    else if (sceneId === "memory") setMemoryExit(true);
+    else setOpeningRunning(false);
+  }, [memoryExit, beat, last, sceneId, transition]);
   const openingDuration = autoOpening && beat >= 0
-    ? (sceneId === "memory" ? 3200 : beat === 0 ? 3800 : 4000)
+    ? memoryExit ? memoryBridge ? null : 480 : sceneId === "memory" ? 3500 : beat === 0 ? 3400 : 3900
     : null;
-  useOpeningTimer(`${sceneId}-${visit}-${beat}`, openingDuration, playbackPaused || cut, nextOpeningBeat);
-
+  useOpeningTimer(`${sceneId}-${visit}-${beat}-${memoryExit}`, openingDuration, playbackPaused || cut, nextOpeningBeat);
   const skipOpening = useCallback(() => {
     if (isHook) { finishHook(); return; }
-    setOpeningRunning(false);
-    setOpeningPaused(false);
+    setOpeningRunning(false); setOpeningPaused(false);
     transition("corridor", scenes.corridor.beats.length - 1);
   }, [isHook, finishHook, transition]);
-
-  /* click anywhere: finish the line that's typing, otherwise next beat */
   const advance = useCallback(() => {
     if (openingActive) { toggleOpeningPause(); return; }
     if (isStart || beat < 0 || transitioning.current) return;
-    if (currentIsRadio && !typed) {
-      setInstant(true);
-      return;
-    }
-    if (beat < last) {
-      setBeat((b) => b + 1);
-      setTyped(false);
-      setInstant(false);
-    } else if (scene.ending) {
-      // Let the player finish reading the final line before showing the result.
-      setEndingRevealed(true);
-    }
-  }, [openingActive, toggleOpeningPause, isStart, beat, last, currentIsRadio, typed, scene.ending]);
-
+    if (beat < last) setBeat((b) => b + 1);
+    else if (scene.ending) setEndingRevealed(true);
+  }, [openingActive, toggleOpeningPause, isStart, beat, last, scene.ending]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === " " || e.key === "Enter") {
-        if ((e.target as HTMLElement | null)?.closest("button, a, input, textarea, select, [contenteditable]")) return;
-        e.preventDefault();
-        advance();
+      if (e.altKey || e.ctrlKey || e.metaKey || (e.target as HTMLElement)?.closest("input, textarea, select, [contenteditable]")) return;
+      if (done && !isStart && scene.choices.length > 1 && /^[1-9]$/.test(e.key)) {
+        const choice = scene.choices[Number(e.key) - 1];
+        if (choice) { e.preventDefault(); transition(choice.to); }
+      } else if ((e.key === " " || e.key === "Enter") && !(e.target as HTMLElement)?.closest("button, a")) {
+        e.preventDefault(); advance();
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [advance]);
+  }, [advance, done, isStart, scene.choices, transition]);
 
-  const toggleSound = useCallback(() => setSoundOn((on) => !on), []);
   const audioBlocked = useCallback(() => setSoundOn(false), []);
-
+  const toggleSound = useCallback(() => {
+    const enabled = !soundOn;
+    setSoundOn(enabled);
+    const video = videoRef.current;
+    if (!video) return;
+    // This must stay inside the tap handler for iOS, not just a React effect.
+    video.muted = !enabled || !videoSrc || playbackPaused;
+    if (enabled && videoSrc && !video.ended && !playbackPaused && !(isStart && hookComplete)) {
+      void video.play().catch(audioBlocked);
+    }
+  }, [soundOn, videoSrc, playbackPaused, isStart, hookComplete, audioBlocked]);
+  const replayWithSound = useCallback(() => {
+    setSoundOn(true); setHookComplete(false); setHookCallVisible(false); setOpeningPaused(false);
+    const video = videoRef.current;
+    if (video) { video.currentTime = 0; video.muted = false; void video.play().catch(audioBlocked); }
+  }, [audioBlocked]);
+  const onFilmEnded = useCallback(() => {
+    if (isHook) finishHook();
+    else if (memoryExit) transition("corridor");
+  }, [isHook, memoryExit, finishHook, transition]);
+  const onFilmProgress = useCallback((time: number) => { if (isHook && time >= 1.1) setHookCallVisible(true); }, [isHook]);
+  const onFilmError = useCallback(() => {
+    if (isHook) finishHook();
+    else if (memoryExit) transition("corridor");
+  }, [isHook, memoryExit, finishHook, transition]);
   const toggleFullscreen = useCallback(() => {
     if (document.fullscreenElement) void document.exitFullscreen();
-    else void rootRef.current?.requestFullscreen?.();
+    else void rootRef.current?.requestFullscreen?.().catch(() => {});
   }, []);
 
-  const onTick = useCallback(() => {}, []);
-  const onTyped = useCallback(() => setTyped(true), []);
+  const tone = sceneId === "memory" ? "memory" : sceneId === "door" ? "door" : sceneId === "report" ? "report"
+    : sceneId === "released" || sceneId === "contamination" ? "exposure"
+    : sceneId === "rescue" ? "rescue" : sceneId.startsWith("survivor") ? "alone" : "station";
+  const rootClass = ["ls-root", `ls-tone-${tone}`, isStart ? "ls-root-intro" : "", isHook ? "ls-root-hook" : "", autoOpening ? "ls-root-opening" : "", sceneId === "memory" ? "ls-root-memory" : "", memoryExit ? "ls-memory-exit" : "", cut ? "ls-root-cut" : "", showEnding ? "ls-root-ending" : "", payoffSrc ? "ls-root-payoff" : ""].filter(Boolean).join(" ");
 
-  const grade = showEnding && scene.ending ? scene.ending.grade : "none";
-  const headingText = useMemo(() => {
-    if (showEnding && scene.ending) return `ENDING ${scene.ending.number} OF 3: ${scene.ending.name}`;
-    return sceneId === "memory" ? "FOUR HOURS EARLIER" : clips[activeShot].label;
-  }, [scene, activeShot, sceneId, showEnding]);
-
-  const rootClass = [
-    "ls-root",
-    showEnding ? "ls-root-ending" : "",
-    isStart ? "ls-root-intro" : "",
-    isHook ? "ls-root-hook" : "",
-    autoOpening ? "ls-root-opening" : "",
-    cut ? "ls-root-cut" : "",
-    done ? "ls-root-done" : "",
-    scene.crt && activeShot === "C" ? "ls-root-crt" : "",
-    sceneId === "memory" ? "ls-root-memory" : "",
-    payoffSrc ? "ls-root-payoff" : "",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  return (
-    <div ref={rootRef} className={rootClass}>
-      <header className="ls-header">
-        {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- full navigation avoids a vinext RSC prefetch failure and unloads game audio */}
-        <a href="/" className="ls-back" aria-label="Back to chrisjereza.io">
-          CJ
-        </a>
-        <div className="ls-ticker" aria-hidden>
-          <span key={`${scene.id}-${visit}`}>{scene.ending && !showEnding ? clips[activeShot].label : scene.ticker}</span>
+  return <div ref={rootRef} className={rootClass} data-shot={activeShot}>
+    <header className="ls-header">
+      {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- unload media and avoid vinext RSC prefetch failure */}
+      <a href="/" className="ls-back" aria-label="Back to chrisjereza.io">CJ <span>LAST SHUTTLE</span></a>
+      <span className="ls-status">{isStart ? "HALDEN STATION" : sceneId === "memory" ? "HALDEN · OFF SHIFT" : showEnding ? "FLIGHT RECORD" : "EVACUATION ACTIVE"}</span>
+    </header>
+    <main className="ls-stage">
+      <section className="ls-screen" aria-labelledby="ls-heading" onClick={advance}>
+        <FilmStage videoRef={videoRef} videoSrc={videoSrc} poster={poster} paused={playbackPaused || cut || (isStart && hookComplete)} soundOn={soundOn} visit={visit} crt={Boolean(scene.crt) && activeShot === "C"} onAudioBlocked={audioBlocked} onEnded={onFilmEnded} onProgress={onFilmProgress} onError={onFilmError} />
+        <h1 id="ls-heading" ref={headingRef} tabIndex={-1} className="ls-accessible-heading">{isStart ? TITLE : sceneId === "memory" ? "Four hours earlier" : meta.label}</h1>
+        {sceneId === "memory" || (sceneId === "corridor" && autoOpening) ? <div className="ls-time-mark" key={sceneId} aria-hidden><span>{sceneId === "memory" ? "FOUR HOURS EARLIER" : "NOW"}</span><small>{sceneId === "memory" ? "BEFORE THE SCUTTLE ORDER" : "HALDEN · SERVICE CORRIDOR"}</small></div> : null}
+        <div className={`ls-panel${isStart ? " ls-panel-start" : ""}${done && !isStart ? " ls-panel-choice" : ""}`} key={`${sceneId}-${visit}`}>
+          {isStart && (hookCallVisible || hookComplete) ? <div className="ls-hook-caption" role="status"><span>{ELLIS}</span><p>{OPENING_CALL}</p></div> : null}
+          {isStart && hookComplete ? <div className="ls-setup" onClick={(e) => e.stopPropagation()}>
+            <form className="ls-identify" onSubmit={(e) => { e.preventDefault(); if (name) transition("memory"); }}>
+              <label htmlFor="crew-name">Your first name</label>
+              <div className="ls-name-row"><input id="crew-name" value={playerName} onChange={(e) => setPlayerName(e.target.value)} maxLength={24} autoComplete="off" required placeholder="Name" /><button type="submit" disabled={!name || cut} aria-label="Continue">Continue <span aria-hidden>↵</span></button></div>
+              <small>Stays in this tab.</small>
+            </form>
+            <div className="ls-premise">{scene.beats.map((b, i) => b.kind === "sub" ? <p key={i}>{b.text}</p> : null)}</div>
+            <button className="ls-replay-sound" type="button" onClick={replayWithSound}>Replay opening with sound</button>
+          </div> : null}
+          {!isStart && !payoffSrc && current && current.kind !== "payoff" ? <div className={`ls-reading ls-reading-${current.kind}`} key={`${beat}`}>
+            {current.kind === "hud" ? <div className="ls-hud" role="status"><div className="ls-hud-header">{current.header}</div>{current.lines.map((line) => <p key={line}>{line}</p>)}</div>
+            : <><span className="ls-speaker">{current.kind === "radio" ? current.who : current.kind === "you" ? "YOU" : ""}</span><p className="ls-dialogue" role="status">{personalize(current.text)}</p></>}
+          </div> : null}
+          {done && !isStart ? <div className="ls-choices" aria-label={scene.choices.length > 1 ? "Choose your response" : "Continue the story"} onKeyDown={(e) => {
+            if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+            const buttons = Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>("button"));
+            const currentIndex = buttons.indexOf(document.activeElement as HTMLButtonElement);
+            e.preventDefault(); buttons[(currentIndex + (e.key === "ArrowDown" ? 1 : buttons.length - 1)) % buttons.length]?.focus();
+          }}>
+            {scene.choices.map((choice, i) => <button key={choice.label} className="ls-choice" type="button" aria-label={choice.label} disabled={cut} onClick={(e) => { e.stopPropagation(); transition(choice.to); }}>
+              <span className="ls-choice-key" aria-hidden>{scene.choices.length > 1 ? i + 1 : "↵"}</span><span className="ls-choice-copy"><span>{choice.label}</span>{choice.detail ? <small>{choice.detail}</small> : null}</span>
+            </button>)}
+          </div> : null}
+          {!done && !autoOpening && beat >= 0 ? <button type="button" className="ls-next" aria-label="Continue dialogue" onClick={(e) => { e.stopPropagation(); advance(); }}><kbd>SPACE</kbd> Continue <span aria-hidden>›</span></button> : null}
+          {showEnding && scene.ending ? <div className="ls-ending" role="status"><span>ENDING {scene.ending.number} / 3</span><h2>{scene.ending.name}</h2><div className="ls-credits" aria-label="Credits">{credits.slice(1).map((c) => <p key={c}>{c}</p>)}<p>{found.length} of 3 endings found</p></div></div> : null}
         </div>
-        {!scene.ending || showEnding ? (
-        <div className="ls-status" aria-live="polite">
-          <span className="ls-dot" />
-          {scene.status}
-        </div>
-        ) : null}
-      </header>
-
-      <main className="ls-stage">
-        <section className="ls-screen" aria-labelledby="ls-heading" onClick={advance}>
-          {isStart ? <OpeningHook key={visit} complete={hookComplete} paused={playbackPaused || cut} soundOn={soundOn} onComplete={finishHook} onAudioBlocked={audioBlocked} /> :
-          <SceneMedia clip={activeShot} crt={Boolean(scene.crt) && activeShot === "C"} grade={grade} stillOnly={false} soundOn={soundOn} suspended={Boolean(payoffSrc) || cut || playbackPaused} onAudioBlocked={audioBlocked} />}
-          {isHook ? <h1 id="ls-heading" ref={headingRef} tabIndex={-1} className="ls-hook-heading">{TITLE}</h1> : null}
-          {payoffSrc ? <PayoffShot key={`${sceneId}-${beat}`} src={payoffSrc} soundOn={soundOn && !cut} onAudioBlocked={audioBlocked} /> : null}
-
-          {/* scene label, top left, small */}
-          {!isStart ? (
-            <h1 id="ls-heading" ref={headingRef} tabIndex={-1} className="ls-label ls-in" key={`h-${scene.id}-${visit}`}>
-              {showEnding ? (
-                <>
-                  <span className="ls-label-kicker">STATION DESTRUCTION CONFIRMED</span>
-                  <span className="ls-label-ending">{headingText}</span>
-                </>
-              ) : (
-                headingText
-              )}
-            </h1>
-          ) : null}
-
-          {/* the foreground line, bottom center */}
-          <div className={`ls-panel${isStart ? " ls-panel-start" : ""}`} key={`${scene.id}-${visit}`}>
-            {!isStart && !payoffSrc ? <div className={`ls-reading ls-reading-${current?.kind ?? "empty"}`}>
-              <div className="ls-context">{sceneId === "memory" ? "MEMORY · FOUR HOURS EARLIER" : `NOW · ${clips[activeShot].label}`}</div>
-          {/* Current mission information shares the dialogue rail. */}
-          {huds.length && showHud ? (
-            <div className="ls-hud" aria-live="polite">
-              {huds.map(({ b, i }) => (
-                <div key={i} className="ls-hudpanel ls-in">
-                  <div className="ls-hud-header">{b.header}</div>
-                  {b.lines.map((l, j) => (
-                    <div key={j} className="ls-hud-line ls-in" style={{ animationDelay: `${j * 0.06}s` }}>
-                      {l}
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          ) : null}
-
-          {/* Radio dialogue shares the same reading position. */}
-          {fore && fore.kind === "radio" ? (
-            <div className="ls-radiocard ls-in" key={`r-${beat}`} role="status">
-              <div className="ls-radio-head">
-                <span className="ls-wave" aria-hidden>
-                  <i className={typed ? "" : "ls-wave-live"} />
-                  <i className={typed ? "" : "ls-wave-live"} />
-                  <i className={typed ? "" : "ls-wave-live"} />
-                  <i className={typed ? "" : "ls-wave-live"} />
-                  <i className={typed ? "" : "ls-wave-live"} />
-                </span>
-                {fore.who}
-              </div>
-              <p>
-                <Typewriter text={personalize(fore.text)} instant={instant || autoOpening || typed} onTick={onTick} onDone={onTyped} typeMs={TYPE_MS} />
-              </p>
-            </div>
-          ) : null}
-
-              <div className="ls-fore" aria-live="polite">
-                {fore && fore.kind === "sub" ? (
-                  <p className="ls-sub ls-in" key={`s-${beat}`}>
-                    {personalize(fore.text)}
-                  </p>
-                ) : null}
-                {fore && fore.kind === "you" ? (
-                  <p className="ls-you ls-in" key={`y-${beat}`}>
-                    <span className="ls-you-label">YOU</span>
-                    {personalize(fore.text)}
-                  </p>
-                ) : null}
-              </div>
-            </div> : null}
-            {isStart && hookComplete ? (
-              <>
-                <h1 id="ls-heading" ref={headingRef} tabIndex={-1} className="ls-h1-big">
-                  {TITLE}
-                </h1>
-                {scene.beats.map((b, i) =>
-                  b.kind === "sub" ? (
-                    <p key={i} className="ls-sub ls-sub-intro ls-in" style={{ animationDelay: `${0.15 + i * 0.1}s` }}>
-                      {b.text}
-                    </p>
-                  ) : null,
-                )}
-                <form className="ls-identify" onSubmit={(e) => { e.preventDefault(); if (name) transition("memory"); }} onClick={(e) => e.stopPropagation()}>
-                  <label htmlFor="crew-name">Your first name</label>
-                  <input id="crew-name" name="crew-name" value={playerName} onChange={(e) => setPlayerName(e.target.value)} maxLength={24} autoComplete="off" required placeholder="Name" />
-                  <span>Used in the story. Stays in this browser tab.</span>
-                  <button className="ls-choice" type="submit" disabled={!name || cut}>CONTINUE</button>
-                </form>
-              </>
-            ) : (
-              null
-            )}
-
-            <div className={`ls-choices${done ? " ls-choices-ready" : ""}`} hidden={isStart}>
-              {(!isStart ? scene.choices : []).map((choice, i) => (
-                <button
-                  key={choice.label}
-                  type="button"
-                  className="ls-choice"
-                  aria-label={choice.label}
-                  style={{ animationDelay: `${i * 0.08}s` }}
-                  disabled={!done || cut}
-                  tabIndex={done ? 0 : -1}
-                  aria-hidden={!done}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    transition(choice.to);
-                  }}
-                >
-                  <span className={choice.label.startsWith("[") ? "ls-choice-action" : undefined}>{choice.label}</span>
-                  {choice.detail ? <small>{choice.detail}</small> : null}
-                </button>
-              ))}
-            </div>
-
-            {isStart ? (
-              <p className="ls-footnote ls-in" style={{ animationDelay: "0.3s" }}>
-                Three endings · 2–3 minutes · Click the image or press Space.
-              </p>
-            ) : null}
-
-            {!done && !autoOpening && beat >= 0 ? (
-              <button type="button" className="ls-next" onClick={(e) => { e.stopPropagation(); advance(); }}>
-                {currentIsRadio && !typed ? "REVEAL LINE" : scene.ending && beat === last ? "CONTINUE" : "NEXT"} <span aria-hidden="true">→</span>
-              </button>
-            ) : null}
-
-            {showEnding ? (
-              <div className="ls-credits" aria-label="Credits">
-                {credits.map((c, i) => (
-                  <p key={c} className="ls-in" style={{ animationDelay: `${i * 0.06}s` }}>
-                    {c}
-                  </p>
-                ))}
-                <p className="ls-found ls-in" style={{ animationDelay: "0.36s" }}>
-                  ENDINGS FOUND {found.length} OF 3
-                </p>
-              </div>
-            ) : null}
-          </div>
-        </section>
-      </main>
-
-      <footer className="ls-footer">
-        <button type="button" className="ls-util" onClick={toggleSound} aria-pressed={soundOn}>
-          {soundOn ? "SOUND ON" : "SOUND OFF"}
-        </button>
-        <button type="button" className="ls-util" onClick={toggleFullscreen}>
-          {fullscreen ? "EXIT FULLSCREEN" : "FULLSCREEN"}
-        </button>
-        {openingActive ? <>
-          <button type="button" className="ls-util" onClick={toggleOpeningPause} aria-pressed={openingPaused}>
-            {openingPaused ? "RESUME INTRO" : "PAUSE INTRO"}
-          </button>
-          <button type="button" className="ls-util" onClick={skipOpening} disabled={cut}>
-            {isHook ? "SKIP CLIP" : "SKIP TO CHOICE"}
-          </button>
-        </> : null}
-        {!isStart ? (
-          <button type="button" className="ls-util" onClick={() => transition("start")}>
-            RESTART
-          </button>
-        ) : null}
-        <span className="ls-credit">Chris Jereza · Runway + OpenAI</span>
-      </footer>
-
-      {isStart && !soundOn ? (
-        <button type="button" className="ls-soundprompt ls-in" style={{ animationDelay: "0.3s" }} onClick={toggleSound}>
-          <span className="ls-dot" /> turn sound on
-        </button>
-      ) : null}
-
-
-    </div>
-  );
+      </section>
+    </main>
+    <footer className="ls-footer">
+      <button type="button" className="ls-util ls-audio" onClick={toggleSound} aria-pressed={soundOn}>{soundOn ? "Audio on" : "Enable audio"}</button>
+      <button type="button" className="ls-util ls-fullscreen" onClick={toggleFullscreen}>{fullscreen ? "Exit fullscreen" : "Fullscreen"}</button>
+      {openingActive ? <><button type="button" className="ls-util" onClick={toggleOpeningPause} aria-pressed={openingPaused}>{openingPaused ? "Resume intro" : "Pause intro"}</button><button type="button" className="ls-util" disabled={cut} onClick={skipOpening}>{isHook ? "Skip clip" : "Skip to choice"}</button></> : null}
+      {!isStart ? <button type="button" className="ls-util ls-restart" onClick={() => transition("start")}>Restart</button> : null}
+    </footer>
+  </div>;
 }

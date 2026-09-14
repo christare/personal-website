@@ -1,14 +1,14 @@
 # Last Shuttle: interview demo
 
-Aim for two minutes. Keep the game open before the call. The opening is an edited sequence; PAUSE INTRO lets you talk over it. After the first choice, dialogue waits for you; click NEXT or press Space. A first click reveals a typing line, and the next advances. Turn sound on before sharing and keep it quiet enough to speak over.
+Aim for two minutes. Keep the game open before the call. The opening is an edited sequence; Pause intro lets you talk over it. After the first choice, dialogue waits for you; tap Continue or press Space. Subtitles appear whole; a single input advances. Turn sound on before sharing and keep it quiet enough to speak over.
 
 ## Opening, 15 seconds
 
-“I made a playable sci-fi story with Runway footage. Your friend is trapped on an infected station. You can leave Alex, open the lab door, or investigate a safer way out. I wanted to turn generated imagery into something an audience participates in.”
+“I made a playable sci-fi story with Runway footage. Your friend is trapped on an infected station. You can leave Ellis, open the lab door, or investigate a safer way out. I wanted to turn generated imagery into something an audience participates in.”
 
 ## Play, about 75 seconds
 
-Watch the compression hook → enter your first name → CONTINUE → coffee memory and live call play automatically → I can't leave Alex here. → Wait. Let me check what happened. → Get in the capsule. I'll bring you over. → [Launch with Alex.] → CONTINUE.
+Watch the compression hook → enter your first name → CONTINUE → coffee memory and live call play automatically → I said I'd wait. I'm coming back. → You knew it was quarantine. What aren't you telling me? → Get in CC-2. I'll stay on the channel. → Launch. Keep CC-2 sealed. → CONTINUE.
 
 Move through the individual dialogue beats between decisions. After the final “Of course,” press CONTINUE once more to show the ending and credits. Let the door, lab feed, and capsule shots breathe for a few seconds. You can talk over a scene without losing a line.
 
@@ -36,7 +36,7 @@ Use the local game at http://localhost:3001/last-shuttle if the public site is n
 
 ## Visual direction
 
-No people, faces, hands, silhouettes or designed creature. Alex stays unseen; two coffee mugs, a packed bag, an empty seat and the radio establish the relationship. The memory has a warm inset frame; present-day scenes use the existing full-frame visual language. Five original motion environments, the supplied capsule and shuttle-vent payoffs, the new compression export (opening and later aftermath), and nine supporting stills are integrated. The old moving-chair clip is no longer used. Dialogue, narration and system records share one reading area with different text styles. No lab cable beat is used. See PAYOFF-SHOTS.md for the integrated payoff assets.
+No people, faces, hands, silhouettes or designed creature. Ellis stays unseen; two coffee mugs, a packed bag, an empty seat and the radio establish the relationship. The memory has a warm frame treatment and an interrupted match cut; present-day scenes use the existing full-frame visual language. Five original motion environments, the supplied capsule and shuttle-vent payoffs, the new compression export (opening and later aftermath), and nine supporting stills are integrated. The old moving-chair clip is no longer used. Dialogue, narration and system records share one reading area with different text styles. No lab cable beat is used. See PAYOFF-SHOTS.md for the integrated payoff assets.
 
 
 ## Restored story
@@ -46,4 +46,8 @@ The fuller pre-trim narrative is restored, including the shared plans, promise, 
 
 ## Current script
 
-Use `LAST-SHUTTLE-SCREENPLAY-v4.md` for the full dialogue, directions and branches, and `NARRATIVE-REVIEW-v3.md` for the selective response to external feedback. The two added player responses give the lie and the open-door rescue an emotional reply. All four routes and three ending categories remain.
+Use `LAST-SHUTTLE-SCREENPLAY-v5.md` for the full dialogue, directions and branches, and `NARRATIVE-REVIEW-v3.md` for the selective response to external feedback. The two added player responses give the lie and the open-door rescue an emotional reply. All four routes and three ending categories remain.
+
+## Final visual addition
+
+Use `final-visual-pack-v5/README.md` and its matched coffee frames for the only proposed remaining Runway render. The current live cut uses the end image for the brief memory interruption. The animation has not yet been generated or integrated.
