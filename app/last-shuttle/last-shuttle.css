@@ -605,3 +605,21 @@
   .ls-reading .ls-sub, .ls-reading .ls-you, .ls-reading .ls-radiocard p { font-size: 16px; }
   .ls-root-memory .ls-media { inset: auto; width: calc(100% - 24px); margin: 12px auto 0; }
 }
+
+/* Speech, narration, system text and intentions have distinct voices. */
+.ls-reading-radio .ls-radio-head { color: #e5cda4; }
+.ls-reading-radio .ls-radiocard p { font-style: normal; color: #f0f1ee; }
+.ls-reading-you .ls-you-label { color: #add8e4; }
+.ls-reading-you .ls-you { font-style: normal; color: #e4f0f2; }
+.ls-reading-sub { border-top-color: rgba(202,205,206,.25); }
+.ls-reading-sub .ls-sub { font-style: italic; color: #c6cacc; }
+.ls-reading-hud { border-top-color: rgba(117,195,206,.5); }
+.ls-reading-hud .ls-hud-header { color: #9dd4df; }
+.ls-reading-hud .ls-hud-line { font-family: var(--font-geist-mono), monospace; font-size: 13px; color: #ccd9de; }
+.ls-root:not(.ls-root-intro) .ls-choice { text-transform: none; letter-spacing: .01em; font-family: var(--font-geist-sans), system-ui, sans-serif; font-size: 16px; font-weight: 500; }
+.ls-choice-action { font-style: italic; font-weight: 400; }
+.ls-root-memory .ls-reading-radio .ls-radio-head, .ls-root-memory .ls-reading-you .ls-you-label { color: #e2c69f; }
+@media (max-width: 720px) {
+  .ls-root:not(.ls-root-intro) .ls-choice { font-size: 15px; }
+  .ls-reading-hud .ls-hud-line { font-size: 12px; }
+}

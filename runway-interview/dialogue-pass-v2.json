@@ -1,0 +1,512 @@
+{
+  "start": {
+    "id": "start",
+    "clip": "F",
+    "status": "EVACUATION ACTIVE",
+    "ticker": "HALDEN STATION · FINAL EVACUATION",
+    "beats": [
+      {
+        "kind": "sub",
+        "text": "The station is being destroyed. You have the last shuttle."
+      },
+      {
+        "kind": "sub",
+        "text": "Alex, your friend and crewmate, is still inside."
+      }
+    ],
+    "choices": [
+      {
+        "label": "BEGIN",
+        "to": "memory"
+      }
+    ]
+  },
+  "memory": {
+    "id": "memory",
+    "clip": "memory",
+    "status": "MEMORY",
+    "ticker": "FOUR HOURS EARLIER · YOUR LAST SHIFT TOGETHER",
+    "beats": [
+      {
+        "kind": "radio",
+        "who": "ALEX",
+        "shot": "memory",
+        "text": "Breakfast tomorrow. My treat. Somewhere with actual coffee."
+      },
+      {
+        "kind": "you",
+        "shot": "empty-seat",
+        "text": "Your bag's on the shuttle. I'll wait for you there."
+      }
+    ],
+    "choices": [
+      {
+        "label": "[Answer Alex.]",
+        "to": "corridor"
+      }
+    ]
+  },
+  "corridor": {
+    "id": "corridor",
+    "clip": "A",
+    "status": "EVACUATION ACTIVE",
+    "ticker": "YOUR SHUTTLE IS READY · ALEX IS STILL IN LAB 3",
+    "beats": [
+      {
+        "kind": "radio",
+        "who": "ALEX",
+        "shot": "A",
+        "text": "{name}? You're still here, right?"
+      },
+      {
+        "kind": "radio",
+        "who": "ALEX",
+        "shot": "intercom",
+        "text": "I'm locked in the lab. My keycard keeps flashing red."
+      },
+      {
+        "kind": "radio",
+        "who": "ALEX",
+        "shot": "intercom",
+        "text": "You promised you'd wait. Please. I'm still in here."
+      }
+    ],
+    "choices": [
+      {
+        "label": "I can't leave Alex here.",
+        "detail": "Go back. Your keycard can override the lab door.",
+        "to": "door"
+      },
+      {
+        "label": "[Say nothing. Head for the shuttle.]",
+        "detail": "Launch alone. Leave Alex behind.",
+        "to": "alone"
+      }
+    ]
+  },
+  "alone": {
+    "id": "alone",
+    "clip": "E",
+    "status": "IN TRANSIT",
+    "ticker": "LAUNCH COMPLETE · ONE ABOARD · ALEX STILL ON STATION",
+    "beats": [
+      {
+        "kind": "radio",
+        "who": "ALEX",
+        "shot": "E",
+        "text": "{name}? Was that you taking off?"
+      },
+      {
+        "kind": "radio",
+        "who": "ALEX",
+        "shot": "empty-seat",
+        "text": "Something's moving in here. Please come back. I need you."
+      },
+      {
+        "kind": "hud",
+        "shot": "shuttle-radio",
+        "header": "COMMS",
+        "lines": [
+          "CONNECTION LOST"
+        ]
+      }
+    ],
+    "choices": [
+      {
+        "label": "CONTINUE",
+        "to": "survivor_alone"
+      }
+    ]
+  },
+  "door": {
+    "id": "door",
+    "clip": "B",
+    "status": "EVACUATION ACTIVE",
+    "ticker": "LAB 3 · ALEX IS ON THE OTHER SIDE",
+    "beats": [
+      {
+        "kind": "radio",
+        "who": "ALEX",
+        "shot": "B",
+        "text": "I can hear you. Please, just open the door."
+      },
+      {
+        "kind": "hud",
+        "shot": "door-control",
+        "header": "QUARANTINE INTERLOCK",
+        "lines": [
+          "LAB 3 SEALED",
+          "OVERRIDE RELEASES LAB AIR",
+          "INCIDENT LOG AVAILABLE"
+        ]
+      },
+      {
+        "kind": "radio",
+        "who": "ALEX",
+        "shot": "intercom",
+        "text": "I know what the light means. I don't want to die in here."
+      }
+    ],
+    "choices": [
+      {
+        "label": "I'm getting you out.",
+        "detail": "Open the door. Release the lab air.",
+        "to": "released"
+      },
+      {
+        "label": "Wait. Let me check what happened.",
+        "detail": "Read the incident log. Keep the door sealed.",
+        "to": "report"
+      }
+    ]
+  },
+  "released": {
+    "id": "released",
+    "clip": "E",
+    "status": "IN TRANSIT",
+    "ticker": "TWO ABOARD · CABIN AIR SHARED",
+    "beats": [
+      {
+        "kind": "sub",
+        "shot": "E",
+        "text": "You get Alex aboard and close the hatch."
+      },
+      {
+        "kind": "radio",
+        "who": "ALEX · SEAT 2",
+        "shot": "shuttle-radio",
+        "text": "Just get us out of here. I'll explain. I promise."
+      },
+      {
+        "kind": "hud",
+        "shot": "cabin-air",
+        "header": "CABIN AIR",
+        "lines": [
+          "AIRBORNE ORGANISM DETECTED",
+          "EXPOSURE: BOTH OCCUPANTS"
+        ]
+      },
+      {
+        "kind": "payoff",
+        "id": "cabin"
+      }
+    ],
+    "choices": [
+      {
+        "label": "[Call for medical help.]",
+        "to": "contamination"
+      }
+    ]
+  },
+  "report": {
+    "id": "report",
+    "clip": "C",
+    "status": "EVACUATION ACTIVE",
+    "crt": true,
+    "ticker": "ALEX IS INFECTED · SHARED AIR IS UNSAFE",
+    "beats": [
+      {
+        "kind": "hud",
+        "shot": "lab-terminal",
+        "header": "INCIDENT LOG",
+        "lines": [
+          "ALEX: INFECTED",
+          "TRANSMISSION: AIRBORNE",
+          "DO NOT OPEN THE LAB"
+        ]
+      },
+      {
+        "kind": "radio",
+        "who": "ALEX",
+        "shot": "C",
+        "text": "Can you see the room? Tell me you're seeing this."
+      },
+      {
+        "kind": "radio",
+        "who": "ALEX",
+        "shot": "intercom",
+        "text": "I saw the result. I thought you'd leave if I told you."
+      },
+      {
+        "kind": "hud",
+        "shot": "lab-terminal",
+        "header": "SEALED TRANSFER",
+        "lines": [
+          "CC-2: INDEPENDENT AIR SUPPLY",
+          "ENCLOSED RAIL TO SHUTTLE: ONLINE",
+          "LAB DOOR REMAINS CLOSED"
+        ]
+      },
+      {
+        "kind": "you",
+        "shot": "capsule-seal",
+        "text": "Can you reach that capsule?"
+      },
+      {
+        "kind": "radio",
+        "who": "ALEX",
+        "shot": "intercom",
+        "text": "Yeah. Keep talking while I do it."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Get in the capsule. I'll bring you over.",
+        "detail": "Use the sealed transfer. Keep the air separate.",
+        "to": "capsule"
+      },
+      {
+        "label": "I need to get out of here.",
+        "detail": "Leave Alex behind. Launch alone.",
+        "to": "leave"
+      }
+    ]
+  },
+  "capsule": {
+    "id": "capsule",
+    "clip": "D",
+    "status": "EVACUATION ACTIVE",
+    "ticker": "SEALED TRANSFER · LAB DOOR CLOSED",
+    "beats": [
+      {
+        "kind": "hud",
+        "shot": "D",
+        "header": "CARGO CONTROL",
+        "lines": [
+          "CAPSULE RECEIVED",
+          "ONE OCCUPANT",
+          "CABIN AIR ISOLATED"
+        ]
+      },
+      {
+        "kind": "radio",
+        "who": "ALEX · INTERCOM",
+        "shot": "capsule-seal",
+        "text": "Is it locked? I can't tell from in here."
+      },
+      {
+        "kind": "you",
+        "shot": "capsule-seal",
+        "text": "It's locked. I've got a green light."
+      },
+      {
+        "kind": "payoff",
+        "id": "capsule"
+      }
+    ],
+    "choices": [
+      {
+        "label": "[Launch with Alex.]",
+        "to": "rescued_departure"
+      }
+    ]
+  },
+  "rescued_departure": {
+    "id": "rescued_departure",
+    "clip": "E",
+    "status": "IN TRANSIT",
+    "ticker": "TWO ABOARD · ALEX IN SEALED CONTAINMENT",
+    "beats": [
+      {
+        "kind": "you",
+        "shot": "E",
+        "text": "Medical, this is the Halden shuttle. Two aboard. One infected, in a sealed capsule."
+      },
+      {
+        "kind": "radio",
+        "who": "MEDICAL CARRIER",
+        "shot": "shuttle-radio",
+        "text": "Bring them to isolation bay four. Keep that capsule shut."
+      },
+      {
+        "kind": "radio",
+        "who": "ALEX · INTERCOM",
+        "shot": "capsule-seal",
+        "text": "{name}? Don't turn this off yet."
+      },
+      {
+        "kind": "you",
+        "shot": "shuttle-radio",
+        "text": "I'm here."
+      }
+    ],
+    "choices": [
+      {
+        "label": "CONTINUE",
+        "to": "rescue"
+      }
+    ]
+  },
+  "leave": {
+    "id": "leave",
+    "clip": "E",
+    "status": "IN TRANSIT",
+    "ticker": "ONE ABOARD · RADIO LINK TO LAB 3",
+    "beats": [
+      {
+        "kind": "you",
+        "shot": "E",
+        "text": "Alex. I'm sorry. I'm leaving."
+      },
+      {
+        "kind": "radio",
+        "who": "ALEX",
+        "shot": "empty-seat",
+        "text": "Okay. Just don't hang up."
+      },
+      {
+        "kind": "hud",
+        "shot": "shuttle-radio",
+        "header": "COMMS",
+        "lines": [
+          "CONNECTION LOST"
+        ]
+      }
+    ],
+    "choices": [
+      {
+        "label": "CONTINUE",
+        "to": "survivor_leave"
+      }
+    ]
+  },
+  "survivor_alone": {
+    "id": "survivor_alone",
+    "clip": "F",
+    "status": "MISSION COMPLETE",
+    "ticker": "ONE RECOVERED · ALEX: LOST",
+    "ending": {
+      "number": 1,
+      "name": "SURVIVOR",
+      "key": "survivor",
+      "grade": "none"
+    },
+    "beats": [
+      {
+        "kind": "hud",
+        "shot": "F",
+        "header": "HALDEN STATION",
+        "lines": [
+          "SCUTTLE COMPLETE",
+          "NO FURTHER LIFE SIGNS"
+        ]
+      },
+      {
+        "kind": "sub",
+        "shot": "empty-seat",
+        "text": "Alex's bag is still under the seat."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Play again",
+        "to": "corridor"
+      }
+    ]
+  },
+  "survivor_leave": {
+    "id": "survivor_leave",
+    "clip": "F",
+    "status": "MISSION COMPLETE",
+    "ticker": "ONE RECOVERED · ALEX: LOST",
+    "ending": {
+      "number": 1,
+      "name": "SURVIVOR",
+      "key": "survivor",
+      "grade": "none"
+    },
+    "beats": [
+      {
+        "kind": "hud",
+        "shot": "F",
+        "header": "HALDEN STATION",
+        "lines": [
+          "SCUTTLE COMPLETE",
+          "NO FURTHER LIFE SIGNS"
+        ]
+      },
+      {
+        "kind": "sub",
+        "shot": "empty-seat",
+        "text": "You leave the radio on."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Play again",
+        "to": "corridor"
+      }
+    ]
+  },
+  "contamination": {
+    "id": "contamination",
+    "clip": "F",
+    "status": "MISSION COMPLETE",
+    "ticker": "DOCKING REFUSED · BOTH OCCUPANTS EXPOSED",
+    "ending": {
+      "number": 2,
+      "name": "CONTAMINATION",
+      "key": "contamination",
+      "grade": "red"
+    },
+    "beats": [
+      {
+        "kind": "radio",
+        "who": "MEDICAL CARRIER",
+        "shot": "F",
+        "text": "Stay where you are. We can't let you dock."
+      },
+      {
+        "kind": "sub",
+        "shot": "cabin-air",
+        "text": "You hold your breath. It doesn't help."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Play again",
+        "to": "corridor"
+      }
+    ]
+  },
+  "rescue": {
+    "id": "rescue",
+    "clip": "F",
+    "status": "MISSION COMPLETE",
+    "ticker": "TWO RECOVERED · ALEX IN MEDICAL ISOLATION",
+    "ending": {
+      "number": 3,
+      "name": "RESCUE",
+      "key": "rescue",
+      "grade": "cyan"
+    },
+    "beats": [
+      {
+        "kind": "hud",
+        "shot": "F",
+        "header": "HALDEN STATION",
+        "lines": [
+          "SCUTTLE COMPLETE",
+          "SHUTTLE CLEAR"
+        ]
+      },
+      {
+        "kind": "radio",
+        "who": "ALEX · MEDICAL BAY",
+        "shot": "medical-bay",
+        "text": "They won't let me out yet. Will you wait outside?"
+      },
+      {
+        "kind": "you",
+        "shot": "medical-bay",
+        "text": "Of course."
+      }
+    ],
+    "choices": [
+      {
+        "label": "Play again",
+        "to": "corridor"
+      }
+    ]
+  }
+}
