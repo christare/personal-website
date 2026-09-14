@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import NextImage, { getImageProps } from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -564,9 +563,10 @@ export function LastShuttle({ payoffs = {} }: { payoffs?: Partial<Record<"cabin"
   return (
     <div ref={rootRef} className={rootClass}>
       <header className="ls-header">
-        <Link href="/" className="ls-back" aria-label="Back to chrisjereza.io">
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- full navigation avoids a vinext RSC prefetch failure and unloads game audio */}
+        <a href="/" className="ls-back" aria-label="Back to chrisjereza.io">
           CJ
-        </Link>
+        </a>
         <div className="ls-ticker" aria-hidden>
           <span key={`${scene.id}-${visit}`}>{scene.ticker}</span>
         </div>
