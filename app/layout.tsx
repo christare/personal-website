@@ -18,11 +18,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://chrisjereza.io"),
   title: `${site.name} | Video Producer, Editor & Engineer`,
   description:
-    "Selected video, editorial, branded, and engineering work by Chris Jereza.",
+    "Chris Jereza is a video producer at The Verge, previously at BuzzFeed. Open for freelance video editing work. Explore selected editorial, branded, and social videos.",
   openGraph: {
     title: `${site.name} | Video Producer, Editor & Engineer`,
     description:
-      "Selected video, editorial, branded, and engineering work by Chris Jereza.",
+      "Chris Jereza is a video producer at The Verge, previously at BuzzFeed. Open for freelance video editing work. Explore selected editorial, branded, and social videos.",
     type: "website",
     images: [{ url: "/og.png", width: 1672, height: 941, alt: "Chris Jereza portfolio" }],
   },
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${site.name} | Video Producer, Editor & Engineer`,
     description:
-      "Selected video, editorial, branded, and engineering work by Chris Jereza.",
+      "Chris Jereza is a video producer at The Verge, previously at BuzzFeed. Open for freelance video editing work. Explore selected editorial, branded, and social videos.",
     images: ["/og.png"],
   },
 };

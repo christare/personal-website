@@ -53,6 +53,7 @@ export const site: {
   profileImageUrl: string;
   profileImageAlt: string;
   intro: string;
+  availability: string;
   highlights: string[];
   socials: SocialLink[];
   portfolioSections: PortfolioSection[];
@@ -69,11 +70,12 @@ export const site: {
   tare: { title: string; href: string; logoUrl: string; images: string[] };
 } = {
   name: "Chris Jereza",
-  tagline: "Video Producer / Editor / Host / Software Engineer",
+  tagline: "Video Producer at The Verge / Editor",
   profileImageUrl: "/Chris Profile Photo 1.jpg",
   profileImageAlt: "Chris Jereza",
   intro:
-    "Formerly at BuzzFeed (lead producer/host) and The Verge (editor). 8+ years in production and post. 1.4M+ followers, 500M+ views annually across platforms.",
+    "Video producer at The Verge. Previously lead producer and host at BuzzFeed. 8+ years in production and post. 1.4M+ followers, 500M+ views annually across platforms.",
+  availability: "Open for freelance video editing work",
   highlights: [],
 
   socials: [
